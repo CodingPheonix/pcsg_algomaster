@@ -13,6 +13,7 @@ const Navbar = () => {
     const router = useRouter()
     const UserContext = useUserContext()
     const user = UserContext?.user
+    const setUser = UserContext?.setUser
 
     console.log(user)
 
@@ -75,7 +76,7 @@ const Navbar = () => {
                                     {user?.username}
                                 </span>
                                 <button
-                                    onClick={logout}
+                                    onClick={() => {logout(); setUser && setUser({ username: "", id: "", role: "user" })}}
                                     className="px-3 py-1.5 text-sm rounded-lg border border-gray-300 text-gray-600 hover:bg-red-500 hover:text-white hover:border-red-500 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-red-300">
                                     Logout
                                 </button>
