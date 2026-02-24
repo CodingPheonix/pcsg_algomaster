@@ -70,6 +70,7 @@ export async function signup(state: FormState, formData: FormData) {
 }
 
 export async function logout() {
-    await deleteSession()
+    await deleteSession();
+    window.location.reload();
     redirect('/login')
 }
