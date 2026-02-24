@@ -15,8 +15,6 @@ const Navbar = () => {
     const user = UserContext?.user
     const setUser = UserContext?.setUser
 
-    console.log(user)
-
     return (
         <nav className="fixed top-0 left-0 right-0 z-50 border-b border-border bg-black text-white backdrop-blur-xl">
             <div className="container mx-auto flex h-16 items-center justify-between gap-4 px-4">
@@ -30,10 +28,6 @@ const Navbar = () => {
                 </Link>
 
                 <div className="hidden md:flex items-center gap-1">
-                    {/* <NavItem label="Algorithms" />
-                    <NavItem label="Data Structures" />
-                    <NavItem label="Resources" /> */}
-
                     <Link
                         href="/algorithms"
                         className="px-3 py-2 text-sm font-medium text-muted-foreground hover:text-primary transition-colors rounded-md hover:bg-secondary"
