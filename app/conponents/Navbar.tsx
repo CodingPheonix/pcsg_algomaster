@@ -18,7 +18,7 @@ const Navbar = () => {
     console.log(user)
 
     return (
-        <nav className="fixed top-0 left-0 right-0 z-50 border-b border-border bg-black/80 text-white backdrop-blur-xl">
+        <nav className="fixed top-0 left-0 right-0 z-50 border-b border-border bg-black text-white backdrop-blur-xl">
             <div className="container mx-auto flex h-16 items-center justify-between gap-4 px-4">
                 <Link href="/" className="flex items-center gap-2 shrink-0">
                     <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-green-500 text-black font-mono text-sm font-bold text-primary-foreground">
@@ -30,9 +30,28 @@ const Navbar = () => {
                 </Link>
 
                 <div className="hidden md:flex items-center gap-1">
-                    <NavItem label="Algorithms" />
+                    {/* <NavItem label="Algorithms" />
                     <NavItem label="Data Structures" />
-                    <NavItem label="Resources" />
+                    <NavItem label="Resources" /> */}
+
+                    <Link
+                        href="/algorithms"
+                        className="px-3 py-2 text-sm font-medium text-muted-foreground hover:text-primary transition-colors rounded-md hover:bg-secondary"
+                    >
+                        Algorithms
+                    </Link>
+                    <Link
+                        href="/data_structures"
+                        className="px-3 py-2 text-sm font-medium text-muted-foreground hover:text-primary transition-colors rounded-md hover:bg-secondary"
+                    >
+                        Data Structures
+                    </Link>
+                    <Link
+                        href="/resources"
+                        className="px-3 py-2 text-sm font-medium text-muted-foreground hover:text-primary transition-colors rounded-md hover:bg-secondary"
+                    >
+                        Resources
+                    </Link>
                 </div>
 
                 <div className="flex items-center gap-2">
@@ -76,7 +95,7 @@ const Navbar = () => {
                                     {user?.username}
                                 </span>
                                 <button
-                                    onClick={() => {logout(); setUser && setUser({ username: "", id: "", role: "user" })}}
+                                    onClick={() => { logout(); setUser && setUser({ username: "", id: "", role: "user" }) }}
                                     className="px-3 py-1.5 text-sm rounded-lg border border-gray-300 text-gray-600 hover:bg-red-500 hover:text-white hover:border-red-500 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-red-300">
                                     Logout
                                 </button>
