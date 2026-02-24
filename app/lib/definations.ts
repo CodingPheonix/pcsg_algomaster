@@ -27,3 +27,9 @@ export type FormState =
       message?: string
     }
   | undefined
+
+export interface SessionPayload {
+  userId: string
+  iat: number
+  exp: number
+}

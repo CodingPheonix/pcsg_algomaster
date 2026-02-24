@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from "react";
+import { useActionState, useState } from "react";
 import Link from "next/link";
 import { UserPlus } from "lucide-react";
 import { signup } from "../actions/auth";
@@ -43,7 +43,7 @@ const Signup = () => {
                             required
                             className="w-full h-10 rounded-lg bg-slate-800 px-3 text-sm text-foreground placeholder:text-muted-foreground outline-none focus:ring-2 focus:ring-primary transition-all"
                         />
-                        {state?.errors?.username && <p>{state.errors.username}</p>}
+                        {state?.errors?.username && <p className="text-red-500">{state.errors.username}</p>}
                     </div>
 
                     <div className="space-y-1.5">
@@ -60,7 +60,7 @@ const Signup = () => {
                             required
                             className="w-full h-10 rounded-lg bg-slate-800 px-3 text-sm text-foreground placeholder:text-muted-foreground outline-none focus:ring-2 focus:ring-primary transition-all"
                         />
-                        {state?.errors?.email && <p>{state.errors.email}</p>}
+                        {state?.errors?.email && <p className="text-red-500">{state.errors.email}</p>}
                     </div>
 
                     <div className="space-y-1.5">
@@ -78,7 +78,7 @@ const Signup = () => {
                             className="w-full h-10 rounded-lg bg-slate-800 px-3 text-sm text-foreground placeholder:text-muted-foreground outline-none focus:ring-2 focus:ring-primary transition-all"
                         />
                         {state?.errors?.password && (
-                            <div>
+                            <div className="text-red-500">
                                 <p>Password must:</p>
                                 <ul>
                                     {state.errors.password.map((error: string) => (
@@ -111,7 +111,3 @@ const Signup = () => {
 };
 
 export default Signup;
-function useActionState(signup: any, undefined: undefined): [any, any, any] {
-    throw new Error("Function not implemented.");
-}
-
