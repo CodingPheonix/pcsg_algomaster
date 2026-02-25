@@ -15,6 +15,8 @@ const Navbar = () => {
     const user = UserContext?.user
     const setUser = UserContext?.setUser
 
+    console.log("Navbar Rendered, User:", user)
+
     return (
         <nav className="fixed top-0 left-0 right-0 z-50 border-b border-border bg-black text-white backdrop-blur-xl">
             <div className="container mx-auto flex h-16 items-center justify-between gap-4 px-4">
@@ -45,6 +47,12 @@ const Navbar = () => {
                         className="px-3 py-2 text-sm font-medium text-muted-foreground hover:text-primary transition-colors rounded-md hover:bg-secondary"
                     >
                         Resources
+                    </Link>
+                    <Link
+                        href="/profile"
+                        className="px-3 py-2 text-sm font-medium text-muted-foreground hover:text-primary transition-colors rounded-md hover:bg-secondary"
+                    >
+                        Profile
                     </Link>
                 </div>
 
