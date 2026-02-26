@@ -7,6 +7,7 @@ import {
   Crown, Mail, Calendar, MoreHorizontal, UserCog, X
 } from "lucide-react";
 import Navbar from "../components/Navbar";
+import { useRouter } from "next/navigation";
 
 interface Admin {
   id: string;
@@ -39,7 +40,7 @@ const ROLE_STYLES: Record<string, string> = {
 };
 
 const AdminProfile = ({ user }: { user: any }) => {
-  const [activeTab, setActiveTab] = useState<"dashboard" | "admins" | "settings">("dashboard");
+  const [activeTab, setActiveTab] = useState<"dashboard" | "admins" | "app_management" | "settings">("dashboard");
   const [admins, setAdmins] = useState(MOCK_ADMINS);
   const [searchQuery, setSearchQuery] = useState("");
   const [showAddModal, setShowAddModal] = useState(false);
@@ -48,6 +49,8 @@ const AdminProfile = ({ user }: { user: any }) => {
   const filteredAdmins = admins.filter(
     (a) => a.username.toLowerCase().includes(searchQuery.toLowerCase()) || a.email.toLowerCase().includes(searchQuery.toLowerCase())
   );
+
+  const router = useRouter();
 
   const handleAddAdmin = (e: React.FormEvent) => {
     e.preventDefault();
@@ -96,17 +99,16 @@ const AdminProfile = ({ user }: { user: any }) => {
 
         {/* Tabs */}
         <div className="flex gap-1 mb-6 border-b border-slate-500">
-          {(["dashboard", "admins", "settings"] as const).map((tab) => (
+          {(["dashboard", "admins", "app_management", "settings"] as const).map((tab) => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
-              className={`px-4 py-2.5 text-sm font-medium capitalize transition-colors border-b-2 -mb-px ${
-                activeTab === tab
+              className={`px-4 py-2.5 text-sm font-medium capitalize transition-colors border-b-2 -mb-px ${activeTab === tab
                   ? "text-green-500 border-green-500"
                   : "text-slate-400 border-transparent hover:text-green-500 hover:border-green-500"
-              }`}
+                }`}
             >
-              {tab === "admins" ? "Manage Admins" : tab}
+              {tab === "admins" ? "Manage Admins" : tab.replace("_", " ")}
             </button>
           ))}
         </div>
@@ -185,9 +187,8 @@ const AdminProfile = ({ user }: { user: any }) => {
                       <td className="px-5 py-3 text-slate-400 hidden lg:table-cell">{admin.addedDate}</td>
                       <td className="px-5 py-3 text-slate-400 hidden sm:table-cell">{admin.lastActive}</td>
                       <td className="px-5 py-3">
-                        <span className={`inline-flex items-center gap-1 text-xs font-medium ${
-                          admin.status === "active" ? "text-green-500" : "text-slate-400"
-                        }`}>
+                        <span className={`inline-flex items-center gap-1 text-xs font-medium ${admin.status === "active" ? "text-green-500" : "text-slate-400"
+                          }`}>
                           <span className={`h-1.5 w-1.5 rounded-full ${admin.status === "active" ? "bg-green-500" : "bg-slate-400text-slate-400"}`} />
                           {admin.status}
                         </span>
@@ -215,6 +216,15 @@ const AdminProfile = ({ user }: { user: any }) => {
                 </tbody>
               </table>
             </div>
+          </div>
+        )}
+
+        {/* App Management  */}
+        {activeTab === "app_management" && (
+          <div>
+            <button onClick={() => router.push(`/admin/tmg?u=${user?.id}`)} className="px-4 py-2 h-32 w-43 rounded-lg border border-green-500 bg-green-500/30 text-white font-semibold hover:text-green-500 transition-colors">
+              Tutorial Management
+            </button>
           </div>
         )}
 
