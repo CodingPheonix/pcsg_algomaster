@@ -222,7 +222,7 @@ const AdminProfile = ({ user }: { user: any }) => {
         {/* App Management  */}
         {activeTab === "app_management" && (
           <div>
-            <button onClick={() => router.push(`/admin/tmg?u=${user?.id}`)} className="px-4 py-2 h-32 w-43 rounded-lg border border-green-500 bg-green-500/30 text-white font-semibold hover:text-green-500 transition-colors">
+            <button onClick={() => router.push(`/admin/tutorial?u=${user?.id}`)} className="px-4 py-2 h-32 w-43 rounded-lg border border-green-500 bg-green-500/30 text-white font-semibold hover:text-green-500 transition-colors">
               Tutorial Management
             </button>
           </div>
