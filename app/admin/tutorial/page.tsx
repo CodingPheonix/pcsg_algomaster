@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Plus,
   Trash2,
@@ -15,6 +15,10 @@ import {
   ArrowUpRight,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { fetchTutorials, insertTutorial } from "@/app/db/operations/tutorials";
+import { v4 as UUIDv4 } from "uuid";
+import { useUserContext } from "@/app/context/userContext";
+import { insertTopic } from "@/app/db/operations/topics";
 
 interface SubTopic {
   id: string;
@@ -39,6 +43,8 @@ const ManageTopics = () => {
   const [newSubName, setNewSubName] = useState("");
 
   const router = useRouter();
+  const userContext = useUserContext();
+  const user = userContext.user
 
   const addTopic = () => {
     if (!newTopicName.trim()) return;
@@ -46,6 +52,14 @@ const ManageTopics = () => {
       ...prev,
       { id: generateId(), name: newTopicName.trim(), subtopics: [], expanded: true },
     ]);
+
+    insertTutorial({
+      id: UUIDv4(),
+      title: newTopicName.trim(),
+      subtopic: null,
+      authorId: user?.id || "unknown", 
+    })
+
     setNewTopicName("");
   };
 
@@ -86,7 +100,7 @@ const ManageTopics = () => {
     setEditingValue("");
   };
 
-  const addSubtopic = (topicId: string) => {
+  const addSubtopic = async (topicId: string) => {
     if (!newSubName.trim()) return;
     setTopics((prev) =>
       prev.map((t) =>
@@ -99,6 +113,14 @@ const ManageTopics = () => {
           : t
       )
     );
+
+    console.log(topicId)
+
+    await insertTopic({
+      id: UUIDv4(),
+      tutorial_id: topicId
+    })
+
     setNewSubName("");
     setAddingSubFor(null);
   };
@@ -112,6 +134,27 @@ const ManageTopics = () => {
       )
     );
   };
+
+  useEffect(() => {
+    const fetch_tutorials = async () => {
+      if (!user?.id) return;
+
+      const tutorials = await fetchTutorials(user?.id);
+      setTopics(tutorials.map((t) => {
+
+        return {
+          id: t.id,
+          name: t.title,
+          subtopics: t.subtopic ? t.subtopic.map((s, subIndex) => ({ id: `${t.id}-sub-${subIndex}`, name: s })) : [],
+          expanded: false
+        }
+      }));
+    }
+
+    fetch_tutorials();
+  }, [user?.id]);
+  
+  console.log("Topics state:", topics);
 
   return (
     <div className="min-h-screen bg-black text-white">

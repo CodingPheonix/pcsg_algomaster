@@ -30,10 +30,10 @@ type highlight = {
   content: string;
 }
 
-type Mixed = heading | subHeading | paragraph | codeBlock | highlight;
+export type Mixed = heading | subHeading | paragraph | codeBlock | highlight | null;
 
 export const usersTable = mysqlTable('users_table', {
-  id: serial().primaryKey(),
+  id: varchar({length: 40}).primaryKey(),
   username: varchar({ length: 255 }).notNull(),
   password: varchar({ length: 255 }).notNull(),
   email: varchar({ length: 255 }).notNull().unique(),
@@ -41,15 +41,15 @@ export const usersTable = mysqlTable('users_table', {
 });
 
 export const tutorialsTable = mysqlTable('tutorials_table', {
-  id: serial().primaryKey(),
+  id: varchar({length: 40}).primaryKey(),
   title: varchar({ length: 255 }).notNull(),
   subtopic: json().$type<string[]>(),
   authorId: varchar({ length: 255 }).notNull().references(() => usersTable.id),
 })
 
 export const topicstable = mysqlTable("topics_table", {
-  id: serial().primaryKey(),
-  title: varchar({ length: 255 }).notNull(),
+  id: varchar({length: 40}).primaryKey(),
+  title: varchar({ length: 255 }),
   content: json().$type<Mixed[]>(),
-  tutorial_id: int().notNull().references(() => tutorialsTable.id),
+  tutorial_id: varchar({length: 40}).notNull().references(() => tutorialsTable.id),
 })

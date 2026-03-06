@@ -7,6 +7,7 @@ import { db } from "../db"
 import { redirect } from "next/navigation"
 import { createSession, deleteSession } from "../lib/sessions"
 import { eq, or } from "drizzle-orm"
+import { v4 as uuidv4 } from "uuid"
 
 export async function signup(state: FormState, formData: FormData) {
     // Validate form fields
@@ -45,26 +46,27 @@ export async function signup(state: FormState, formData: FormData) {
         }
     }
 
+    const userId = uuidv4();
+
     //   3. Insert the user into the database or call an Auth Library's API
-    const data = await db
-        .insert(usersTable)
-        .values({
-            username,
-            email,
-            password: hashedPassword,
-        })
-        .$returningId()
-
-    const user = data[0]
-
-    if (!user) {
+    try {
+        await db
+            .insert(usersTable)
+            .values({
+                id: userId,
+                username,
+                email,
+                password: hashedPassword,
+            })
+            .$returningId()
+    } catch (error) {
         return {
             message: 'An error occurred while creating your account.',
         }
     }
 
     // 4. Create user session
-    await createSession(user.id as unknown as string)
+    await createSession(userId)
     // 5. Redirect user
     redirect('/');
 }
@@ -96,7 +98,7 @@ export async function login(state: FormState, formData: FormData) {
         .where(or(eq(usersTable.email, email), eq(usersTable.password, hashedPassword)))
         .execute()
 
-        console.log('Existing user:', existingUser)
+    console.log('Existing user:', existingUser)
 
     if (existingUser.length === 0) {
         return {
