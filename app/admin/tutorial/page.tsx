@@ -15,7 +15,7 @@ import {
   ArrowUpRight,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { fetchTutorials, insertTutorial } from "@/app/db/operations/tutorials";
+import { addSubTopic, fetchTutorials, insertTutorial } from "@/app/db/operations/tutorials";
 import { v4 as UUIDv4 } from "uuid";
 import { useUserContext } from "@/app/context/userContext";
 import { insertTopic } from "@/app/db/operations/topics";
@@ -115,6 +115,8 @@ const ManageTopics = () => {
     );
 
     console.log(topicId)
+
+    await addSubTopic(topicId, newSubName.trim());
 
     await insertTopic({
       id: UUIDv4(),

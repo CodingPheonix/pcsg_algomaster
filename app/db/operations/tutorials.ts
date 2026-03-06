@@ -20,6 +20,24 @@ export const insertTutorial = async ({ id, title, subtopic, authorId }: { id: st
     }
 }
 
+export const addSubTopic = async (id: string, subtopic: string) => {
+    try {
+        const tutorial = (await db.select().from(tutorialsTable).where(eq(tutorialsTable.id, id)))[0]
+
+        const updatedSubtopics = [...(tutorial?.subtopic ?? []), subtopic]
+
+        await db
+            .update(tutorialsTable)
+            .set({
+                subtopic: updatedSubtopics,
+            })
+            .where(eq(tutorialsTable.id, id))
+
+    } catch (error) {
+        console.error(error)
+    }
+}
+
 export const fetchTutorials = async (authorId: string) => {
     try {
         return await db

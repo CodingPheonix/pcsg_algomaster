@@ -3,16 +3,16 @@
 import { db } from ".."
 import { Mixed, topicstable } from "../schema"
 
-export const insertTopic = async ({id, title, content, tutorial_id} : {id: string, title?: string, content?: Mixed[], tutorial_id: string}) => {
+export const insertTopic = async ({ id, title, content, tutorial_id }: { id: string, title?: string, content?: Mixed[], tutorial_id: string }) => {
     try {
-        return await db
-        .insert(topicstable)
-        .values({
-            id,
-            title,
-            content,
-            tutorial_id
-        })
+        await db
+            .insert(topicstable)
+            .values({
+                id,
+                title: title || 'Untitled',
+                content: content || null,
+                tutorial_id
+            })
     } catch (error) {
         console.error("Error inserting topic:", error);
         throw error;
@@ -22,11 +22,11 @@ export const insertTopic = async ({id, title, content, tutorial_id} : {id: strin
 export const fetchTopics = async () => {
     try {
         return await db
-        .select()
-        .from(topicstable)
-        
+            .select()
+            .from(topicstable)
+
     } catch (error) {
         console.error("Error fetching topics:", error);
-        throw error;        
+        throw error;
     }
 }
