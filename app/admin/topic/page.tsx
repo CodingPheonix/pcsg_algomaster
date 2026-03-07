@@ -21,6 +21,8 @@ import {
 } from "lucide-react";
 import { v4 as uuidv4 } from 'uuid';
 import { BlockEditor } from "@/app/components/BlockEditor";
+import { addTopicContent } from "@/app/db/operations/topics";
+import { useSearchParams } from "next/navigation";
 
 type BlockType = "text" | "heading" | "subheading" | "code" | "highlight";
 
@@ -80,6 +82,9 @@ const page = () => {
     },
   ]);
   const [newComment, setNewComment] = useState("");
+
+  const searchParams = useSearchParams()
+  const topicId = searchParams.get('sub')
 
   const createBlock = (type: BlockType): TutorialBlock => {
     const base = { id: generateId(), type, content: "" };
@@ -154,7 +159,12 @@ const page = () => {
   };
 
   const handleContentUpload = () => {
+    if (topicId === null) return;
+
     console.log(blocks);
+    console.log(title);
+
+    addTopicContent(topicId as string, title, blocks)
   }
 
   return (

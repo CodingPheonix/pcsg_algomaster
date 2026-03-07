@@ -32,15 +32,17 @@ export const fetchTopics = async () => {
     }
 }
 
-export const addTopicContent = async (content: Mixed[], topicId: string) => {
+export const addTopicContent = async ( topicId: string, title?: string | "untitled", content?: Mixed[] | []) => {
     try {
         await db
         .update(topicstable)
         .set({
+            title: title,
             content: content
         })
-        .where(eq(topicstable.tutorial_id, topicId))
+        .where(eq(topicstable.id, topicId))
     } catch (error) {
-        
+        console.error("Error fetching topics:", error);
+        throw error;
     }
 }
