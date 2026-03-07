@@ -32,7 +32,7 @@ interface Topic {
   expanded: boolean;
 }
 
-const generateId = () => Math.random().toString(36).slice(2, 10);
+const generateId = () => UUIDv4();
 
 const ManageTopics = () => {
   const [topics, setTopics] = useState<Topic[]>([]);
@@ -102,13 +102,16 @@ const ManageTopics = () => {
 
   const addSubtopic = async (topicId: string) => {
     if (!newSubName.trim()) return;
+
+    const subtopicId = generateId();
+
     setTopics((prev) =>
       prev.map((t) =>
         t.id === topicId
           ? {
             ...t,
             expanded: true,
-            subtopics: [...t.subtopics, { id: generateId(), name: newSubName.trim() }],
+            subtopics: [...t.subtopics, { id: subtopicId, name: newSubName.trim() }],
           }
           : t
       )
@@ -116,10 +119,10 @@ const ManageTopics = () => {
 
     console.log(topicId)
 
-    await addSubTopic(topicId, newSubName.trim());
+    await addSubTopic(topicId, {id: subtopicId, name: newSubName.trim()});
 
     await insertTopic({
-      id: UUIDv4(),
+      id: subtopicId,
       tutorial_id: topicId
     })
 
@@ -142,12 +145,14 @@ const ManageTopics = () => {
       if (!user?.id) return;
 
       const tutorials = await fetchTutorials(user?.id);
+      console.log(tutorials)
       setTopics(tutorials.map((t) => {
+
 
         return {
           id: t.id,
           name: t.title,
-          subtopics: t.subtopic ? t.subtopic.map((s, subIndex) => ({ id: `${t.id}-sub-${subIndex}`, name: s })) : [],
+          subtopics: t.subtopic ? t.subtopic.map((s) => ({ id: s.id, name: s.name })) : [],
           expanded: false
         }
       }));
@@ -293,9 +298,9 @@ const ManageTopics = () => {
                     </p>
                   )}
 
-                  {topic.subtopics.map((sub) => (
+                  {topic.subtopics.map((sub, index) => (
                     <div
-                      key={sub.id}
+                      key={index}
                       className="group flex items-center gap-2 py-2 pl-7 border-b border-slate-600/50 last:border-0"
                     >
                       <FileText size={14} className="text-white/70 shrink-0" />

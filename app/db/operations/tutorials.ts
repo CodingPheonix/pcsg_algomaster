@@ -2,9 +2,9 @@
 
 import { eq } from "drizzle-orm"
 import { db } from "../index"
-import { tutorialsTable } from "../schema"
+import { SubTopic, tutorialsTable } from "../schema"
 
-export const insertTutorial = async ({ id, title, subtopic, authorId }: { id: string, title: string, subtopic: string[] | null, authorId: string }) => {
+export const insertTutorial = async ({ id, title, subtopic, authorId }: { id: string, title: string, subtopic: SubTopic[] | null, authorId: string }) => {
     try {
         await db
             .insert(tutorialsTable)
@@ -20,7 +20,7 @@ export const insertTutorial = async ({ id, title, subtopic, authorId }: { id: st
     }
 }
 
-export const addSubTopic = async (id: string, subtopic: string) => {
+export const addSubTopic = async (id: string, subtopic: SubTopic) => {
     try {
         const tutorial = (await db.select().from(tutorialsTable).where(eq(tutorialsTable.id, id)))[0]
 

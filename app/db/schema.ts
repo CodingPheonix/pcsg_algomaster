@@ -1,36 +1,46 @@
 import { int, mysqlTable, serial, varchar, json } from 'drizzle-orm/mysql-core';
 
 type heading = {
+  id: string;
   type: string;
   content: string;
 }
 
 type subHeading = {
+  id: string;
   type: string;
   content: string;
 }
 
 type paragraph = {
+  id: string;
   type: string;
   content: string;
 }
 
 type code = {
-  language: string;
+  lang: string;
   code: string;
 }
 
 type codeBlock = {
+  id: string;
   type: string;
-  content: code[];
+  languages: code[];
 }
 
 type highlight = {
+  id: string;
   type: string;
   content: string;
 }
 
 export type Mixed = heading | subHeading | paragraph | codeBlock | highlight | null;
+
+export type SubTopic = {
+  id: string,
+  name: string;
+}
 
 export const usersTable = mysqlTable('users_table', {
   id: varchar({length: 40}).primaryKey(),
@@ -43,7 +53,7 @@ export const usersTable = mysqlTable('users_table', {
 export const tutorialsTable = mysqlTable('tutorials_table', {
   id: varchar({length: 40}).primaryKey(),
   title: varchar({ length: 255 }).notNull(),
-  subtopic: json().$type<string[]>(),
+  subtopic: json().$type<SubTopic[]>(),
   authorId: varchar({ length: 255 }).notNull().references(() => usersTable.id),
 })
 

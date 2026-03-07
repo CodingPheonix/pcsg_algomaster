@@ -1,5 +1,6 @@
 "use server"
 
+import { eq } from "drizzle-orm"
 import { db } from ".."
 import { Mixed, topicstable } from "../schema"
 
@@ -28,5 +29,18 @@ export const fetchTopics = async () => {
     } catch (error) {
         console.error("Error fetching topics:", error);
         throw error;
+    }
+}
+
+export const addTopicContent = async (content: Mixed[], topicId: string) => {
+    try {
+        await db
+        .update(topicstable)
+        .set({
+            content: content
+        })
+        .where(eq(topicstable.tutorial_id, topicId))
+    } catch (error) {
+        
     }
 }
