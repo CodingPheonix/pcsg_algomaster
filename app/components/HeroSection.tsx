@@ -2,20 +2,20 @@ import { ArrowRight, Code2, GitBranch, Layers } from "lucide-react";
 
 const HeroSection = () => {
     return (
-        <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-16 bg-black text-white">
-            <div className="absolute inset-0 bg-linear-to-b from-green-500/10 via-transparent to-transparent" />
-            <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-150 h-150 rounded-full bg-green-from-green-500/5 blur-[120px]" />
+        <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-16 bg-white text-black">
+            <div className="absolute inset-0 bg-linear-to-b from-blue-500/10 via-transparent to-transparent" />
+            <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-150 h-150 rounded-full bg-blue-from-blue-500/5 blur-[120px]" />
 
             <div className="container relative z-10 mx-auto px-4 py-20">
                 <div className="max-w-3xl mx-auto text-center">
                     <div className="inline-flex items-center gap-2 rounded-full border border-border bg-secondary px-4 py-1.5 mb-8">
-                        <span className="h-2 w-2 rounded-full bg-green-500 from-green-500 animate-pulse" />
+                        <span className="h-2 w-2 rounded-full bg-blue-500 from-blue-500 animate-pulse" />
                         <span className="text-xs font-medium text-muted-foreground">Master DSA step by step</span>
                     </div>
 
                     <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight tracking-tight mb-6">
                         Learn to{" "}
-                        <span className="text-green-400">think</span>
+                        <span className="text-blue-400">think</span>
                         <br />
                         like a programmer
                     </h1>
@@ -25,7 +25,7 @@ const HeroSection = () => {
                     </p>
 
                     <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
-                        <button className="flex items-center gap-2 px-8 py-3 rounded-lg bg-green-500 text-black font-mono text-sm font-medium hover:bg-green-600 transition-colors">
+                        <button className="flex items-center gap-2 px-8 py-3 rounded-lg bg-blue-500 text-white font-mono text-sm font-medium hover:bg-blue-600 transition-colors">
                             Start Learning <ArrowRight size={16} />
                         </button>
                         <button className="flex items-center gap-2 px-8 py-3 rounded-lg border border-border text-muted-foreground font-mono text-sm font-medium hover:text-foreground hover:bg-secondary transition-colors">
@@ -65,8 +65,8 @@ const FeatureCard = ({
     title: string;
     description: string;
 }) => (
-    <div className="group rounded-xl border border-border bg-card p-6 hover:border-green-from-green-500/30 hover:shadow-[0_0_30px_-5px_hsl(152_60%_52%/0.25)] transition-all duration-300 cursor-pointer">
-        <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-green-from-green-500/10 text-green-from-green-500 mb-4 group-hover:bg-green-from-green-500/20 transition-colors">
+    <div className="group rounded-xl border border-border bg-card p-6 hover:border-blue-from-blue-500/30 hover:shadow-[0_0_30px_-5px_hsl(152_60%_52%/0.25)] transition-all duration-300 cursor-pointer">
+        <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-from-blue-500/10 text-blue-from-blue-500 mb-4 group-hover:bg-blue-from-blue-500/20 transition-colors">
             {icon}
         </div>
         <h3 className="font-mono text-sm font-semibold mb-2">{title}</h3>
