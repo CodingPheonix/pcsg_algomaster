@@ -164,13 +164,13 @@ const ManageTopics = () => {
   console.log("Topics state:", topics);
 
   return (
-    <div className="min-h-screen bg-black text-white">
+    <div className="min-h-screen">
       {/* Top bar */}
-      <div className="sticky top-0 z-40 border-b border-slate-600 bg-black/80 backdrop-blur-xl">
+      <div className="sticky top-0 z-40 border-b backdrop-blur-xl">
         <div className="container mx-auto flex h-14 items-center justify-between px-4">
           <a
             href="/"
-            className="flex items-center gap-2 text-white/70 hover:text-white transition-colors"
+            className="flex items-center gap-2 hover:text-blue-400 transition-colors"
           >
             <ArrowLeft size={18} />
             <span className="text-sm font-mono">Back</span>
@@ -188,12 +188,12 @@ const ManageTopics = () => {
             onChange={(e) => setNewTopicName(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && addTopic()}
             placeholder="New topic name..."
-            className="flex-1 rounded-lg border border-slate-600 bg-slate-950 px-3 py-2.5 text-sm font-mono text-white placeholder:text-white/70 outline-none focus:ring-1 focus:ring-green-500bg-green-500 transition-colors"
+            className="flex-1 rounded-lg border border-blue-600 px-3 py-2.5 text-sm font-mono outline-none focus:ring-1 focus:ring-blue-500 transition-colors"
           />
           <button
             onClick={addTopic}
             disabled={!newTopicName.trim()}
-            className="flex items-center gap-1.5 rounded-lg bg-green-500 px-4 py-2.5 text-sm font-mono font-medium text-black hover:bg-green-500/90 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+            className="flex items-center gap-1.5 rounded-lg bg-blue-500 px-4 py-2.5 text-sm font-mono font-medium text-white hover:bg-blue-500/90 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
           >
             <Plus size={16} />
             Add Topic
@@ -216,13 +216,13 @@ const ManageTopics = () => {
           {topics.map((topic) => (
             <div
               key={topic.id}
-              className="rounded-xl border border-slate-600 bg-card overflow-hidden"
+              className="rounded-xl border border-blue-600 bg-card overflow-hidden"
             >
               {/* Topic header */}
-              <div className="flex items-center gap-2 px-4 py-3 bg-slate-950/50">
+              <div className="flex items-center gap-2 px-4 py-3">
                 <button
                   onClick={() => toggleExpand(topic.id)}
-                  className="p-0.5 text-white/70 hover:text-white transition-colors"
+                  className="p-0.5 transition-colors"
                 >
                   {topic.expanded ? (
                     <ChevronDown size={16} />
@@ -230,7 +230,7 @@ const ManageTopics = () => {
                     <ChevronRight size={16} />
                   )}
                 </button>
-                <FolderOpen size={16} className="text-green-500 shrink-0" />
+                <FolderOpen size={16} className="text-blue-500 shrink-0" />
 
                 {editingId === topic.id ? (
                   <div className="flex flex-1 items-center gap-1.5">
@@ -242,22 +242,22 @@ const ManageTopics = () => {
                         if (e.key === "Escape") cancelEdit();
                       }}
                       autoFocus
-                      className="flex-1 bg-black rounded px-2 py-1 text-sm font-mono text-white outline-none border border-green-500bg-green-500"
+                      className="flex-1 rounded px-2 py-1 text-sm font-mono outline-none border border-blue-500"
                     />
-                    <button onClick={confirmEdit} className="p-1 text-green-500 hover:text-green-500/80">
+                    <button onClick={confirmEdit} className="p-1 text-blue-500 hover:text-blue-500/80">
                       <Check size={14} />
                     </button>
-                    <button onClick={cancelEdit} className="p-1 text-white/70 hover:text-white">
+                    <button onClick={cancelEdit} className="p-1">
                       <X size={14} />
                     </button>
                   </div>
                 ) : (
-                  <span className="flex-1 text-sm font-mono font-medium text-white">
+                  <span className="flex-1 text-sm font-mono font-medium">
                     {topic.name}
                   </span>
                 )}
 
-                <span className="text-[10px] font-mono text-white/70">
+                <span className="text-[10px] font-mono">
                   {topic.subtopics.length} sub
                 </span>
 
@@ -265,7 +265,7 @@ const ManageTopics = () => {
                   <>
                     <button
                       onClick={() => startEdit(topic.id, topic.name)}
-                      className="p-1 text-white/70 hover:text-white transition-colors"
+                      className="p-1 transition-colors"
                     >
                       <Pencil size={13} />
                     </button>
@@ -274,14 +274,14 @@ const ManageTopics = () => {
                         setAddingSubFor(addingSubFor === topic.id ? null : topic.id);
                         setNewSubName("");
                       }}
-                      className="p-1 text-white/70 hover:text-green-500 transition-colors"
+                      className="p-1 hover:text-blue-500 transition-colors"
                       title="Add subtopic"
                     >
                       <Plus size={14} />
                     </button>
                     <button
                       onClick={() => removeTopic(topic.id)}
-                      className="p-1 text-white/70 hover:text-red-500 transition-colors"
+                      className="p-1 hover:text-red-500 transition-colors"
                     >
                       <Trash2 size={13} />
                     </button>
@@ -315,12 +315,12 @@ const ManageTopics = () => {
                               if (e.key === "Escape") cancelEdit();
                             }}
                             autoFocus
-                            className="flex-1 bg-black rounded px-2 py-1 text-sm font-mono text-white outline-none border border-green-500bg-green-500"
+                            className="flex-1 rounded px-2 py-1 text-sm font-mono outline-none border border-blue-500bg-blue-500"
                           />
-                          <button onClick={confirmEdit} className="p-1 text-green-500 hover:text-green-500/80">
+                          <button onClick={confirmEdit} className="p-1 text-blue-500 hover:text-blue-500/80">
                             <Check size={14} />
                           </button>
-                          <button onClick={cancelEdit} className="p-1 text-white/70 hover:text-white">
+                          <button onClick={cancelEdit} className="p-1">
                             <X size={14} />
                           </button>
                         </div>
@@ -334,18 +334,18 @@ const ManageTopics = () => {
                         <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                           <button 
                           onClick={() => {router.push(`/admin/topic?topic=${topic.id}&sub=${sub.id}`)}}
-                          className="p-1 text-white/70 hover:text-white transition-colors">
+                          className="p-1 transition-colors">
                             <ArrowUpRight size={17} />
                           </button>
                           <button
                             onClick={() => startEdit(sub.id, sub.name)}
-                            className="p-1 text-white/70 hover:text-white transition-colors"
+                            className="p-1 transition-colors"
                           >
                             <Pencil size={12} />
                           </button>
                           <button
                             onClick={() => removeSubtopic(topic.id, sub.id)}
-                            className="p-1 text-white/70 hover:text-red-500 transition-colors"
+                            className="p-1 hover:text-red-500 transition-colors"
                           >
                             <Trash2 size={12} />
                           </button>
@@ -357,7 +357,7 @@ const ManageTopics = () => {
                   {/* Add subtopic inline */}
                   {addingSubFor === topic.id && (
                     <div className="flex items-center gap-2 py-2 pl-7">
-                      <FileText size={14} className="text-green-500 shrink-0" />
+                      <FileText size={14} className="text-blue-500 shrink-0" />
                       <input
                         value={newSubName}
                         onChange={(e) => setNewSubName(e.target.value)}
@@ -370,12 +370,12 @@ const ManageTopics = () => {
                         }}
                         placeholder="Subtopic name..."
                         autoFocus
-                        className="flex-1 bg-black rounded-lg border border-slate-600 px-2.5 py-1.5 text-sm font-mono text-white placeholder:text-white/70 outline-none focus:ring-1 focus:ring-green-500bg-green-500"
+                        className="flex-1 rounded-lg border border-slate-600 px-2.5 py-1.5 text-sm font-mono outline-none focus:ring-1 focus:ring-blue-500bg-blue-500"
                       />
                       <button
                         onClick={() => addSubtopic(topic.id)}
                         disabled={!newSubName.trim()}
-                        className="p-1.5 rounded bg-green-500 text-green-500-white hover:bg-green-500/90 disabled:opacity-40 transition-colors"
+                        className="p-1.5 rounded bg-blue-500 text-white hover:bg-blue-500/90 disabled:opacity-40 transition-colors"
                       >
                         <Check size={14} />
                       </button>
