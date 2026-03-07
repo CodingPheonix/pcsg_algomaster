@@ -20,11 +20,12 @@ export const insertTopic = async ({ id, title, content, tutorial_id }: { id: str
     }
 }
 
-export const fetchTopics = async () => {
+export const fetchTopics = async (id: string) => {
     try {
         return await db
             .select()
             .from(topicstable)
+            .where(eq(topicstable.id, id))
 
     } catch (error) {
         console.error("Error fetching topics:", error);
