@@ -174,9 +174,9 @@ const page = () => {
   
 
   return (
-    <div className="min-h-screen bg-black text-white">
+    <div className="min-h-screen">
       {/* Top bar */}
-      <div className="sticky top-0 z-40 border-b border-border bg-black/80 backdrop-blur-xl">
+      <div className="sticky top-0 z-40 border-b backdrop-blur-xl">
         <div className="container mx-auto flex h-14 items-center justify-between px-4">
           <a href="/" className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors">
             <ArrowLeft size={18} />
@@ -186,14 +186,14 @@ const page = () => {
             <button
               onClick={() => setPreviewMode(!previewMode)}
               className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-mono font-medium transition-colors ${previewMode
-                ? "bg-green-500 text-green-500bg-green-500-foreground"
+                ? "bg-blue-500 text-blue-500bg-blue-500-foreground"
                 : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
                 }`}
             >
               {previewMode ? <Eye size={14} /> : <Pencil size={14} />}
               {previewMode ? "Preview" : "Edit"}
             </button>
-            <button onClick={handleContentUpload} className="rounded-lg bg-green-500 px-4 py-1.5 text-xs font-mono font-medium text-green-500bg-green-500-foreground active:bg-green-600 hover:bg-green-500/90 transition-colors">
+            <button onClick={handleContentUpload} className="rounded-lg bg-blue-500 px-4 py-1.5 text-xs font-mono font-medium text-white active:bg-blue-600 hover:bg-blue-500/90 transition-colors">
               Publish
             </button>
           </div>
@@ -228,7 +228,7 @@ const page = () => {
                   <button
                     key={opt.type}
                     onClick={() => addBlock(opt.type)}
-                    className="flex items-center gap-1.5 rounded-lg border border-border bg-secondary px-3 py-2 text-xs font-mono text-secondary-foreground hover:border-green-500bg-green-500 hover:text-green-500bg-green-500 transition-colors"
+                    className="flex items-center gap-1.5 rounded-lg border border-border bg-secondary px-3 py-2 text-xs font-mono text-secondary-foreground hover:border-blue-500bg-blue-500 hover:text-blue-500bg-blue-500 transition-colors"
                   >
                     {opt.icon}
                     {opt.label}
@@ -274,7 +274,7 @@ const page = () => {
                 <div className="flex justify-center py-1 opacity-0 group-hover:opacity-100 transition-opacity">
                   <button
                     onClick={() => openAddMenu(index)}
-                    className="flex items-center gap-1 rounded-full border border-dashed border-border px-3 py-1 text-[10px] font-mono text-muted-foreground hover:border-green-500 hover:text-green-500 transition-colors"
+                    className="flex items-center gap-1 rounded-full border border-dashed border-border px-3 py-1 text-[10px] font-mono text-muted-foreground hover:border-blue-500 hover:text-blue-500 transition-colors"
                   >
                     <Plus size={12} />
                     Add block
@@ -288,7 +288,7 @@ const page = () => {
             <div className="flex justify-center pt-2 gap-3">
               <button
                 onClick={() => openAddMenu(null)}
-                className="flex items-center gap-1.5 rounded-lg border border-dashed border-border px-4 py-2.5 text-xs font-mono text-muted-foreground hover:border-green-500 hover:text-green-500 transition-colors"
+                className="flex items-center gap-1.5 rounded-lg border border-dashed border-border px-4 py-2.5 text-xs font-mono text-muted-foreground hover:border-blue-500 hover:text-blue-500 transition-colors"
               >
                 <Plus size={14} />
                 Add block
@@ -299,7 +299,7 @@ const page = () => {
 
         {/* Add block modal */}
         {showAddMenu && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm" onClick={() => setShowAddMenu(false)}>
+          <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm" onClick={() => setShowAddMenu(false)}>
             <div
               className="w-full max-w-sm rounded-xl border border-border bg-card p-4 shadow-2xl"
               onClick={(e) => e.stopPropagation()}>
@@ -311,7 +311,7 @@ const page = () => {
                     onClick={() => addBlock(opt.type, addMenuIndex ?? undefined)}
                     className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left hover:bg-secondary transition-colors"
                   >
-                    <span className="text-green-500bg-green-500">{opt.icon}</span>
+                    <span className="text-blue-500bg-blue-500">{opt.icon}</span>
                     <div>
                       <p className="text-sm font-medium text-foreground">{opt.label}</p>
                       <p className="text-xs text-muted-foreground">{opt.desc}</p>
@@ -329,7 +329,7 @@ const page = () => {
         {/* Comment Section */}
         <div className="pb-16">
           <div className="flex items-center gap-2 mb-6">
-            <MessageSquare size={20} className="text-green-500bg-green-500" />
+            <MessageSquare size={20} className="text-blue-500bg-blue-500" />
             <h2 className="text-lg font-mono font-bold text-foreground">
               Comments <span className="text-muted-foreground font-normal">({comments.length})</span>
             </h2>
@@ -337,7 +337,7 @@ const page = () => {
 
           {/* Add comment */}
           <div className="mb-6 flex gap-3">
-            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-green-500 text-xs font-bold text-green-500bg-green-500-foreground font-mono">
+            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-blue-500 text-xs font-bold text-blue-500bg-blue-500-foreground font-mono">
               Y
             </div>
             <div className="flex-1">
@@ -346,13 +346,13 @@ const page = () => {
                 onChange={(e) => setNewComment(e.target.value)}
                 placeholder="Add a comment..."
                 rows={2}
-                className="w-full resize-none rounded-lg border border-border bg-secondary px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground outline-none focus:ring-1 focus:ring-green-500bg-green-500 transition-colors"
+                className="w-full resize-none rounded-lg border border-border bg-secondary px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground outline-none focus:ring-1 focus:ring-blue-500bg-blue-500 transition-colors"
               />
               <div className="flex justify-end mt-2">
                 <button
                   onClick={addComment}
                   disabled={!newComment.trim()}
-                  className="flex items-center gap-1.5 rounded-lg bg-green-500 px-3 py-1.5 text-xs font-mono font-medium text-green-500bg-green-500-foreground hover:bg-green-500/90 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                  className="flex items-center gap-1.5 rounded-lg bg-blue-500 px-3 py-1.5 text-xs font-mono font-medium text-blue-500bg-blue-500-foreground hover:bg-blue-500/90 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
                 >
                   <Send size={12} />
                   Post

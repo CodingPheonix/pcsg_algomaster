@@ -56,7 +56,7 @@ export const BlockEditor = ({
           onChange={(e) => onUpdate({ content: e.target.value })}
           placeholder="Write your paragraph..."
           rows={3}
-          className="w-full resize-none rounded-lg border border-slate-700 bg-slate-950 px-3 py-2.5 text-sm text-foreground placeholder:text-muted-foreground outline-none focus:ring-1 focus:ring-primary transition-colors pr-8"
+          className="w-full resize-none rounded-lg border border-blue-500/90 px-3 py-2.5 text-sm text-foreground placeholder:text-muted-foreground outline-none focus:ring-1 focus:ring-blue transition-colors pr-8"
         />
         <RemoveBtn onClick={onRemove} />
       </div>
@@ -65,7 +65,7 @@ export const BlockEditor = ({
 
   if (block.type === "highlight") {
     return preview ? (
-      <div className="rounded-lg border-l-4 border-primary bg-primary/10 px-4 py-3">
+      <div className="rounded-lg border-l-4 border-blue bg-blue/10 px-4 py-3">
         <p className="text-sm text-foreground leading-relaxed whitespace-pre-wrap">{block.content}</p>
       </div>
     ) : (
@@ -75,7 +75,7 @@ export const BlockEditor = ({
           onChange={(e) => onUpdate({ content: e.target.value })}
           placeholder="Highlighted callout text..."
           rows={2}
-          className="w-full resize-none rounded-lg border-l-4 border-primary bg-primary/10 px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground outline-none pr-8"
+          className="w-full resize-none rounded-lg border-l-4 border-blue bg-blue/10 px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground outline-none pr-8"
         />
         <RemoveBtn onClick={onRemove} />
       </div>
@@ -95,11 +95,10 @@ export const BlockEditor = ({
               <button
                 key={l.lang}
                 onClick={() => onUpdate({ activeLanguage: l.lang })}
-                className={`px-3 py-2 text-xs font-mono whitespace-nowrap transition-colors border-b-2 ${
-                  l.lang === activeLang
-                    ? "border-primary text-primary"
+                className={`px-3 py-2 text-xs font-mono whitespace-nowrap transition-colors border-b-2 ${l.lang === activeLang
+                    ? "border-blue text-blue"
                     : "border-transparent text-muted-foreground hover:text-foreground"
-                }`}
+                  }`}
               >
                 {l.lang}
               </button>
