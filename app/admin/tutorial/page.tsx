@@ -15,10 +15,12 @@ import {
   ArrowUpRight,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { addSubTopic, fetchTutorials, insertTutorial } from "@/app/db/operations/tutorials";
+import { fetchTutorials, fetchTutorialsWithSubtopic, insertTutorial } from "@/app/db/operations/tutorials";
 import { v4 as UUIDv4 } from "uuid";
 import { useUserContext } from "@/app/context/userContext";
 import { insertTopic } from "@/app/db/operations/topics";
+import { addSubTopic } from "@/app/db/operations/subtopics";
+import { addTutorialSubtopicsRelation } from "@/app/db/operations/tutorialSubtopics";
 
 interface SubTopic {
   id: string;
@@ -32,6 +34,13 @@ interface Topic {
   expanded: boolean;
 }
 
+export interface SubTopicFor {
+  newSubName: string
+  description: string
+  difficulty: "Easy" | "Normal" | "Hard"
+  external_video: string
+}
+
 const generateId = () => UUIDv4();
 
 const ManageTopics = () => {
@@ -40,7 +49,12 @@ const ManageTopics = () => {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editingValue, setEditingValue] = useState("");
   const [addingSubFor, setAddingSubFor] = useState<string | null>(null);
-  const [newSubName, setNewSubName] = useState("");
+  const [subTopicFor, setSubTopicFor] = useState<SubTopicFor>({
+    newSubName: "",
+    description: "",
+    difficulty: "Easy",
+    external_video: ""
+  })
 
   const router = useRouter();
   const userContext = useUserContext();
@@ -56,8 +70,7 @@ const ManageTopics = () => {
     insertTutorial({
       id: UUIDv4(),
       title: newTopicName.trim(),
-      subtopic: null,
-      authorId: user?.id || "unknown", 
+      authorId: user?.id || "unknown",
     })
 
     setNewTopicName("");
@@ -101,7 +114,7 @@ const ManageTopics = () => {
   };
 
   const addSubtopic = async (topicId: string) => {
-    if (!newSubName.trim()) return;
+    if (!subTopicFor.newSubName.trim()) return;
 
     const subtopicId = generateId();
 
@@ -111,7 +124,7 @@ const ManageTopics = () => {
           ? {
             ...t,
             expanded: true,
-            subtopics: [...t.subtopics, { id: subtopicId, name: newSubName.trim() }],
+            subtopics: [...t.subtopics, { id: subtopicId, name: subTopicFor.newSubName.trim() }],
           }
           : t
       )
@@ -119,14 +132,27 @@ const ManageTopics = () => {
 
     console.log(topicId)
 
-    await addSubTopic(topicId, {id: subtopicId, name: newSubName.trim()});
-
+    await addSubTopic({
+      id: subtopicId,
+      name: subTopicFor.newSubName.trim(),
+      description: subTopicFor.description.trim(),
+      difficulty: subTopicFor.difficulty,
+      external_video: subTopicFor.external_video.trim()
+    });
+    
     await insertTopic({
       id: subtopicId,
       tutorial_id: topicId
     })
+    
+    await addTutorialSubtopicsRelation(topicId, subtopicId);
 
-    setNewSubName("");
+    setSubTopicFor({
+      newSubName: "",
+      difficulty: "Easy",
+      description: "",
+      external_video: ""
+    });
     setAddingSubFor(null);
   };
 
@@ -144,15 +170,14 @@ const ManageTopics = () => {
     const fetch_tutorials = async () => {
       if (!user?.id) return;
 
-      const tutorials = await fetchTutorials(user?.id);
+      const tutorials = await fetchTutorialsWithSubtopic(user?.id);
       console.log(tutorials)
       setTopics(tutorials.map((t) => {
-
-
+        console.log(t)
         return {
           id: t.id,
           name: t.title,
-          subtopics: t.subtopic ? t.subtopic.map((s) => ({ id: s.id, name: s.name })) : [],
+          subtopics: t.subtopics ? t.subtopics.map((s : {id: string, name: string}) => ({ id: s.id, name: s.name })) : [],
           expanded: false
         }
       }));
@@ -160,7 +185,7 @@ const ManageTopics = () => {
 
     fetch_tutorials();
   }, [user?.id]);
-  
+
   console.log("Topics state:", topics);
 
   return (
@@ -272,7 +297,12 @@ const ManageTopics = () => {
                     <button
                       onClick={() => {
                         setAddingSubFor(addingSubFor === topic.id ? null : topic.id);
-                        setNewSubName("");
+                        setSubTopicFor({
+                          "newSubName": "",
+                          "description": "",
+                          "difficulty": "Easy",
+                          "external_video": ""
+                        });
                       }}
                       className="p-1 hover:text-blue-500 transition-colors"
                       title="Add subtopic"
@@ -332,9 +362,9 @@ const ManageTopics = () => {
 
                       {editingId !== sub.id && (
                         <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                          <button 
-                          onClick={() => {router.push(`/admin/topic?topic=${topic.id}&sub=${sub.id}`)}}
-                          className="p-1 transition-colors">
+                          <button
+                            onClick={() => { router.push(`/admin/topic?topic=${topic.id}&sub=${sub.id}`) }}
+                            className="p-1 transition-colors">
                             <ArrowUpRight size={17} />
                           </button>
                           <button
@@ -357,37 +387,82 @@ const ManageTopics = () => {
                   {/* Add subtopic inline */}
                   {addingSubFor === topic.id && (
                     <div className="flex items-center gap-2 py-2 pl-7">
-                      <FileText size={14} className="text-blue-500 shrink-0" />
-                      <input
-                        value={newSubName}
-                        onChange={(e) => setNewSubName(e.target.value)}
-                        onKeyDown={(e) => {
-                          if (e.key === "Enter") addSubtopic(topic.id);
-                          if (e.key === "Escape") {
-                            setAddingSubFor(null);
-                            setNewSubName("");
-                          }
-                        }}
-                        placeholder="Subtopic name..."
-                        autoFocus
-                        className="flex-1 rounded-lg border border-slate-600 px-2.5 py-1.5 text-sm font-mono outline-none focus:ring-1 focus:ring-blue-500bg-blue-500"
-                      />
-                      <button
-                        onClick={() => addSubtopic(topic.id)}
-                        disabled={!newSubName.trim()}
-                        className="p-1.5 rounded bg-blue-500 text-white hover:bg-blue-500/90 disabled:opacity-40 transition-colors"
-                      >
-                        <Check size={14} />
-                      </button>
-                      <button
-                        onClick={() => {
-                          setAddingSubFor(null);
-                          setNewSubName("");
-                        }}
-                        className="p-1.5 text-white/70 hover:text-white transition-colors"
-                      >
-                        <X size={14} />
-                      </button>
+                      <form onSubmit={(e) => { e.preventDefault() }} className="flex flex-col gap-3 w-full max-w-md p-4 border border-slate-700 rounded-xl">
+
+                        <div className="flex items-center gap-2">
+                          <FileText size={14} className="text-blue-500 shrink-0" />
+                          <input
+                            value={subTopicFor.newSubName}
+                            onChange={(e) => { setSubTopicFor({ ...subTopicFor, newSubName: e.target.value }) }}
+                            onKeyDown={(e) => {
+                              if (e.key === "Enter") addSubtopic(topic.id);
+                              if (e.key === "Escape") {
+                                setAddingSubFor(null);
+                              }
+                            }}
+                            placeholder="Subtopic name..."
+                            autoFocus
+                            className="w-full rounded-lg border border-slate-600 px-3 py-2 text-sm font-mono outline-none focus:ring-2 focus:ring-blue-500"
+                          />
+                        </div>
+
+                        <textarea
+                          value={subTopicFor.description}
+                          onChange={(e) => { setSubTopicFor({ ...subTopicFor, description: e.target.value }) }}
+                          placeholder="Subtopic description..."
+                          className="w-full rounded-lg border border-slate-600 px-3 py-2 text-sm font-mono outline-none focus:ring-2 focus:ring-blue-500"
+                        />
+
+                        <div className="flex flex-col gap-1">
+                          <label htmlFor="difficulty" className="text-sm text-slate-300">
+                            Difficulty
+                          </label>
+                          <select
+                            value={subTopicFor.difficulty}
+                            onChange={(e) => { setSubTopicFor({ ...subTopicFor, difficulty: e.target.value as "Easy" | "Normal" | "Hard" }) }}
+                            id="difficulty"
+                            className="w-full rounded-lg border border-slate-600 px-3 py-2 text-sm font-mono outline-none focus:ring-2 focus:ring-blue-500"
+                          >
+                            <option value="Easy">Easy</option>
+                            <option value="Normal">Normal</option>
+                            <option value="Hard">Hard</option>
+                          </select>
+                        </div>
+
+                        <input
+                          type="text"
+                          value={subTopicFor.external_video}
+                          onChange={(e) => { setSubTopicFor({ ...subTopicFor, external_video: e.target.value }) }}
+                          placeholder="Enter YT Link..."
+                          className="w-full rounded-lg border border-slate-600 px-3 py-2 text-sm font-mono outline-none focus:ring-2 focus:ring-blue-500"
+                        />
+
+                        <div className="flex justify-end gap-2 pt-2">
+                          <button
+                            onClick={() => addSubtopic(topic.id)}
+                            disabled={!subTopicFor.newSubName.trim()}
+                            className="p-2 rounded-lg bg-blue-500 text-white hover:bg-blue-600 disabled:opacity-40 transition-colors"
+                          >
+                            <Check size={14} />
+                          </button>
+
+                          <button
+                            onClick={() => {
+                              setAddingSubFor(null);
+                              setSubTopicFor({
+                                newSubName: "",
+                                description: "",
+                                difficulty: "Easy",
+                                external_video: ""
+                              });
+                            }}
+                            className="p-2 rounded-lg bg-slate-700 text-white hover:bg-slate-600 transition-colors"
+                          >
+                            <X size={14} />
+                          </button>
+                        </div>
+
+                      </form>
                     </div>
                   )}
                 </div>

@@ -38,8 +38,11 @@ type highlight = {
 export type Mixed = heading | subHeading | paragraph | codeBlock | highlight | null;
 
 export type SubTopic = {
-  id: string,
+  id: string;
   name: string;
+  description?: string;
+  difficulty: "Easy" | "Normal" | "Hard";
+  external_video?: string;
 }
 
 export const usersTable = mysqlTable('users_table', {
@@ -53,9 +56,21 @@ export const usersTable = mysqlTable('users_table', {
 export const tutorialsTable = mysqlTable('tutorials_table', {
   id: varchar({length: 40}).primaryKey(),
   title: varchar({ length: 255 }).notNull(),
-  subtopic: json().$type<SubTopic[]>(),
   authorId: varchar({ length: 255 }).notNull().references(() => usersTable.id),
 })
+
+export const subtopicTable = mysqlTable('subtopic_table', {
+  id: varchar({length: 40}).primaryKey(),
+  name: varchar({length: 255}).notNull(),
+  description: varchar({length: 255}),
+  difficulty: varchar({length: 255}).notNull().default("Easy"),
+  external_video: varchar({length: 255})
+})
+
+export const tutorialSubtopicsTable = mysqlTable("tutorial_subtopics", {
+  tutorialId: varchar({ length: 40 }).notNull().references(() => tutorialsTable.id),
+  subtopicId: varchar({ length: 40 }).notNull().references(() => subtopicTable.id),
+});
 
 export const topicstable = mysqlTable("topics_table", {
   id: varchar({length: 40}).primaryKey(),
