@@ -15,8 +15,6 @@ const Navbar = () => {
     const user = UserContext?.user
     const setUser = UserContext?.setUser
 
-    console.log("Navbar Rendered, User:", user)
-
     return (
         <nav className="fixed top-0 left-0 right-0 z-50 border-b border-border bg-white text-black backdrop-blur-xl">
             <div className="container mx-auto flex h-16 items-center justify-between gap-4 px-4">

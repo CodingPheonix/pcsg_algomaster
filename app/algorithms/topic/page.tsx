@@ -8,6 +8,9 @@ import { Mixed } from "@/app/db/schema";
 import { useSearchParams } from "next/navigation";
 import { useEffect } from "react";
 import { fetchTopics } from "@/app/db/operations/topics";
+import { useUserContext } from "@/app/context/userContext";
+import { v4 as UUIDv4 } from "uuid";
+import { fetchComments, uploadComment } from "@/app/db/operations/comments";
 
 // Sample data for demonstration
 const SAMPLE_DATA: Mixed[] = [
@@ -28,45 +31,67 @@ const SAMPLE_DATA: Mixed[] = [
 
 interface Comment {
     id: string;
-    author: string;
-    avatar: string;
-    text: string;
-    time: string;
+    username: string;
+    message: string;
+    time: Date;
 }
 
 const ViewTutorial = () => {
     // State list
     const [blocks, setBlocks] = useState<Mixed[]>(SAMPLE_DATA);
-    const [comments, setComments] = useState<Comment[]>([
-        {
-            id: "1",
-            author: "Alice",
-            avatar: "A",
-            text: "Great tutorial! The code examples really helped.",
-            time: "2 hours ago",
-        },
-    ]);
+    const [comments, setComments] = useState<Comment[]>([]);
     const [newComment, setNewComment] = useState("");
 
     // Hooks
     const searchParams = useSearchParams()
     const id = searchParams.get('id')
 
+    const userContext = useUserContext()
+    const { user } = userContext
+
     // Functions
-    const addComment = () => {
+    const addComment = async () => {
         if (!newComment.trim()) return;
+
+        const payload = {
+            id: UUIDv4() as string,
+            topic_id: id as string,
+            username: user.username,
+            message: newComment.trim(),
+            time: new Date(Date.now()),
+        }
+
         setComments((prev) => [
-            ...prev,
-            {
-                id: Math.random().toString(36).slice(2, 10),
-                author: "You",
-                avatar: "Y",
-                text: newComment.trim(),
-                time: "Just now",
-            },
+            ...prev, payload
         ]);
+
+        // add comments to db
+        await uploadComment(payload)
+
         setNewComment("");
     };
+
+    function timeAgo(date: Date) {
+        const seconds = Math.floor((Date.now() - date.getTime()) / 1000);
+
+        const intervals = [
+            { label: "year", seconds: 31536000 },
+            { label: "month", seconds: 2592000 },
+            { label: "day", seconds: 86400 },
+            { label: "hr", seconds: 3600 },
+            { label: "min", seconds: 60 },
+            { label: "sec", seconds: 1 },
+        ];
+
+        for (const i of intervals) {
+            const value = Math.floor(seconds / i.seconds);
+            if (value >= 1) {
+                return `${value} ${i.label}${value > 1 && i.label !== "hr" ? "s" : ""} ago`;
+            }
+        }
+
+        return "just now";
+    }
 
     // UseEffects
     useEffect(() => {
@@ -74,11 +99,19 @@ const ViewTutorial = () => {
             if (!id) return;
 
             const topics = await fetchTopics(id as string)
-            console.log(topics)
             topics[0].content !== null && setBlocks(topics[0].content as unknown as Mixed[])
         }
+
+        const fetchComment = async () => {
+            if (!id) return;
+
+            const all_comments = await fetchComments(id);
+            setComments(all_comments as Comment[])
+        }
+
         fetchtopics()
-    }, [])
+        fetchComment()
+    }, [id])
 
     return (
         <div className="min-h-screen bg-background text-foreground">
@@ -121,7 +154,7 @@ const ViewTutorial = () => {
 
                     <div className="mb-6 flex gap-3">
                         <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-blue-500 text-xs font-bold text-blue-500-foreground font-mono">
-                            Y
+                            {user.id && user.username[0].toUpperCase()}
                         </div>
                         <div className="flex-1">
                             <textarea
@@ -148,19 +181,19 @@ const ViewTutorial = () => {
                         {comments.map((c) => (
                             <div key={c.id} className="flex gap-3">
                                 <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-muted text-xs font-bold text-muted-foreground font-mono">
-                                    {c.avatar}
+                                    {c.username[0].toUpperCase()}
                                 </div>
                                 <div className="flex-1 rounded-lg border border-border bg-card p-3">
                                     <div className="flex items-center gap-2 mb-1">
                                         <span className="text-sm font-medium text-foreground">
-                                            {c.author}
+                                            {c.username}
                                         </span>
                                         <span className="text-[10px] text-muted-foreground">
-                                            {c.time}
+                                            {timeAgo(c.time)}
                                         </span>
                                     </div>
                                     <p className="text-sm text-secondary-foreground leading-relaxed">
-                                        {c.text}
+                                        {c.message}
                                     </p>
                                 </div>
                             </div>
