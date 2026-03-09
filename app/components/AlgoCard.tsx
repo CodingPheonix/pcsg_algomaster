@@ -45,13 +45,13 @@ const AlgoCard = (item: CourseItem) => {
                 </span>
             </span>
             <span className='flex w-1/4 justify-center items-center gap-3'>
-                <button onClick={() => {router.push(`/algorithms/topic?id=${item.id}`)}} className="text-black hover:text-blue-600 px-3 py-1 rounded mr-2">
+                <button onClick={() => {router.push(`/algorithms/topic?id=${item.id}`)}} className="text-black hover:text-blue-600 px-3 py-1 rounded mr-2 hover:cursor-pointer">
                     <FileSpreadsheet className="w-4 h-4" />
                 </button>
-                <button onClick={() => { router.push(`/algorithms/tutorial?id=${item.id}`) }} className=" text-black hover:text-yellow-500 px-3 py-2 rounded">
+                <button onClick={() => { router.push(`/algorithms/tutorial?id=${item.id}`) }} className=" text-black hover:text-yellow-500 px-3 py-2 rounded hover:cursor-pointer">
                     <Play className="w-4 h-4" />
                 </button>
-                <button onClick={() => { item.externalLink ? router.push(item.externalLink) : toast('No Link Available!') }} className=" text-black hover:text-red-500 px-3 py-2 rounded">
+                <button onClick={() => { item.externalLink ? router.push(item.externalLink) : toast('No Link Available!') }} className=" text-black hover:text-red-500 px-3 py-2 rounded hover:cursor-pointer">
                     <Youtube className="w-4 h-4" />
                 </button>
             </span>

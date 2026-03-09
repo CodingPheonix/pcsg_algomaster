@@ -63,7 +63,7 @@ const Client = () => {
                         {/* <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4"> */}
                         <div className="flex flex-col mt-4 mb-3 w-[90%] mx-auto gap-4">
                             {section.subtopics.map((item, index) => (
-                                <div key={index} className="text-black p-4 rounded-lg border border-gray-700 flex justify-around items-center hover:cursor-pointer">
+                                <div key={index} className="text-black p-4 rounded-lg border border-gray-700 flex justify-around items-center">
                                     <AlgoCard {...item} />
                                 </div>
                             ))}
