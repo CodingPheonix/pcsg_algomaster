@@ -1,9 +1,43 @@
-import React from 'react'
-import Navbar from '../components/Navbar'
-import { content } from '../utils/json/algorithms'
-import AlgoCard from '../components/AlgoCard'
+'use client'
 
-const page = () => {
+import { useEffect } from 'react'
+import Navbar from '../components/Navbar'
+import AlgoCard from '../components/AlgoCard'
+import { fetchAllTutorialsWithSubtopic } from '../db/operations/tutorials'
+import { useState } from 'react'
+
+type Topic = {
+    id: string,
+    name: string,
+    description: string,
+    difficulty: string,
+    externalLink: string
+}
+
+export type Tutorial = {
+    id: string,
+    subtopics: Topic[],
+    title: string
+}
+
+
+const Client = () => {
+
+    const [tutorialTopics, setTutorialTopics] = useState<Tutorial[]>([{
+        id: "",
+        subtopics: [],
+        title: ""
+    }])
+    
+    useEffect(() => {
+        const fetchTutorials = async () => {
+            const tutorial_topics = await fetchAllTutorialsWithSubtopic() as unknown as Tutorial[];
+            setTutorialTopics(tutorial_topics)
+        }
+        fetchTutorials()
+    }, [])
+    
+
     return (
         <div className='bg-white text-black'>
             <Navbar />
@@ -23,12 +57,12 @@ const page = () => {
                     </div>
                 </div>
 
-                {content.map((section, index) => (
+                {tutorialTopics.map((section, index) => (
                     <div key={index} className="border border-gray-800 ">
-                        <h2 className="text-xl font-bold w-full bg-blue-500 text-white p-2">#  {section.heading}</h2>
+                        <h2 className="text-xl font-bold w-full bg-blue-500 text-white p-2">#  {section.title}</h2>
                         {/* <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4"> */}
                         <div className="flex flex-col mt-4 mb-3 w-[90%] mx-auto gap-4">
-                            {section.course.map((item, index) => (
+                            {section.subtopics.map((item, index) => (
                                 <div key={index} className="text-black p-4 rounded-lg border border-gray-700 flex justify-around items-center hover:cursor-pointer">
                                     <AlgoCard {...item} />
                                 </div>
@@ -41,4 +75,4 @@ const page = () => {
     )
 }
 
-export default page
+export default Client

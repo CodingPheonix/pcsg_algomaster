@@ -75,3 +75,54 @@ export const fetchTutorialsWithSubtopic = async (authorId: string) => {
         throw error;
     }
 };
+
+
+export const fetchAllTutorialsWithSubtopic = async () => {
+    try {
+        const rows = await db
+            .select({
+                tutorialId: tutorialsTable.id,
+                tutorialTitle: tutorialsTable.title,
+                subtopicId: subtopicTable.id,
+                subtopicName: subtopicTable.name,
+                subtopicDescription: subtopicTable.description,
+                subtopicDifficulty: subtopicTable.difficulty,
+                subtopicExternalVideo: subtopicTable.external_video
+            })
+            .from(tutorialsTable)
+            .leftJoin(
+                tutorialSubtopicsTable,
+                eq(tutorialSubtopicsTable.tutorialId, tutorialsTable.id)
+            )
+            .leftJoin(
+                subtopicTable,
+                eq(subtopicTable.id, tutorialSubtopicsTable.subtopicId)
+            )
+
+        const tutorialMap = new Map();
+
+        for (const row of rows) {
+            if (!tutorialMap.has(row.tutorialId)) {
+                tutorialMap.set(row.tutorialId, {
+                    id: row.tutorialId,
+                    title: row.tutorialTitle,
+                    subtopics: []
+                });
+            }
+
+            if (row.subtopicId) {
+                tutorialMap.get(row.tutorialId).subtopics.push({
+                    id: row.subtopicId,
+                    name: row.subtopicName,
+                    description: row.subtopicDescription,
+                    difficulty: row.subtopicDifficulty,
+                    externalLink: row.subtopicExternalVideo
+                });
+            }
+        }
+
+        return Array.from(tutorialMap.values());
+    } catch (error) {
+        throw error;
+    }
+};

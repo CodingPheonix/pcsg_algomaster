@@ -1,18 +1,18 @@
 import { int, mysqlTable, serial, varchar, json } from 'drizzle-orm/mysql-core';
 
-type heading = {
+export type heading = {
   id: string;
   type: string;
   content: string;
 }
 
-type subHeading = {
+export type subHeading = {
   id: string;
   type: string;
   content: string;
 }
 
-type paragraph = {
+export type paragraph = {
   id: string;
   type: string;
   content: string;
@@ -29,7 +29,7 @@ type codeBlock = {
   languages: code[];
 }
 
-type highlight = {
+export type highlight = {
   id: string;
   type: string;
   content: string;
