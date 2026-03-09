@@ -11,105 +11,19 @@ import { fetchTopics } from "@/app/db/operations/topics";
 
 // Sample data for demonstration
 const SAMPLE_DATA: Mixed[] = [
-    { id: "1", type: "heading", content: "Getting Started with React Hooks" },
+    { id: "1", type: "heading", content: "Content not Available" },
     {
         id: "2",
         type: "text",
         content:
-            "React Hooks let you use state and other React features without writing a class. They were introduced in React 16.8 and have since become the standard way to manage component logic.",
+            "The Content for the page is currently not available",
     },
     {
         id: "3",
         type: "highlight",
         content:
-            "Hooks can only be called at the top level of a component or from other custom hooks. Never call them inside loops, conditions, or nested functions.",
-    },
-    { id: "4", type: "subheading", content: "The useState Hook" },
-    {
-        id: "5",
-        type: "text",
-        content:
-            "useState is the most basic hook. It returns a stateful value and a function to update it. The argument passed to useState is the initial state.",
-    },
-    {
-        id: "6",
-        type: "code",
-        languages: [
-            {
-                lang: "JavaScript",
-                code: `import { useState } from 'react';
-
-function Counter() {
-  const [count, setCount] = useState(0);
-
-  return (
-    <button onClick={() => setCount(count + 1)}>
-      Clicked {count} times
-    </button>
-  );
-}`,
-            },
-            {
-                lang: "Python",
-                code: `# Python equivalent concept using a class
-class Counter:
-    def __init__(self):
-        self.count = 0
-
-    def increment(self):
-        self.count += 1
-        print(f"Clicked {self.count} times")`,
-            },
-            {
-                lang: "Java",
-                code: `public class Counter {
-    private int count = 0;
-
-    public void increment() {
-        count++;
-        System.out.println("Clicked " + count + " times");
+            "Contact your respective professor"
     }
-}`,
-            },
-        ],
-    },
-    { id: "7", type: "subheading", content: "The useEffect Hook" },
-    {
-        id: "8",
-        type: "text",
-        content:
-            "useEffect lets you perform side effects in function components. It serves the same purpose as componentDidMount, componentDidUpdate, and componentWillUnmount combined.",
-    },
-    {
-        id: "9",
-        type: "highlight",
-        content:
-            "Always include a cleanup function in useEffect when subscribing to external data sources to avoid memory leaks.",
-    },
-    {
-        id: "10",
-        type: "code",
-        languages: [
-            {
-                lang: "JavaScript",
-                code: `import { useState, useEffect } from 'react';
-
-function Timer() {
-  const [seconds, setSeconds] = useState(0);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setSeconds(s => s + 1);
-    }, 1000);
-
-    return () => clearInterval(interval);
-  }, []);
-
-  return <p>Elapsed: {seconds}s</p>;
-}`,
-            },
-        ],
-    },
 ];
 
 interface Comment {
@@ -161,7 +75,7 @@ const ViewTutorial = () => {
 
             const topics = await fetchTopics(id as string)
             console.log(topics)
-            setBlocks(topics[0].content as unknown as Mixed[])
+            topics[0].content !== null && setBlocks(topics[0].content as unknown as Mixed[])
         }
         fetchtopics()
     }, [])
