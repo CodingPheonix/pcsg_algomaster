@@ -39,7 +39,18 @@ const ROLE_STYLES: Record<string, string> = {
   moderator: "bg-blue-600/15 text-blue-600 border-blue-600/30",
 };
 
-const AdminProfile = ({ user }: { user: any }) => {
+const APP_MANAGEMENT_SECTIONS = [
+  { name: "Tutorial Management", path: "/admin/tutorial" },
+  { name: "Create Visualisation", path: "/admin/visual" },
+]
+
+const AdminProfile = ({ user }: {
+  user: {
+    id: string, username: string, role: "admin" | "user";
+  }
+}) => {
+
+  // State list
   const [activeTab, setActiveTab] = useState<"dashboard" | "admins" | "app_management" | "settings">("dashboard");
   const [admins, setAdmins] = useState(MOCK_ADMINS);
   const [searchQuery, setSearchQuery] = useState("");
@@ -49,6 +60,8 @@ const AdminProfile = ({ user }: { user: any }) => {
   const filteredAdmins = admins.filter(
     (a) => a.username.toLowerCase().includes(searchQuery.toLowerCase()) || a.email.toLowerCase().includes(searchQuery.toLowerCase())
   );
+
+
 
   const router = useRouter();
 
@@ -104,8 +117,8 @@ const AdminProfile = ({ user }: { user: any }) => {
               key={tab}
               onClick={() => setActiveTab(tab)}
               className={`px-4 py-2.5 text-sm font-medium capitalize transition-colors border-b-2 -mb-px ${activeTab === tab
-                  ? "text-blue-500 border-blue-500"
-                  : "text-slate-600 border-transparent hover:text-blue-500 hover:border-blue-500"
+                ? "text-blue-500 border-blue-500"
+                : "text-slate-600 border-transparent hover:text-blue-500 hover:border-blue-500"
                 }`}
             >
               {tab === "admins" ? "Manage Admins" : tab.replace("_", " ")}
@@ -221,10 +234,18 @@ const AdminProfile = ({ user }: { user: any }) => {
 
         {/* App Management  */}
         {activeTab === "app_management" && (
-          <div>
-            <button onClick={() => router.push(`/admin/tutorial?u=${user?.id}`)} className="px-4 py-2 h-32 w-43 rounded-lg border border-blue-500 bg-blue-500/70 text-white font-semibold hover:text-blue-500 transition-colors">
+          <div className="flex gap-3 flex-wrap">
+            {/* <button onClick={() => router.push(`/admin/tutorial?u=${user?.id}`)} className="px-4 py-2 h-32 w-43 rounded-lg border border-blue-500 bg-blue-500/70 text-white font-semibold hover:text-blue-500 transition-colors">
               Tutorial Management
-            </button>
+            </button> */}
+
+            {APP_MANAGEMENT_SECTIONS.map((section, index) => {
+              return (
+                <button key={index} onClick={() => router.push(`${section.path}?u=${user?.id}`)} className="px-4 py-2 h-32 w-43 rounded-lg border border-blue-500 bg-blue-500/70 text-white font-semibold hover:text-blue-500 transition-colors">
+                  {section.name}
+                </button>
+              )
+            })}
           </div>
         )}
 
