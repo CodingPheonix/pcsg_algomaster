@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import {
   Type,
   Heading1,
@@ -59,7 +59,7 @@ const DEFAULT_LANGUAGES = ["JavaScript", "Python", "C++", "Java"];
 
 const generateId = () => uuidv4();
 
-const page = () => {
+const TopicPage = () => {
   const [title, setTitle] = useState("");
   const [blocks, setBlocks] = useState<TutorialBlock[]>([]);
   const [showAddMenu, setShowAddMenu] = useState(false);
@@ -390,4 +390,10 @@ const page = () => {
 
 
 
-export default page;
+export default function Page() {
+  return (
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+      <TopicPage />
+    </Suspense>
+  );
+}

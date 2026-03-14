@@ -5,7 +5,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { eq } from "drizzle-orm";
 
 type sessionPayload = {
-    userId: number,
+    userId: string,
     expiresAt: string
 }
 

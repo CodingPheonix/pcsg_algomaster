@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from "react";
+import { useState, Suspense } from "react";
 import { ArrowLeft, Code, MessageSquare, Send } from "lucide-react";
 import CodeBlockViewer from "@/app/components/CodeBlockViewer";
 import { BlockRenderer } from "@/app/components/BlockRenderer";
@@ -36,7 +36,7 @@ interface Comment {
     time: Date;
 }
 
-const ViewTutorial = () => {
+const TopicPage = () => {
     // State list
     const [blocks, setBlocks] = useState<Mixed[]>(SAMPLE_DATA);
     const [comments, setComments] = useState<Comment[]>([]);
@@ -205,4 +205,10 @@ const ViewTutorial = () => {
     );
 };
 
-export default ViewTutorial;
+export default function Page() {
+  return (
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+      <TopicPage />
+    </Suspense>
+  );
+}
