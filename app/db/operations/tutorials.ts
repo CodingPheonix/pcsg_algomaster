@@ -89,6 +89,7 @@ export const fetchAllTutorialsWithSubtopic = async () => {
             .select({
                 tutorialId: tutorialsTable.id,
                 tutorialTitle: tutorialsTable.title,
+                tutorialType: tutorialsTable.type,
                 subtopicId: subtopicTable.id,
                 subtopicName: subtopicTable.name,
                 subtopicDescription: subtopicTable.description,
@@ -112,6 +113,7 @@ export const fetchAllTutorialsWithSubtopic = async () => {
                 tutorialMap.set(row.tutorialId, {
                     id: row.tutorialId,
                     title: row.tutorialTitle,
+                    type: row.tutorialType,
                     subtopics: []
                 });
             }

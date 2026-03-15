@@ -17,18 +17,27 @@ type Topic = {
 export type Tutorial = {
     id: string,
     subtopics: Topic[],
-    title: string
+    title: string,
+    type: string
 }
 
 
 const Client = () => {
 
+    const [currentMenu, setCurrentMenu] = useState<"algorithm" | "data_structure">("algorithm")
     const [tutorialTopics, setTutorialTopics] = useState<Tutorial[]>([{
         id: "",
         subtopics: [],
-        title: ""
+        title: "",
+        type: ""
     }])
-    
+    const [filteredTopics, setFilteredTopics] = useState<Tutorial[]>([{
+        id: "",
+        subtopics: [],
+        title: "",
+        type: ""
+    }])
+
     useEffect(() => {
         const fetchTutorials = async () => {
             const tutorial_topics = await fetchAllTutorialsWithSubtopic() as unknown as Tutorial[];
@@ -36,7 +45,13 @@ const Client = () => {
         }
         fetchTutorials()
     }, [])
-    
+
+    useEffect(() => {
+        if (tutorialTopics.length === 0) return;
+
+        setFilteredTopics(tutorialTopics.filter(topic => topic.type === currentMenu))
+    }, [currentMenu, tutorialTopics])
+
 
     return (
         <div className='bg-white text-black'>
@@ -44,7 +59,31 @@ const Client = () => {
 
             <div className='pt-20 w-[75%] mx-auto'>
                 <div className='flex justify-between items-baseline mb-5 mt-10'>
-                    <h1 className="text-3xl font-bold text-blue-500">Algorithm</h1>
+                    <div className="flex justify-center items-center gap-2 rounded-2xl bg-blue-100 p-2 shadow-[inset_0_2px_6px_rgba(0,0,0,0.08)]">
+
+                        <h1
+                            onClick={() => { setCurrentMenu("algorithm") }}
+                            className={`px-4 py-2 rounded-xl text-lg font-bold transition-all hover:cursor-pointer
+                                ${currentMenu === "algorithm"
+                                    ? "bg-white text-blue-600 shadow-sm"
+                                    : "text-blue-500 hover:bg-white/40"}
+                                `}
+                        >
+                            Algorithm
+                        </h1>
+
+                        <h1
+                            onClick={() => { setCurrentMenu("data_structure") }}
+                            className={`px-4 py-2 rounded-xl text-lg font-bold transition-all hover:cursor-pointer
+                                ${currentMenu === "data_structure"
+                                    ? "bg-white text-blue-600 shadow-sm"
+                                    : "text-blue-500 hover:bg-white/40"}
+                                `}
+                        >
+                            Data Structure
+                        </h1>
+
+                    </div>
                     <p className="text-gray-400 text-sm">Last Updated: 2026-02-24</p>
                 </div>
 
@@ -57,7 +96,7 @@ const Client = () => {
                     </div>
                 </div>
 
-                {tutorialTopics.map((section, index) => (
+                {filteredTopics.map((section, index) => (
                     <div key={index} className="border border-gray-800 ">
                         <h2 className="text-xl font-bold w-full bg-blue-500 text-white p-2">#  {section.title}</h2>
                         {/* <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4"> */}
