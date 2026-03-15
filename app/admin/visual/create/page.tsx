@@ -2,7 +2,7 @@
 
 import { useState, useRef, useCallback, useEffect } from "react";
 import { ArrowLeft, Play, Pause, RotateCcw, SkipForward, ChevronDown, ChevronUp, Copy } from "lucide-react";
-import { getInstruction, VisualizerAction } from "./tools";
+import { ActionColors, getInstruction, VisualizerAction } from "./tools";
 import { toast, Toaster } from "sonner";
 import { mapping } from "./functions";
 import { fetchVisuals, insertVisuals } from "@/app/db/operations/algoVisuals";
@@ -25,6 +25,7 @@ const Visualizer = () => {
 
     // State list
     const [code, setCode] = useState("");
+    const [stepDesc, setStepDesc] = useState<{ "action": string, "colour": string }>({ action: 'Initialize', colour: "#6c9eef" });
     const [algoSteps, setAlgoSteps] = useState<VisualizerAction[]>([]);
     const [arrayInput, setArrayInput] = useState("");
     const [currentArray, setCurrentArray] = useState<Elements[]>([]);
@@ -128,6 +129,10 @@ const Visualizer = () => {
                     setCurrentArray(prevArr => {
                         const newArr = [...prevArr.map(e => ({ ...e, colour: '#6c9eef' }))]; // deep copy
                         mapping(prev, newArr, steps[prev]);
+                        setStepDesc({
+                            action: steps[prev].action[0].toUpperCase() + steps[prev].action.substring(1).replace("_", " "),
+                            colour: ActionColors[steps[prev].action]
+                        })
                         return newArr;
                     });
                     return prev + 1;
@@ -327,20 +332,9 @@ const Visualizer = () => {
                         <span className="text-xs font-mono font-bold text-foreground">Array Visualization</span>
                         <div className="flex items-center gap-4 text-[10px] font-mono">
                             <span className="flex items-center gap-1.5">
-                                <span className="w-3 h-3 rounded-sm bg-blue-200-foreground/40" />
-                                <span className="text-muted-foreground">Default</span>
+                                {stepDesc.action}
                             </span>
-                            <span className="flex items-center gap-1.5">
-                                <span className="w-3 h-3 rounded-sm bg-accent" />
-                                <span className="text-muted-foreground">Comparing</span>
-                            </span>
-                            <span className="flex items-center gap-1.5">
-                                <span className="w-3 h-3 rounded-sm bg-streak" />
-                                <span className="text-muted-foreground">Swapping</span>
-                            </span>
-                            <span className="flex items-center gap-1.5">
-                                <span className="w-3 h-3 rounded-sm bg-primary" />
-                                <span className="text-muted-foreground">Sorted</span>
+                            <span style={{ backgroundColor: stepDesc.colour }} className="w-[0.8vw] h-[0.8vw]">
                             </span>
                         </div>
                     </div>
