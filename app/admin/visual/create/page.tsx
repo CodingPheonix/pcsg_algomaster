@@ -104,9 +104,29 @@ const Visualizer = () => {
             setStepIndex(0);
             return;
         }
-        if (stepIndex < steps.length - 1) {
-            setStepIndex((i) => i + 1);
-        }
+
+        console.log("running...")
+
+        setStepIndex((prev) => {
+            if (prev >= steps.length - 1) {
+                handleReset();
+                return prev;
+            }
+            setCurrentArray(prevArr => {
+                const newArr = [...prevArr.map(e => ({ ...e, colour: '#6c9eef' }))]; // deep copy
+                mapping(prev, newArr, steps[prev]);
+                setStepDesc({
+                    action: steps[prev].action[0].toUpperCase() + steps[prev].action.substring(1).replace("_", " "),
+                    colour: ActionColors[steps[prev].action]
+                })
+                return newArr;
+            });
+            return prev + 1;
+        });
+
+        // if (stepIndex < steps.length - 1) {
+        //     setStepIndex((i) => i + 1);
+        // }
     };
 
     const handleAlgorithmUpload = () => {
