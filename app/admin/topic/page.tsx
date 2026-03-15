@@ -178,10 +178,10 @@ const TopicPage = () => {
       {/* Top bar */}
       <div className="sticky top-0 z-40 border-b backdrop-blur-xl">
         <div className="container mx-auto flex h-14 items-center justify-between px-4">
-          <a href="/" className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors">
+          <button onClick={() => { window.history.back() }} className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors">
             <ArrowLeft size={18} />
             <span className="text-sm font-mono">Back</span>
-          </a>
+          </button>
           <div className="flex items-center gap-2">
             <button
               onClick={() => setPreviewMode(!previewMode)}

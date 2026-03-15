@@ -255,7 +255,7 @@ const ManageTopics = () => {
       <div className="sticky top-0 z-40 border-b backdrop-blur-xl">
         <div className="container mx-auto flex h-14 items-center justify-between px-4">
           <button
-            onClick={() => { window.navigation.back() }}
+            onClick={() => { window.history.back() }}
             className="flex items-center gap-2 hover:text-blue-400 transition-colors"
           >
             <ArrowLeft size={18} />

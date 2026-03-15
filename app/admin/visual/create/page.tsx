@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useRef, useCallback, useEffect } from "react";
+import { useState, useRef, useCallback, useEffect, Suspense } from "react";
 import { ArrowLeft, Play, Pause, RotateCcw, SkipForward, ChevronDown, ChevronUp, Copy } from "lucide-react";
 import { ActionColors, getInstruction, VisualizerAction } from "./tools";
 import { toast, Toaster } from "sonner";
@@ -379,4 +379,14 @@ const Visualizer = () => {
     );
 };
 
-export default Visualizer;
+const page = () => {
+    return (
+        <>
+            <Suspense fallback={<p>Loading...</p>}>
+                <Visualizer />
+            </Suspense>
+        </>
+    )
+}
+
+export default page;
