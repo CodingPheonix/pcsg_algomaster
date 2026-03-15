@@ -10,7 +10,7 @@ type Topic = {
     id: string,
     name: string,
     description: string,
-    difficulty: string,
+    difficulty: "Easy" | "Normal" | "Hard",
     externalLink: string
 }
 

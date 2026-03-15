@@ -254,13 +254,13 @@ const ManageTopics = () => {
       {/* Top bar */}
       <div className="sticky top-0 z-40 border-b backdrop-blur-xl">
         <div className="container mx-auto flex h-14 items-center justify-between px-4">
-          <a
-            href="/"
+          <button
+            onClick={() => { window.navigation.back() }}
             className="flex items-center gap-2 hover:text-blue-400 transition-colors"
           >
             <ArrowLeft size={18} />
             <span className="text-sm font-mono">Back</span>
-          </a>
+          </button>
           <h1 className="text-sm font-mono font-bold">Manage Topics</h1>
           <div className="w-16" />
         </div>
@@ -357,6 +357,7 @@ const ManageTopics = () => {
                     </button>
                     <button
                       onClick={() => {
+                        if (!topic.expanded) toggleExpand(topic.id)
                         setAddingSubFor(addingSubFor === topic.id ? null : topic.id);
                         setSubTopicFor({
                           "newSubName": "",

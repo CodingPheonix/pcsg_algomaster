@@ -10,7 +10,7 @@ export type CourseItem = {
     "id": string;
     "name": string;
     "description": string;
-    "difficulty": string;
+    "difficulty": "Easy" | "Normal" | "Hard";
     "externalLink": string;
 }
 
@@ -38,7 +38,7 @@ const AlgoCard = (item: CourseItem) => {
             <p className="text-sm mt-2 w-1/4 text-start">{item.description}</p>
             <span className='w-1/4 flex justify-center items-center'>
                 <span className={`inline-block px-2 py-1 text-md rounded-full font-semibold mt-2 ${item.difficulty === "Easy" ? "text-green-500" :
-                    item.difficulty === "Medium" ? "text-yellow-500 " :
+                    item.difficulty === "Normal" ? "text-yellow-500 " :
                         "text-red-500"
                     }`}>
                     {item.difficulty}

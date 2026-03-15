@@ -143,8 +143,8 @@ const TutorialPage = () => {
       setTextValue(JSON.stringify(fetchData[0]?.steps || []))
       const parsed = JSON.parse(JSON.stringify(fetchData[0]?.steps || {}));
       setAlgoSteps(parsed || []);
-      setCode(fetchData[0]?.code || "")
-      syncArray(fetchData[0]?.inputArray || "")
+      setCode(fetchData[0]?.code || "Data not Available")
+      syncArray(fetchData[0]?.inputArray || "0, 0, 0, 0, 0")
     }
 
     fetchDetails()
@@ -209,7 +209,7 @@ const TutorialPage = () => {
 
               {/* Static array display styled like input */}
               <div className="w-full bg-blue-200 rounded-lg border border-blue-600 px-3 py-2 text-xs font-mono text-foreground">
-                {arrayInput || "5, 3, 8, 1, 2"}
+                {arrayInput || "0, 0, 0, 0, 0"}
               </div>
             </div>
           </div>
