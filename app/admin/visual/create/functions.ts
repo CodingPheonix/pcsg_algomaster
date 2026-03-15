@@ -8,14 +8,12 @@ export function compare(arr: Elements[], task: Compare) {
 }
 
 export function swap(arr: Elements[], task: Swap) {
-    console.log("before swap", arr)
     arr[task.index_1].colour = ActionColors[task.action]
     arr[task.index_2].colour = ActionColors[task.action]
     
     const temp = arr[task.index_1].value
     arr[task.index_1].value = arr[task.index_2].value
     arr[task.index_2].value = temp
-    console.log("after swap", arr)
 }
 
 export function setValue(arr: Elements[], task: SetValue) {
@@ -74,15 +72,15 @@ export function removeFromQueue(arr: number[], task: RemoveFromQueue) {
 }
 
 export function callFunction(task: CallFunction) {
-    console.log(`Calling function ${task.function} with args:`, task.args);
+    // console.warn(`Calling function ${task.function} with args:`, task.args);
 }
 
 export function returnFunction(task: ReturnFunction) {
-    console.log(`Returning from function ${task.function}`);
+    // console.warn(`Returning from function ${task.function}`);
 }
 
 export function logMessage(task: Log) {
-    console.log(task.message);
+    // console.warn(task.message);
 }
 
 export function pause(task: Pause) {

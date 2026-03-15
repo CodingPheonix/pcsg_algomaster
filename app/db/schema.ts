@@ -1,4 +1,5 @@
 import { int, mysqlTable, serial, varchar, json, date } from 'drizzle-orm/mysql-core';
+import { VisualizerAction } from '../admin/visual/create/tools';
 
 export type heading = {
   id: string;
@@ -81,8 +82,16 @@ export const topicstable = mysqlTable("topics_table", {
 
 export const commentsTable = mysqlTable("comments_table", {
   id: varchar({ length: 40 }).primaryKey(),
-  topic_id: varchar({length: 40}).notNull().references(() => topicstable.id),
-  username: varchar({length: 100}).notNull(),
-  message: varchar({length: 500}).notNull(),
-  time: date({mode: 'date'})
+  topic_id: varchar({ length: 40 }).notNull().references(() => topicstable.id),
+  username: varchar({ length: 100 }).notNull(),
+  message: varchar({ length: 500 }).notNull(),
+  time: date({ mode: 'date' })
+})
+
+export const algoVisualsTable = mysqlTable('algoVisuals_table', {
+  id: varchar({ length: 40 }).primaryKey(),
+  subtopic_id: varchar({ length: 40 }).references(() => subtopicTable.id),
+  code_text: varchar({length: 500}).notNull(),
+  code_steps: json().$type<VisualizerAction[]>().notNull(),
+  input_array: varchar({length: 30}).notNull()
 })

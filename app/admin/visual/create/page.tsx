@@ -5,6 +5,8 @@ import { ArrowLeft, Play, Pause, RotateCcw, SkipForward, ChevronDown, ChevronUp,
 import { getInstruction, VisualizerAction } from "./tools";
 import { toast, Toaster } from "sonner";
 import { mapping } from "./functions";
+import { fetchVisuals, insertVisuals } from "@/app/db/operations/algoVisuals";
+import { useSearchParams } from "next/navigation";
 
 // interface BarState {
 //     values: number[];
@@ -20,6 +22,8 @@ export type Elements = {
 }
 
 const Visualizer = () => {
+
+    // State list
     const [code, setCode] = useState("");
     const [algoSteps, setAlgoSteps] = useState<VisualizerAction[]>([]);
     const [arrayInput, setArrayInput] = useState("");
@@ -31,12 +35,18 @@ const Visualizer = () => {
     const [showInstructions, setShowInstructions] = useState(false);
     const [textValue, setTextValue] = useState("")
 
+    // Use refs
     const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+    // Hooks and custom actions
+    const searchparams = useSearchParams()
+    const subtopicId = searchparams.get('id') as string
 
     const currentStep: VisualizerAction | null = stepIndex >= 0 && stepIndex < steps.length ? steps[stepIndex] : null;
     const displayValues = currentArray;
     const maxVal = Math.max(...displayValues.map(values => values.value), 1);
 
+    // functions
     const syncArray = useCallback((value: string) => {
         try {
             const parsed = value
@@ -98,6 +108,14 @@ const Visualizer = () => {
         }
     };
 
+    const handleAlgorithmUpload = () => {
+        if (!subtopicId || !code || !algoSteps || !arrayInput) return;
+
+        insertVisuals({ subTopicId: subtopicId as string, code: code, codeSteps: algoSteps, inputValues: arrayInput });
+        toast("Algorithm Visual Uploaded")
+    }
+
+    // UseEffects
     useEffect(() => {
         if (isPlaying && steps.length > 0) {
             intervalRef.current = setInterval(() => {
@@ -121,17 +139,23 @@ const Visualizer = () => {
         };
     }, [isPlaying, steps.length, speed]);
 
-    console.log("current step index is: ", stepIndex)
-    console.log("updated array: ", currentArray)
+    useEffect(() => {
+        const fetchDetails = async () => {
+            const fetchData = await fetchVisuals(subtopicId);
+
+            if (!fetchData) return;
+            setArrayInput(fetchData[0].inputArray)
+            setTextValue(JSON.stringify(fetchData[0].steps))
+            const parsed = JSON.parse(JSON.stringify(fetchData[0].steps));
+            setAlgoSteps(parsed);
+            setCode(fetchData[0].code)
+            syncArray(fetchData[0].inputArray)
+        }
+
+        fetchDetails()
+    }, [subtopicId])
 
     const codeLines = code.split("\n");
-
-    // const getBarColor = (index: number) => {
-    //     // if (currentStep?.action?.includes(index)) return "bg-primary";
-    //     // if (currentStep?.action?.includes(index)) return "bg-streak";
-    //     // if (currentStep?.action?.includes(index)) return "bg-accent";
-    //     return "bg-blue-200";
-    // };
 
     return (
         <div className="min-h-screen bg-background text-foreground flex flex-col">
@@ -260,7 +284,7 @@ const Visualizer = () => {
 
             {/* action buttons */}
             <div className="flex justify-around items-center w-[90%] mx-auto my-4">
-                <button className="px-6 py-2 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600 transition duration-200">
+                <button onClick={handleAlgorithmUpload} className="px-6 py-2 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600 transition duration-200">
                     Upload
                 </button>
             </div>
