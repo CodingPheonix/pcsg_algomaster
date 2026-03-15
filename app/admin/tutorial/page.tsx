@@ -35,6 +35,7 @@ interface Topic {
   name: string;
   subtopics: SubTopic[];
   expanded: boolean;
+  type: "algorithm" | "data_structure"
 }
 
 export interface SubTopicFor {
@@ -48,7 +49,10 @@ const generateId = () => UUIDv4();
 
 const ManageTopics = () => {
   const [topics, setTopics] = useState<Topic[]>([]);
-  const [newTopicName, setNewTopicName] = useState("");
+  const [newTopic, setNewTopic] = useState<{ name: string, type: "algorithm" | "data_structure" }>({
+    name: "",
+    type: "algorithm"
+  });
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editingValue, setEditingValue] = useState("");
   const [editingSubTopic, seteditingSubTopic] = useState<SubTopic>({
@@ -71,19 +75,22 @@ const ManageTopics = () => {
   const user = userContext.user
 
   const addTopic = () => {
-    if (!newTopicName.trim()) return;
+    if (!newTopic.name.trim() || !newTopic.type) return;
     setTopics((prev) => [
       ...prev,
-      { id: generateId(), name: newTopicName.trim(), subtopics: [], expanded: true },
+      { id: generateId(), name: newTopic.name.trim(), subtopics: [], expanded: true, type: newTopic.type },
     ]);
+
+    console.log(newTopic)
 
     insertTutorial({
       id: UUIDv4(),
-      title: newTopicName.trim(),
+      title: newTopic.name.trim(),
       authorId: user?.id || "unknown",
+      type: newTopic.type
     })
 
-    setNewTopicName("");
+    setNewTopic({name: "", type: "algorithm"});
   };
 
   const removeTopic = (id: string) => {
@@ -225,6 +232,7 @@ const ManageTopics = () => {
         return {
           id: t.id,
           name: t.title,
+          type: t.type,
           subtopics: t.subtopics ? t.subtopics.map((s:
             {
               id: string,
@@ -270,15 +278,21 @@ const ManageTopics = () => {
         {/* Add topic input */}
         <div className="mb-8 flex gap-2">
           <input
-            value={newTopicName}
-            onChange={(e) => setNewTopicName(e.target.value)}
+            value={newTopic.name}
+            onChange={(e) => setNewTopic({ ...newTopic, name: e.target.value })}
             onKeyDown={(e) => e.key === "Enter" && addTopic()}
             placeholder="New topic name..."
             className="flex-1 rounded-lg border border-blue-600 px-3 py-2.5 text-sm font-mono outline-none focus:ring-1 focus:ring-blue-500 transition-colors"
           />
+
+          <select value={newTopic.type} onChange={(e) => {setNewTopic({...newTopic, type: e.target.value as "algorithm" | "data_structure"})}} className="flex-1 rounded-lg border border-blue-600 px-3 py-2.5 text-sm font-mono outline-none focus:ring-1 focus:ring-blue-500 transition-colors">
+            <option className="text-sm font-mono" value="algorithm">Algorithm</option>
+            <option className="text-sm font-mono" value="data_structure">Data Structure</option>
+          </select>
+
           <button
             onClick={addTopic}
-            disabled={!newTopicName.trim()}
+            disabled={!newTopic.name.trim() || !newTopic.type}
             className="flex items-center gap-1.5 rounded-lg bg-blue-500 px-4 py-2.5 text-sm font-mono font-medium text-white hover:bg-blue-500/90 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
           >
             <Plus size={16} />

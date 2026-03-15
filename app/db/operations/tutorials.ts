@@ -2,16 +2,18 @@
 
 import { eq } from "drizzle-orm"
 import { db } from "../index"
-import { SubTopic, subtopicTable, tutorialsTable, tutorialSubtopicsTable } from "../schema"
+import { subtopicTable, tutorialsTable, tutorialSubtopicsTable } from "../schema"
 
-export const insertTutorial = async ({ id, title, authorId }: { id: string, title: string, authorId: string }) => {
+export const insertTutorial = async ({ id, title, authorId, type }: { id: string, title: string, authorId: string, type: "algorithm" | "data_structure" }) => {
+    console.log(id, title, authorId, type)
     try {
         await db
             .insert(tutorialsTable)
             .values({
                 id,
                 title,
-                authorId
+                authorId,
+                type
             })
     } catch (error) {
         console.error("Error inserting tutorial:", error)
@@ -37,6 +39,7 @@ export const fetchTutorialsWithSubtopic = async (authorId: string) => {
             .select({
                 tutorialId: tutorialsTable.id,
                 tutorialTitle: tutorialsTable.title,
+                tutorialType: tutorialsTable.type,
                 subtopicId: subtopicTable.id,
                 subtopicName: subtopicTable.name,
                 subtopicDescription: subtopicTable.description,
@@ -61,6 +64,7 @@ export const fetchTutorialsWithSubtopic = async (authorId: string) => {
                 tutorialMap.set(row.tutorialId, {
                     id: row.tutorialId,
                     title: row.tutorialTitle,
+                    type: row.tutorialType,
                     subtopics: []
                 });
             }

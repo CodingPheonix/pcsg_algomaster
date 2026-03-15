@@ -101,11 +101,15 @@ const Client = () => {
                         <h2 className="text-xl font-bold w-full bg-blue-500 text-white p-2">#  {section.title}</h2>
                         {/* <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4"> */}
                         <div className="flex flex-col mt-4 mb-3 w-[90%] mx-auto gap-4">
-                            {section.subtopics.map((item, index) => (
+                            {section?.subtopics.length > 0 ? section.subtopics.map((item, index) => (
                                 <div key={index} className="text-black p-4 rounded-lg border border-gray-700 flex justify-around items-center">
                                     <AlgoCard {...item} />
                                 </div>
-                            ))}
+                            )) : (
+                                <div className='text-center'>
+                                    No topic added
+                                </div>
+                            )}
                         </div>
                     </div>
                 ))}
