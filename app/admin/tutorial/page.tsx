@@ -19,12 +19,15 @@ import { fetchTutorials, fetchTutorialsWithSubtopic, insertTutorial } from "@/ap
 import { v4 as UUIDv4 } from "uuid";
 import { useUserContext } from "@/app/context/userContext";
 import { insertTopic } from "@/app/db/operations/topics";
-import { addSubTopic } from "@/app/db/operations/subtopics";
+import { addSubTopic, editSubTopic } from "@/app/db/operations/subtopics";
 import { addTutorialSubtopicsRelation } from "@/app/db/operations/tutorialSubtopics";
 
 interface SubTopic {
   id: string;
   name: string;
+  description: string,
+  difficulty: "Easy" | "Normal" | "Hard",
+  external_video: string
 }
 
 interface Topic {
@@ -48,6 +51,13 @@ const ManageTopics = () => {
   const [newTopicName, setNewTopicName] = useState("");
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editingValue, setEditingValue] = useState("");
+  const [editingSubTopic, seteditingSubTopic] = useState<SubTopic>({
+    id: "",
+    name: "",
+    description: "",
+    difficulty: "Easy",
+    external_video: ""
+  })
   const [addingSubFor, setAddingSubFor] = useState<string | null>(null);
   const [subTopicFor, setSubTopicFor] = useState<SubTopicFor>({
     newSubName: "",
@@ -91,6 +101,38 @@ const ManageTopics = () => {
     setEditingValue(currentName);
   };
 
+  const confirmSubTopicEdit = (topicId: string) => {
+    if (!editingSubTopic.id || !editingSubTopic.name.trim) return;
+
+    setTopics(prev =>
+      prev.map(topic => {
+        if (topic.id === topicId) {
+          return {
+            ...topic,
+            subtopics: topic.subtopics.map(subtopic =>
+              subtopic.id === editingSubTopic.id ? editingSubTopic : subtopic
+            )
+          };
+        }
+
+        return topic;
+      })
+    );
+
+    // Update db
+    editSubTopic(editingSubTopic)
+  }
+
+  const cancelSubTopicEdit = () => {
+    seteditingSubTopic({
+      id: "",
+      name: "",
+      description: "",
+      difficulty: "Easy",
+      external_video: ""
+    })
+  }
+
   const confirmEdit = () => {
     if (!editingId || !editingValue.trim()) return;
     setTopics((prev) =>
@@ -124,7 +166,13 @@ const ManageTopics = () => {
           ? {
             ...t,
             expanded: true,
-            subtopics: [...t.subtopics, { id: subtopicId, name: subTopicFor.newSubName.trim() }],
+            subtopics: [...t.subtopics, {
+              id: subtopicId,
+              name: subTopicFor.newSubName.trim(),
+              description: subTopicFor.description.trim(),
+              difficulty: subTopicFor.difficulty,
+              external_video: subTopicFor.external_video.trim()
+            }],
           }
           : t
       )
@@ -139,12 +187,12 @@ const ManageTopics = () => {
       difficulty: subTopicFor.difficulty,
       external_video: subTopicFor.external_video.trim()
     });
-    
+
     await insertTopic({
       id: subtopicId,
       tutorial_id: topicId
     })
-    
+
     await addTutorialSubtopicsRelation(topicId, subtopicId);
 
     setSubTopicFor({
@@ -177,7 +225,20 @@ const ManageTopics = () => {
         return {
           id: t.id,
           name: t.title,
-          subtopics: t.subtopics ? t.subtopics.map((s : {id: string, name: string}) => ({ id: s.id, name: s.name })) : [],
+          subtopics: t.subtopics ? t.subtopics.map((s:
+            {
+              id: string,
+              name: string,
+              description: string,
+              difficulty: "Easy" | "Normal" | "Hard",
+              external_video: string
+            }) => ({
+              id: s.id,
+              name: s.name,
+              description: s.description,
+              difficulty: s.difficulty,
+              external_video: s.external_video
+            })) : [],
           expanded: false
         }
       }));
@@ -335,24 +396,75 @@ const ManageTopics = () => {
                     >
                       <FileText size={14} className="text-white/70 shrink-0" />
 
-                      {editingId === sub.id ? (
-                        <div className="flex flex-1 items-center gap-1.5">
+                      {editingSubTopic.id === sub.id ? (
+                        <div className="flex flex-col w-full max-w-md gap-3 rounded-lg border border-blue-600 bg-blue-50/40 p-4">
+
+                          {/* Name */}
                           <input
-                            value={editingValue}
-                            onChange={(e) => setEditingValue(e.target.value)}
-                            onKeyDown={(e) => {
-                              if (e.key === "Enter") confirmEdit();
-                              if (e.key === "Escape") cancelEdit();
-                            }}
+                            value={editingSubTopic.name}
+                            onChange={(e) => seteditingSubTopic({ ...editingSubTopic, name: e.target.value })}
                             autoFocus
-                            className="flex-1 rounded px-2 py-1 text-sm font-mono outline-none border border-blue-500bg-blue-500"
+                            placeholder="Subtopic name"
+                            className="w-full rounded-md border border-blue-500 bg-white px-3 py-2 text-sm font-mono outline-none focus:ring-2 focus:ring-blue-500"
                           />
-                          <button onClick={confirmEdit} className="p-1 text-blue-500 hover:text-blue-500/80">
-                            <Check size={14} />
-                          </button>
-                          <button onClick={cancelEdit} className="p-1">
-                            <X size={14} />
-                          </button>
+
+                          {/* Description */}
+                          <input
+                            value={editingSubTopic.description}
+                            onChange={(e) => seteditingSubTopic({ ...editingSubTopic, description: e.target.value })}
+                            placeholder="Description"
+                            className="w-full rounded-md border border-blue-500 bg-white px-3 py-2 text-sm font-mono outline-none focus:ring-2 focus:ring-blue-500"
+                          />
+
+                          {/* Difficulty */}
+                          <div className="flex flex-col gap-1">
+                            <label htmlFor="difficulty" className="text-xs font-semibold text-slate-600">
+                              Difficulty
+                            </label>
+                            <select
+                              value={editingSubTopic.difficulty}
+                              onChange={(e) =>
+                                seteditingSubTopic({
+                                  ...editingSubTopic,
+                                  difficulty: e.target.value as "Easy" | "Normal" | "Hard",
+                                })
+                              }
+                              id="difficulty"
+                              className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm font-mono outline-none focus:ring-2 focus:ring-blue-500"
+                            >
+                              <option value="Easy">Easy</option>
+                              <option value="Normal">Normal</option>
+                              <option value="Hard">Hard</option>
+                            </select>
+                          </div>
+
+                          {/* Video */}
+                          <input
+                            value={editingSubTopic.external_video}
+                            onChange={(e) =>
+                              seteditingSubTopic({ ...editingSubTopic, external_video: e.target.value })
+                            }
+                            placeholder="External video URL"
+                            className="w-full rounded-md border border-blue-500 bg-white px-3 py-2 text-sm font-mono outline-none focus:ring-2 focus:ring-blue-500"
+                          />
+
+                          {/* Buttons */}
+                          <div className="flex justify-end gap-2 pt-1">
+                            <button
+                              onClick={() => { confirmSubTopicEdit(topic.id) }}
+                              className="flex items-center justify-center rounded-md bg-blue-500 px-3 py-1.5 text-white hover:bg-blue-600 transition"
+                            >
+                              <Check size={16} />
+                            </button>
+
+                            <button
+                              onClick={cancelSubTopicEdit}
+                              className="flex items-center justify-center rounded-md border border-slate-300 px-3 py-1.5 text-slate-600 hover:bg-slate-100 transition"
+                            >
+                              <X size={16} />
+                            </button>
+                          </div>
+
                         </div>
                       ) : (
                         <span className="flex-1 text-sm font-mono text-slate-950bg-slate-950-white">
@@ -368,7 +480,13 @@ const ManageTopics = () => {
                             <ArrowUpRight size={17} />
                           </button>
                           <button
-                            onClick={() => startEdit(sub.id, sub.name)}
+                            onClick={() => seteditingSubTopic({
+                              id: sub.id,
+                              name: sub.name,
+                              description: sub.description,
+                              difficulty: sub.difficulty,
+                              external_video: sub.external_video
+                            })}
                             className="p-1 transition-colors"
                           >
                             <Pencil size={12} />

@@ -38,7 +38,10 @@ export const fetchTutorialsWithSubtopic = async (authorId: string) => {
                 tutorialId: tutorialsTable.id,
                 tutorialTitle: tutorialsTable.title,
                 subtopicId: subtopicTable.id,
-                subtopicName: subtopicTable.name
+                subtopicName: subtopicTable.name,
+                subtopicDescription: subtopicTable.description,
+                subtopicDifficulty: subtopicTable.difficulty,
+                subtopicExternalVideo: subtopicTable.external_video
             })
             .from(tutorialsTable)
             .leftJoin(
@@ -65,7 +68,10 @@ export const fetchTutorialsWithSubtopic = async (authorId: string) => {
             if (row.subtopicId) {
                 tutorialMap.get(row.tutorialId).subtopics.push({
                     id: row.subtopicId,
-                    name: row.subtopicName
+                    name: row.subtopicName,
+                    description: row.subtopicDescription,
+                    difficulty: row.subtopicDifficulty,
+                    external_video: row.subtopicExternalVideo
                 });
             }
         }
