@@ -158,10 +158,10 @@ const TutorialPage = () => {
       {/* Top bar */}
       <div className="sticky top-0 z-40 border-b border-blue-600 bg-background/80 backdrop-blur-xl">
         <div className="container mx-auto flex h-14 items-center justify-between px-4">
-          <a href="/" className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors">
+          <button onClick={() => { window.navigation.back() }} className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors">
             <ArrowLeft size={18} />
             <span className="text-sm font-mono">Back</span>
-          </a>
+          </button>
           <h1 className="text-sm font-mono font-bold text-foreground">Algorithm Visualizer</h1>
           <div className="w-20" />
         </div>

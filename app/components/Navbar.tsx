@@ -29,16 +29,16 @@ const Navbar = () => {
 
                 <div className="hidden md:flex items-center gap-1">
                     <Link
-                        href="/algorithms"
+                        href="/learn"
                         className="px-3 py-2 text-sm font-medium text-muted-foreground hover:text-blue-500 transition-colors rounded-md"
                     >
-                        Algorithms
+                        Learn
                     </Link>
                     <Link
-                        href="/data_structures"
+                        href="/practice"
                         className="px-3 py-2 text-sm font-medium text-muted-foreground hover:text-blue-500 transition-colors rounded-md"
                     >
-                        Data Structures
+                        Practice
                     </Link>
                     <Link
                         href="/resources"
@@ -69,10 +69,10 @@ const Navbar = () => {
                         />
                     </div>
 
-                    <a href="#" className="p-2 text-muted-foreground hover:text-destructive transition-colors hover:text-red-500" title="YouTube">
+                    <a href="https://www.youtube.com/@PCSGlobalPrivateLimited" className="p-2 text-muted-foreground hover:text-destructive transition-colors hover:text-red-500" title="YouTube">
                         <Youtube size={18} />
                     </a>
-                    <a href="#" className="p-2 text-muted-foreground transition-colors hover:text-blue-500" title="Website">
+                    <a href="https://www.pcsglobal.in/#/home" className="p-2 text-muted-foreground transition-colors hover:text-blue-500" title="Website">
                         <Globe size={18} />
                     </a>
 
