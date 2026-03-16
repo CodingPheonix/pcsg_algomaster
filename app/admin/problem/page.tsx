@@ -1,12 +1,12 @@
 'use client'
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Plus, Trash2, ExternalLink, FileText, Play, Wand2, ChevronDown, ChevronRight } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { deleteSetById, insertSet } from "@/app/db/operations/set";
+import { deleteSetById, fetchSetWithProblemsById, insertSet } from "@/app/db/operations/set";
 import { useUserContext } from "@/app/context/userContext";
 
-interface Problem {
+export interface Problem {
   id: string;
   name: string;
   link: string;
@@ -33,10 +33,10 @@ const SetProblems = () => {
     videoLink: string;
     showForm: boolean;
   }>>({});
-  
+
   // Contexts
   const router = useRouter();
-  const {user} = useUserContext()
+  const { user } = useUserContext()
 
   // Functions
   const createSet = () => {
@@ -54,7 +54,7 @@ const SetProblems = () => {
     setSets((prev) => [...prev, newSet]);
     setFormState((prev) => ({
       ...prev,
-      [newSet.id]: { name: "", link: "", difficulty: "Easy", videoLink: "", showForm: false},
+      [newSet.id]: { name: "", link: "", difficulty: "Easy", videoLink: "", showForm: false },
     }));
 
     setNewSetName("");
@@ -111,8 +111,6 @@ const SetProblems = () => {
       )
     );
 
-
-
     setFormState((prev) => ({
       ...prev,
       [setId]: { name: "", link: "", difficulty: "Easy", videoLink: "", showForm: false },
@@ -137,6 +135,31 @@ const SetProblems = () => {
       default: return "text-foreground";
     }
   };
+
+  // UseEffects
+  useEffect(() => {
+    const fetchData = async () => {
+      const data = await fetchSetWithProblemsById(user.id);
+      console.log(data)
+
+      setSets(
+        data.map(set => ({
+          id: set.id,
+          name: set.name,
+          isExpanded: false,
+          problems: set.problems.map(problem => ({
+            id: problem.id,
+            name: problem.name,
+            link: problem.link,
+            difficulty: problem.difficulty,
+            videoLink: problem.videoLink
+          }))
+        }))
+      );
+    }
+    fetchData()
+  }, [user.id])
+
 
   return (
     <div className="min-h-screen">
