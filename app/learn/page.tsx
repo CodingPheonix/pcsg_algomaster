@@ -84,7 +84,6 @@ const Client = () => {
                         </h1>
 
                     </div>
-                    <p className="text-gray-400 text-sm">Last Updated: 2026-02-24</p>
                 </div>
 
                 <div className='w-full mx-auto my-2 h-auto bg-white text-gray-400 p-3 rounded-t-lg font-mono text-start border border-blue-500 rounded-xl'>

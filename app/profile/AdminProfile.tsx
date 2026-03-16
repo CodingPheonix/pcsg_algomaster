@@ -42,6 +42,7 @@ const ROLE_STYLES: Record<string, string> = {
 const APP_MANAGEMENT_SECTIONS = [
   { name: "Tutorial Management", path: "/admin/tutorial" },
   { name: "Create Visualisation", path: "/admin/visual" },
+  { name: "Set Practice Problem", path: "/admin/problem" },
 ]
 
 const AdminProfile = ({ user }: {
