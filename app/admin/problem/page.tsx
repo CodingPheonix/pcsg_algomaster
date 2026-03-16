@@ -5,12 +5,16 @@ import { Plus, Trash2, ExternalLink, FileText, Play, Wand2, ChevronDown, Chevron
 import { useRouter } from "next/navigation";
 import { deleteSetById, fetchSetWithProblemsById, insertSet } from "@/app/db/operations/set";
 import { useUserContext } from "@/app/context/userContext";
+import { toast, Toaster } from "sonner";
+import { insertProblem, removeProblem } from "@/app/db/operations/problems";
+import { deleteSetProblem, insertSetProblem } from "@/app/db/operations/setProblem";
+import { v4 } from "uuid";
 
 export interface Problem {
   id: string;
   name: string;
   link: string;
-  difficulty: "Easy" | "Medium" | "Hard";
+  difficulty: "Easy" | "Normal" | "Hard";
   videoLink: string;
 }
 
@@ -29,7 +33,7 @@ const SetProblems = () => {
   const [formState, setFormState] = useState<Record<string, {
     name: string;
     link: string;
-    difficulty: "Easy" | "Medium" | "Hard";
+    difficulty: "Easy" | "Normal" | "Hard";
     videoLink: string;
     showForm: boolean;
   }>>({});
@@ -77,6 +81,8 @@ const SetProblems = () => {
       delete copy[setId];
       return copy;
     });
+
+    toast("Set deleted");
   };
 
   const toggleForm = (setId: string) => {
@@ -86,6 +92,19 @@ const SetProblems = () => {
     }));
   };
 
+  // const toggleForm = (setId: string) => {
+  //   setFormState(prev => ({
+  //     ...prev,
+  //     [setId]: prev[setId] ?? {
+  //       name: "",
+  //       link: "",
+  //       difficulty: "Easy",
+  //       videoLink: "",
+  //       showForm: true
+  //     }
+  //   }));
+  // };
+
   const updateForm = (setId: string, field: string, value: string) => {
     setFormState((prev) => ({
       ...prev,
@@ -93,17 +112,24 @@ const SetProblems = () => {
     }));
   };
 
-  const addProblem = (setId: string) => {
+  const addProblem = async (setId: string) => {
     const form = formState[setId];
-    if (!form?.name.trim() || !form?.link.trim()) return;
+    if (!form?.name.trim() || !form?.link.trim()) {
+      toast("Complete the fields");
+      return;
+    }
 
     const newProblem: Problem = {
-      id: crypto.randomUUID(),
+      id: v4(),
       name: form.name.trim(),
       link: form.link.trim(),
-      difficulty: form.difficulty,
-      videoLink: form.videoLink.trim(),
+      difficulty: form.difficulty ?? "Easy",
+      videoLink: form.videoLink?.trim() || "",
     };
+
+    await insertProblem(newProblem, setId, user.id);
+
+    await insertSetProblem(setId, newProblem.id);
 
     setSets((prev) =>
       prev.map((s) =>
@@ -117,7 +143,7 @@ const SetProblems = () => {
     }));
   };
 
-  const deleteProblem = (setId: string, problemId: string) => {
+  const deleteProblem = async (setId: string, problemId: string) => {
     setSets((prev) =>
       prev.map((s) =>
         s.id === setId
@@ -125,12 +151,17 @@ const SetProblems = () => {
           : s
       )
     );
+
+    await deleteSetProblem(problemId);
+    await removeProblem(problemId);
+
+    toast("Problem deleted!");
   };
 
   const difficultyColor = (d: string) => {
     switch (d) {
       case "Easy": return "text-green-500";
-      case "Medium": return "text-yellow-500";
+      case "Normal": return "text-yellow-500";
       case "Hard": return "text-red-500";
       default: return "text-foreground";
     }
@@ -163,6 +194,8 @@ const SetProblems = () => {
 
   return (
     <div className="min-h-screen">
+      <Toaster />
+
       {/* Header */}
       <div className="border-b border-border bg-blue-500 text-white">
         <div className="max-w-6xl mx-auto px-6 py-5 flex items-center justify-between">
@@ -237,7 +270,7 @@ const SetProblems = () => {
               </div>
               <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
                 <button
-                  onClick={() => toggleForm(set.id)}
+                  onClick={() => { !set.isExpanded && toggleSet(set.id); toggleForm(set.id) }}
                   className="flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-white text-sm font-medium hover:text-blue-600 transition-colors"
                 >
                   <Plus className="h-3.5 w-3.5" />

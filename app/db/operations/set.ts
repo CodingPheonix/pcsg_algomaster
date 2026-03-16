@@ -68,7 +68,7 @@ export const fetchSetWithProblemsById = async (userId: string) => {
                     id: row.problemId,
                     name: row.problemName as string,
                     link: row.problemLink as string,
-                    difficulty: row.problemDifficulty as "Easy" | "Medium" | "Hard",
+                    difficulty: row.problemDifficulty as "Easy" | "Normal" | "Hard",
                     videoLink: row.problemVideoLink as string
                 });
             }
