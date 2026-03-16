@@ -24,6 +24,24 @@ export const insertProblem = async (problem: Problem, setId: string, authorId: s
     }
 }
 
+export const updateProblem = async (problem: Problem) => {
+
+    console.log(problem)
+    try {
+        await db
+        .update(problemTable)
+        .set({
+            name: problem.name,
+            link: problem.link,
+            difficulty: problem.difficulty,
+            video_link: problem.videoLink,
+        })
+        .where(eq(problemTable.id, problem.id))
+    } catch (error) {
+        console.error(error)
+    }
+}
+
 export const removeProblem = async (problemId: string) => {
     try {
         await db

@@ -1,12 +1,12 @@
 'use client'
 
 import React, { useEffect, useState } from "react";
-import { Plus, Trash2, ExternalLink, FileText, Play, Wand2, ChevronDown, ChevronRight } from "lucide-react";
+import { Plus, Trash2, ExternalLink, FileText, Play, Wand2, ChevronDown, ChevronRight, FilePen } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { deleteSetById, fetchSetWithProblemsById, insertSet } from "@/app/db/operations/set";
 import { useUserContext } from "@/app/context/userContext";
 import { toast, Toaster } from "sonner";
-import { insertProblem, removeProblem } from "@/app/db/operations/problems";
+import { insertProblem, removeProblem, updateProblem } from "@/app/db/operations/problems";
 import { deleteSetProblem, insertSetProblem } from "@/app/db/operations/setProblem";
 import { v4 } from "uuid";
 
@@ -30,6 +30,7 @@ const SetProblems = () => {
   const [sets, setSets] = useState<ProblemSet[]>([]);
   const [newSetName, setNewSetName] = useState("");
   const [showCreateSet, setShowCreateSet] = useState(false);
+  const [editingProblem, setEditingProblem] = useState<{ problemId: string, value: boolean }>({ problemId: "", value: false });
   const [formState, setFormState] = useState<Record<string, {
     name: string;
     link: string;
@@ -85,10 +86,17 @@ const SetProblems = () => {
     toast("Set deleted");
   };
 
-  const toggleForm = (setId: string) => {
+  const toggleForm = (setId: string, problem?: Problem) => {
     setFormState((prev) => ({
       ...prev,
-      [setId]: { ...prev[setId], showForm: !prev[setId]?.showForm },
+      [setId]: {
+        ...prev[setId],
+        showForm: !prev[setId]?.showForm,
+        name: problem?.name as string,
+        difficulty: problem?.difficulty as "Easy" | "Normal" | "Hard",
+        link: problem?.link as string,
+        videoLink: problem?.videoLink as string
+      },
     }));
   };
 
@@ -118,29 +126,52 @@ const SetProblems = () => {
       toast("Complete the fields");
       return;
     }
-
     const newProblem: Problem = {
-      id: v4(),
+      id: editingProblem.value ? editingProblem.problemId : v4(),
       name: form.name.trim(),
       link: form.link.trim(),
       difficulty: form.difficulty ?? "Easy",
       videoLink: form.videoLink?.trim() || "",
     };
 
-    await insertProblem(newProblem, setId, user.id);
+    if (editingProblem.value) {
 
-    await insertSetProblem(setId, newProblem.id);
+      await updateProblem(newProblem);
 
-    setSets((prev) =>
-      prev.map((s) =>
-        s.id === setId ? { ...s, problems: [...s.problems, newProblem] } : s
-      )
-    );
+      setSets((prev) =>
+        prev.map((s) =>
+          s.id === setId
+            ? {
+              ...s,
+              problems: s.problems.map((p) =>
+                p.id === newProblem.id ? { ...p, ...newProblem } : p
+              ),
+            }
+            : s
+        )
+      );
 
-    setFormState((prev) => ({
-      ...prev,
-      [setId]: { name: "", link: "", difficulty: "Easy", videoLink: "", showForm: false },
-    }));
+      setFormState((prev) => ({
+        ...prev,
+        [setId]: { name: "", link: "", difficulty: "Easy", videoLink: "", showForm: false },
+      }));
+
+      toast("Problem Updated")
+    } else {
+      await insertProblem(newProblem, setId, user.id);
+      await insertSetProblem(setId, newProblem.id);
+
+      setSets((prev) =>
+        prev.map((s) =>
+          s.id === setId ? { ...s, problems: [...s.problems, newProblem] } : s
+        )
+      );
+
+      setFormState((prev) => ({
+        ...prev,
+        [setId]: { name: "", link: "", difficulty: "Easy", videoLink: "", showForm: false },
+      }));
+    }
   };
 
   const deleteProblem = async (setId: string, problemId: string) => {
@@ -326,7 +357,7 @@ const SetProblems = () => {
                     </div>
                     <div className="flex justify-end gap-2 mt-3">
                       <button
-                        onClick={() => toggleForm(set.id)}
+                        onClick={() => {toggleForm(set.id); editingProblem.value && setEditingProblem({...editingProblem, value: false})}}
                         className="px-3 py-1.5 rounded-md text-sm text-blue-300bg-blue-300-foreground hover:bg-blue-300 hover:text-foreground transition-colors"
                       >
                         Cancel
@@ -335,7 +366,7 @@ const SetProblems = () => {
                         onClick={() => addProblem(set.id)}
                         className="px-3 py-1.5 rounded-md bg-blue-500 text-white text-sm font-medium hover:bg-blue-500/90 transition-colors"
                       >
-                        Add Problem
+                        {editingProblem.value ? 'Update Problem' : 'Add Problem'}
                       </button>
                     </div>
                   </div>
@@ -406,7 +437,13 @@ const SetProblems = () => {
                                 </button>
                               </div>
                             </td>
-                            <td className="px-4 py-3">
+                            <td className="px-4 py-3 flex gap-3">
+                              <button
+                                onClick={() => {toggleForm(set.id, problem); setEditingProblem({...editingProblem, value: true, problemId: problem.id})}}
+                                className="p-1.5 rounded-md text-blue-300bg-blue-300-foreground hover:text-destructive hover:bg-blue-300 transition-colors"
+                              >
+                                <FilePen className="h-3.5 w-3.5" />
+                              </button>
                               <button
                                 onClick={() => deleteProblem(set.id, problem.id)}
                                 className="p-1.5 rounded-md text-blue-300bg-blue-300-foreground hover:text-destructive hover:bg-blue-300 transition-colors"
