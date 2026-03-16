@@ -3,6 +3,8 @@
 import React, { useState } from "react";
 import { Plus, Trash2, ExternalLink, FileText, Play, Wand2, ChevronDown, ChevronRight } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { deleteSetById, insertSet } from "@/app/db/operations/set";
+import { useUserContext } from "@/app/context/userContext";
 
 interface Problem {
   id: string;
@@ -20,11 +22,10 @@ interface ProblemSet {
 }
 
 const SetProblems = () => {
-  const router = useRouter();
+  // state list
   const [sets, setSets] = useState<ProblemSet[]>([]);
   const [newSetName, setNewSetName] = useState("");
   const [showCreateSet, setShowCreateSet] = useState(false);
-
   const [formState, setFormState] = useState<Record<string, {
     name: string;
     link: string;
@@ -32,20 +33,30 @@ const SetProblems = () => {
     videoLink: string;
     showForm: boolean;
   }>>({});
+  
+  // Contexts
+  const router = useRouter();
+  const {user} = useUserContext()
 
+  // Functions
   const createSet = () => {
     if (!newSetName.trim()) return;
+
     const newSet: ProblemSet = {
       id: crypto.randomUUID(),
       name: newSetName.trim(),
       problems: [],
       isExpanded: true,
     };
+
+    insertSet(newSet.id, newSet.name, user.id);
+
     setSets((prev) => [...prev, newSet]);
     setFormState((prev) => ({
       ...prev,
       [newSet.id]: { name: "", link: "", difficulty: "Easy", videoLink: "", showForm: false},
     }));
+
     setNewSetName("");
     setShowCreateSet(false);
   };
@@ -57,6 +68,9 @@ const SetProblems = () => {
   };
 
   const deleteSet = (setId: string) => {
+
+    deleteSetById(setId)
+
     setSets((prev) => prev.filter((s) => s.id !== setId));
     setFormState((prev) => {
       const copy = { ...prev };
@@ -96,6 +110,8 @@ const SetProblems = () => {
         s.id === setId ? { ...s, problems: [...s.problems, newProblem] } : s
       )
     );
+
+
 
     setFormState((prev) => ({
       ...prev,
