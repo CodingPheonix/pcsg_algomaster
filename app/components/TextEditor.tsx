@@ -51,12 +51,12 @@ const generateId = () => uuidv4();
 
 interface TextEditorProps {
   onSubmit: (title: string, blocks: TutorialBlock[]) => void;
-  prevBlocks?: TutorialBlock[];
-  problemId: string;
+  prevBlocks?: TutorialBlock[] | null;
+  taskId: string;
   prevTitle: string;
 }
 
-const TextEditor: React.FC<TextEditorProps> = ({ onSubmit, prevBlocks, problemId, prevTitle }) => {
+const TextEditor: React.FC<TextEditorProps> = ({ onSubmit, prevBlocks, taskId, prevTitle }) => {
     const [title, setTitle] = useState("");
     const [blocks, setBlocks] = useState<TutorialBlock[]>([]);
     const [showAddMenu, setShowAddMenu] = useState(false);

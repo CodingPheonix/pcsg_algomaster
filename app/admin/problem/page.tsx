@@ -9,6 +9,7 @@ import { toast, Toaster } from "sonner";
 import { insertProblem, removeProblem, updateProblem } from "@/app/db/operations/problems";
 import { deleteSetProblem, insertSetProblem } from "@/app/db/operations/setProblem";
 import { v4 } from "uuid";
+import { deleteProblemDescription } from "@/app/db/operations/problemDescription";
 
 export interface Problem {
   id: string;
@@ -185,6 +186,7 @@ const SetProblems = () => {
 
     await deleteSetProblem(problemId);
     await removeProblem(problemId);
+    await deleteProblemDescription(problemId);
 
     toast("Problem deleted!");
   };

@@ -1,3 +1,5 @@
+'use server'
+
 import { v4 } from "uuid"
 import { db } from ".."
 import { problemDescriptionTable } from "../schema"

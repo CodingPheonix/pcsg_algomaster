@@ -118,19 +118,19 @@ export const problemTable = mysqlTable('problem_table', {
 export const setProblemTable = mysqlTable('set_problem', {
   id: varchar({ length: 40 }).primaryKey(),
   set_id: varchar({length: 40}).notNull().references(() => setTable.id),
-  problem_id: varchar({length: 40}).notNull().references(() => problemTable.id),
+  problem_id: varchar({length: 40}).notNull().references(() => problemTable.id).unique(),
 })
 
 export const problemDescriptionTable = mysqlTable('problem_description', {
   id: varchar({ length: 40 }).primaryKey(),
   title: varchar({ length: 255 }),
   content: json().$type<Mixed[]>(),
-  problem_id: varchar({ length: 40 }).notNull().references(() => problemTable.id)
+  problem_id: varchar({ length: 40 }).notNull().references(() => problemTable.id).unique()
 })
 
 export const problemVisualsTable = mysqlTable('problem_visuals', {
   id: varchar({ length: 40 }).primaryKey(),
-  problem_id: varchar({ length: 40 }).notNull().references(() => problemTable.id),
+  problem_id: varchar({ length: 40 }).notNull().references(() => problemTable.id).unique(),
   code_text: varchar({ length: 500 }).notNull(),
   code_steps: json().$type<VisualizerAction[]>().notNull(),
   input_array: varchar({ length: 500 }).notNull()
