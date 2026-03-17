@@ -73,9 +73,18 @@ const SetProblems = () => {
     );
   };
 
-  const deleteSet = (setId: string) => {
+  const deleteSet = async (setId: string) => {
+    
+    // Delete all problems in a set from db
+    for (const set of sets) {
+      if (set.id === setId) {
+        for (const problem of set.problems) {
+          await deleteProblem(problem.id);
+        }
+      }
+    }
 
-    deleteSetById(setId)
+    await deleteSetById(setId);
 
     setSets((prev) => prev.filter((s) => s.id !== setId));
     setFormState((prev) => {
@@ -175,8 +184,8 @@ const SetProblems = () => {
     }
   };
 
-  const deleteProblem = async (setId: string, problemId: string) => {
-    setSets((prev) =>
+  const deleteProblem = async (problemId: string, setId?: string) => {
+    setId && setSets((prev) =>
       prev.map((s) =>
         s.id === setId
           ? { ...s, problems: s.problems.filter((p) => p.id !== problemId) }
@@ -185,10 +194,10 @@ const SetProblems = () => {
     );
 
     await deleteSetProblem(problemId);
-    await removeProblem(problemId);
     await deleteProblemDescription(problemId);
+    await removeProblem(problemId);
 
-    toast("Problem deleted!");
+    setId && toast("Problem deleted!");
   };
 
   const difficultyColor = (d: string) => {
@@ -358,7 +367,7 @@ const SetProblems = () => {
                     </div>
                     <div className="flex justify-end gap-2 mt-3">
                       <button
-                        onClick={() => {toggleForm(set.id); editingProblem.value && setEditingProblem({...editingProblem, value: false})}}
+                        onClick={() => { toggleForm(set.id); editingProblem.value && setEditingProblem({ ...editingProblem, value: false }) }}
                         className="px-3 py-1.5 rounded-md text-sm text-blue-300bg-blue-300-foreground hover:bg-blue-300 hover:text-foreground transition-colors"
                       >
                         Cancel
@@ -440,7 +449,7 @@ const SetProblems = () => {
                             </td>
                             <td className="px-4 py-3 flex gap-3">
                               <button
-                                onClick={() => {toggleForm(set.id, problem); setEditingProblem({...editingProblem, value: true, problemId: problem.id})}}
+                                onClick={() => { toggleForm(set.id, problem); setEditingProblem({ ...editingProblem, value: true, problemId: problem.id }) }}
                                 className="p-1.5 rounded-md text-blue-300bg-blue-300-foreground hover:text-destructive hover:bg-blue-300 transition-colors"
                               >
                                 <FilePen className="h-3.5 w-3.5" />

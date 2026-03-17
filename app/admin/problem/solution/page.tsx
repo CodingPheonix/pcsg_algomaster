@@ -5,6 +5,7 @@ import { fetchProblemDescription, insertProblemDescription, updateProblemDescrip
 import { Mixed } from '@/app/db/schema'
 import { useSearchParams } from 'next/navigation'
 import { Suspense, useEffect, useState } from 'react'
+import { toast, Toaster } from 'sonner'
 
 const ProblemDescription = () => {
 
@@ -21,6 +22,8 @@ const ProblemDescription = () => {
         } else {
             await updateProblemDescription(problem_id, title, blocks);
         }
+
+        toast("Post Updated")
     }
 
     useEffect(() => {
@@ -36,6 +39,8 @@ const ProblemDescription = () => {
 
     return (
         <div>
+            <Toaster />
+
             <TextEditor
                 taskId={problem_id}
                 prevTitle={title}
