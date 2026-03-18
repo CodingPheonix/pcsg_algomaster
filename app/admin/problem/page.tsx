@@ -199,8 +199,8 @@ const SetProblems = () => {
 
     await deleteSetProblem(problemId);
     await deleteProblemDescription(problemId);
-    await removeProblem(problemId);
     await deleteProblemVisuals(problemId);
+    await removeProblem(problemId);
 
     setId && toast("Problem deleted!");
   };
