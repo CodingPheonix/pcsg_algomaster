@@ -2,18 +2,29 @@
 
 import { useState, useRef, useCallback, useEffect, Suspense } from "react";
 import { ArrowLeft, Play, Pause, RotateCcw, SkipForward, ChevronDown, ChevronUp, Copy } from "lucide-react";
-import { ActionColors, getInstruction, VisualizerAction } from "./tools";
 import { toast, Toaster } from "sonner";
-import { mapping } from "./functions";
 import { fetchVisuals, insertVisuals } from "@/app/db/operations/algoVisuals";
 import { useSearchParams } from "next/navigation";
+import { mapping } from "@/app/admin/visual/create/functions";
+import { VisualizerAction, ActionColors, getInstruction } from "@/app/admin/visual/create/tools";
 
 export type Elements = {
     value: number;
     colour: string;
 }
 
-const Visualizer = () => {
+interface ArrayAnimatorsProps {
+    onSubmit: (problemId: string, code: string, algoSteps: VisualizerAction[], arrayInput: string) => void;
+    topic: string;
+    problemId?: string;
+    prevData?: {
+        codetext: string;
+        inputArray: string;
+        actionSteps: VisualizerAction[]
+    };
+}
+
+const ArrayAnimators: React.FC<ArrayAnimatorsProps> = ({ onSubmit, topic, problemId, prevData }) => {
 
     // State list
     const [code, setCode] = useState("");
@@ -30,10 +41,6 @@ const Visualizer = () => {
 
     // Use refs
     const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
-
-    // Hooks and custom actions
-    const searchparams = useSearchParams()
-    const subtopicId = searchparams.get('id') as string
 
     const currentStep: VisualizerAction | null = stepIndex >= 0 && stepIndex < steps.length ? steps[stepIndex] : null;
     const displayValues = currentArray;
@@ -81,13 +88,6 @@ const Visualizer = () => {
         setSteps([]);
         syncArray(arrayInput);
         if (intervalRef.current) clearInterval(intervalRef.current);
-
-        // setCurrentArray(arr =>
-        //     arr.map(e => ({
-        //         ...e,
-        //         colour: '#6c9eef'
-        //     }))
-        // );
     };
 
     const handleStepForward = () => {
@@ -96,8 +96,6 @@ const Visualizer = () => {
             setStepIndex(0);
             return;
         }
-
-        console.log("running...")
 
         setStepIndex((prev) => {
             if (prev >= steps.length - 1) {
@@ -122,9 +120,9 @@ const Visualizer = () => {
     };
 
     const handleAlgorithmUpload = () => {
-        if (!subtopicId || !code || !algoSteps || !arrayInput) return;
+        if (!problemId || !code || !algoSteps || !arrayInput) return;
 
-        insertVisuals({ subTopicId: subtopicId as string, code: code, codeSteps: algoSteps, inputValues: arrayInput });
+        onSubmit(problemId, code, algoSteps, arrayInput);
         toast("Algorithm Visual Uploaded")
     }
 
@@ -158,19 +156,20 @@ const Visualizer = () => {
 
     useEffect(() => {
         const fetchDetails = async () => {
-            const fetchData = await fetchVisuals(subtopicId);
+            if (!prevData) return;
 
-            if (!fetchData) return;
-            setArrayInput(fetchData[0]?.inputArray || "")
-            setTextValue(JSON.stringify(fetchData[0]?.steps || []))
-            const parsed = JSON.parse(JSON.stringify(fetchData[0]?.steps || {}));
+            setArrayInput(prevData.inputArray || "")
+            setTextValue(JSON.stringify(prevData.actionSteps || []))
+
+            const parsed = JSON.parse(JSON.stringify(prevData.actionSteps || {}));
             setAlgoSteps(parsed || []);
-            setCode(fetchData[0]?.code || "")
-            syncArray(fetchData[0]?.inputArray || "")
+
+            setCode(prevData.codetext || "")
+            syncArray(prevData.inputArray || "")
         }
 
         fetchDetails()
-    }, [subtopicId])
+    }, [problemId, prevData])
 
     const codeLines = code.split("\n");
 
@@ -184,7 +183,7 @@ const Visualizer = () => {
                         <ArrowLeft size={18} />
                         <span className="text-sm font-mono">Back</span>
                     </a>
-                    <h1 className="text-sm font-mono font-bold text-foreground">Algorithm Visualizer</h1>
+                    <h1 className="text-sm font-mono font-bold text-foreground">{topic} Visualizer</h1>
                     <div className="w-20" />
                 </div>
             </div>
@@ -371,14 +370,4 @@ const Visualizer = () => {
     );
 };
 
-const page = () => {
-    return (
-        <>
-            <Suspense fallback={<p>Loading...</p>}>
-                <Visualizer />
-            </Suspense>
-        </>
-    )
-}
-
-export default page;
+export default ArrayAnimators;
