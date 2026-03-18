@@ -10,6 +10,7 @@ import { insertProblem, removeProblem, updateProblem } from "@/app/db/operations
 import { deleteSetProblem, insertSetProblem } from "@/app/db/operations/setProblem";
 import { v4 } from "uuid";
 import { deleteProblemDescription } from "@/app/db/operations/problemDescription";
+import { deleteProblemVisuals } from "@/app/db/operations/problemVisuals";
 
 export interface Problem {
   id: string;
@@ -185,6 +186,9 @@ const SetProblems = () => {
   };
 
   const deleteProblem = async (problemId: string, setId?: string) => {
+
+    console.log("deleting...", problemId, setId)
+
     setId && setSets((prev) =>
       prev.map((s) =>
         s.id === setId
@@ -196,6 +200,7 @@ const SetProblems = () => {
     await deleteSetProblem(problemId);
     await deleteProblemDescription(problemId);
     await removeProblem(problemId);
+    await deleteProblemVisuals(problemId);
 
     setId && toast("Problem deleted!");
   };
@@ -455,7 +460,7 @@ const SetProblems = () => {
                                 <FilePen className="h-3.5 w-3.5" />
                               </button>
                               <button
-                                onClick={() => deleteProblem(set.id, problem.id)}
+                                onClick={() => deleteProblem(problem.id, set.id)}
                                 className="p-1.5 rounded-md text-blue-300bg-blue-300-foreground hover:text-destructive hover:bg-blue-300 transition-colors"
                               >
                                 <Trash2 className="h-3.5 w-3.5" />
