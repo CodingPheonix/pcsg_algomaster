@@ -9,8 +9,10 @@ import {
 import Navbar from "../components/Navbar";
 import { useRouter } from "next/navigation";
 import { User, UserRole } from "../utils/type";
-import { alterUserRole, fetchAllAdmins, fetchfilteredUsers } from "../db/operations/users";
+import { alterUserRole, fetchAllAdmins, fetchfilteredUsers, getAllUsersCount } from "../db/operations/users";
 import { toast } from "sonner";
+import { getTotalProblemCount } from "../db/operations/problems";
+import { getTotalTutorialCount } from "../db/operations/tutorials";
 
 // interface Admin {
 //   id: string;
@@ -27,11 +29,11 @@ import { toast } from "sonner";
 //   { id: "4", username: "mod_luna", email: "luna@algocraft.dev", role: "professor", dateJoined: "Feb 2025" },
 // ];
 
-const MOCK_STATS = {
-  totalUsers: 4821,
-  activeToday: 342,
-  problemsCreated: 156,
-  reportsOpen: 7,
+type Stats = {
+  totalUsers: number,
+  tutorialsCreated: number,
+  problemsCreated: number,
+  totalofficials: number,
 };
 
 const ROLE_STYLES: Record<string, string> = {
@@ -55,6 +57,7 @@ const AdminProfile = ({ user }: {
   // State list
   const [activeTab, setActiveTab] = useState<"dashboard" | "admins" | "app_management" | "settings">("dashboard");
   const [admins, setAdmins] = useState<User[]>([]);
+  const [statusBar, setStatusBar] = useState<Stats>({totalofficials: 0, totalUsers: 0, problemsCreated: 0, tutorialsCreated: 0})
   const [searchQuery, setSearchQuery] = useState("");
   const [showAddModal, setShowAddModal] = useState(false);
   const [isAddingAdmin, setIsAddingAdmin] = useState(false);
@@ -107,8 +110,22 @@ const AdminProfile = ({ user }: {
 
   useEffect(() => {
     const fetchAdmins = async () => {
-      const users = await fetchAllAdmins();
-      if (!users) return;
+
+      const [users, problemCount, tutorialCount, totalUsers] = await Promise.all([
+        fetchAllAdmins(), 
+        getTotalProblemCount(), 
+        getTotalTutorialCount(),
+        getAllUsersCount()
+      ])
+      
+      if (!users || !problemCount || !tutorialCount || !totalUsers) return;
+
+      setStatusBar({
+        totalUsers: totalUsers,
+        problemsCreated: problemCount,
+        tutorialsCreated: tutorialCount,
+        totalofficials: users.length
+      })
 
       const formattedUsers: User[] = users.map((user) => ({
         id: user.id,
@@ -176,10 +193,10 @@ const AdminProfile = ({ user }: {
         {activeTab === "dashboard" && (
           <div className="space-y-4">
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-              <DashStat icon={<Users size={18} />} label="Total Users" value={MOCK_STATS.totalUsers.toLocaleString()} color="text-blue-500" />
-              <DashStat icon={<Activity size={18} />} label="Active Today" value={MOCK_STATS.activeToday.toString()} color="text-accent" />
-              <DashStat icon={<BarChart3 size={18} />} label="Problems" value={MOCK_STATS.problemsCreated.toString()} color="text-foreground" />
-              <DashStat icon={<AlertTriangle size={18} />} label="Open Reports" value={MOCK_STATS.reportsOpen.toString()} color="text-red-border-red-500" />
+              <DashStat icon={<Users size={18} />} label="Total Users" value={statusBar.totalUsers.toString()} color="text-blue-500" />
+              <DashStat icon={<Activity size={18} />} label="Tutorials" value={statusBar.tutorialsCreated.toString()} color="text-accent" />
+              <DashStat icon={<BarChart3 size={18} />} label="Problems" value={statusBar.problemsCreated.toString()} color="text-foreground" />
+              <DashStat icon={<AlertTriangle size={18} />} label="Total Officials" value={statusBar.totalofficials.toString()} color="text-red-border-red-500" />
             </div>
 
             <div className="rounded-xl border border-slate-500 bg-card p-5">

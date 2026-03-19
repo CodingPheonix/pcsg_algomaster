@@ -138,3 +138,12 @@ export const fetchAllTutorialsWithSubtopic = async () => {
         throw error;
     }
 };
+
+export const getTotalTutorialCount = async () => {
+    try {
+        return await db
+            .$count(tutorialsTable)
+    } catch (error) {
+        console.error(error)
+    }
+}

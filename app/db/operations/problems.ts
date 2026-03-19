@@ -75,3 +75,12 @@ export const uploadHints = async (problemId: string, hints: string[]) => {
         console.error(error);
     }
 }
+
+export const getTotalProblemCount = async () => {
+    try {
+        return await db
+        .$count(problemTable)
+    } catch (error) {
+        console.error(error)
+    }
+}
