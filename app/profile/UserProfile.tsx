@@ -7,6 +7,7 @@ import {
   Star, TrendingUp, Target
 } from "lucide-react";
 import Navbar from "../components/Navbar";
+import { useSearchParams } from "next/navigation";
 import { useUserContext } from "../context/userContext";
 
 const MOCK_USER = {
@@ -78,7 +79,7 @@ const UserProfile = ({ user }: { user: any }) => {
               </div>
               <p className="text-sm text-slate-600 mb-3 max-w-lg">{u.bio}</p>
               <div className="flex flex-wrap gap-4 text-xs text-slate-600">
-                <span className="flex items-center gap-1.5"><Mail size={13} /> {u.email}</span>
+                <span className="flex items-center gap-1.5"><Mail size={13} /> {user.email}</span>
                 <span className="flex items-center gap-1.5"><Calendar size={13} /> Joined {u.joinedDate}</span>
                 <span className="flex items-center gap-1.5 text-orange-400"><Flame size={13} /> {u.streak}-day streak</span>
               </div>

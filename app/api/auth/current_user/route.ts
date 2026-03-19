@@ -30,7 +30,9 @@ export async function GET(request: NextRequest) {
             user: {
                 id: data[0].id,
                 username: data[0].username,
-                role: data[0].role
+                email: data[0].email,
+                role: data[0].role,
+                dateJoined: data[0].dateJoined
             }
         })
     } catch (error) {

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Shield, Users, Settings, Plus, Trash2, Search,
   BarChart3, Activity, AlertTriangle, CheckCircle2,
@@ -8,23 +8,24 @@ import {
 } from "lucide-react";
 import Navbar from "../components/Navbar";
 import { useRouter } from "next/navigation";
+import { User, UserRole } from "../utils/type";
+import { alterUserRole, fetchAllAdmins, fetchfilteredUsers } from "../db/operations/users";
+import { toast } from "sonner";
 
-interface Admin {
-  id: string;
-  username: string;
-  email: string;
-  role: "super_admin" | "admin" | "moderator";
-  addedDate: string;
-  lastActive: string;
-  status: "active" | "inactive";
-}
+// interface Admin {
+//   id: string;
+//   username: string;
+//   email: string;
+//   role: UserRole;
+//   dateJoined: string;
+// }
 
-const MOCK_ADMINS: Admin[] = [
-  { id: "1", username: "root_admin", email: "root@algocraft.dev", role: "super_admin", addedDate: "Oct 2024", lastActive: "Just now", status: "active" },
-  { id: "2", username: "mod_sarah", email: "sarah@algocraft.dev", role: "admin", addedDate: "Dec 2024", lastActive: "2h ago", status: "active" },
-  { id: "3", username: "mod_jake", email: "jake@algocraft.dev", role: "moderator", addedDate: "Jan 2025", lastActive: "1d ago", status: "active" },
-  { id: "4", username: "mod_luna", email: "luna@algocraft.dev", role: "moderator", addedDate: "Feb 2025", lastActive: "5d ago", status: "inactive" },
-];
+// const MOCK_ADMINS: User[] = [
+//   { id: "1", username: "root_admin", email: "root@algocraft.dev", role: "super_admin", dateJoined: "Oct 2024" },
+//   { id: "2", username: "mod_sarah", email: "sarah@algocraft.dev", role: "admin", dateJoined: "Dec 2024" },
+//   { id: "3", username: "mod_jake", email: "jake@algocraft.dev", role: "professor", dateJoined: "Jan 2025" },
+//   { id: "4", username: "mod_luna", email: "luna@algocraft.dev", role: "professor", dateJoined: "Feb 2025" },
+// ];
 
 const MOCK_STATS = {
   totalUsers: 4821,
@@ -47,42 +48,82 @@ const APP_MANAGEMENT_SECTIONS = [
 
 const AdminProfile = ({ user }: {
   user: {
-    id: string, username: string, role: "admin" | "user";
+    id: string, username: string, role: UserRole, email: string, dateJoined: Date
   }
 }) => {
 
   // State list
   const [activeTab, setActiveTab] = useState<"dashboard" | "admins" | "app_management" | "settings">("dashboard");
-  const [admins, setAdmins] = useState(MOCK_ADMINS);
+  const [admins, setAdmins] = useState<User[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [showAddModal, setShowAddModal] = useState(false);
-  const [newAdmin, setNewAdmin] = useState({ username: "", email: "", role: "moderator" as Admin["role"] });
+  const [isAddingAdmin, setIsAddingAdmin] = useState(false);
+  const [newUser, setnewUser] = useState({ id: "", username: "", email: "", role: "admin" as UserRole, dateJoined: new Date(Date.now()) });
 
-  const filteredAdmins = admins.filter(
-    (a) => a.username.toLowerCase().includes(searchQuery.toLowerCase()) || a.email.toLowerCase().includes(searchQuery.toLowerCase())
-  );
-
-
+  const filteredUsers: User[] = isAddingAdmin ? [newUser] : admins;
 
   const router = useRouter();
 
   const handleAddAdmin = (e: React.FormEvent) => {
     e.preventDefault();
-    const added: Admin = {
-      id: Date.now().toString(),
-      ...newAdmin,
-      addedDate: "Just now",
-      lastActive: "Never",
-      status: "active",
+    const added: User = {
+      ...newUser,
+      dateJoined: new Date(Date.now())
     };
     setAdmins([...admins, added]);
-    setNewAdmin({ username: "", email: "", role: "moderator" });
+    setnewUser({ id: "", username: "", email: "", role: "professor", dateJoined: new Date(Date.now()) });
     setShowAddModal(false);
   };
 
   const handleRemoveAdmin = (id: string) => {
     setAdmins(admins.filter((a) => a.id !== id));
   };
+
+  const handleSearchCandidate = async () => {
+    setIsAddingAdmin(true);
+
+    if (!searchQuery) {
+      toast("Search is Empty!");
+      return;
+    }
+
+    const user = await fetchfilteredUsers(searchQuery);
+    console.log(user)
+    user ? setnewUser({
+      id: user[0].id,
+      username: user[0].username,
+      email: user[0].email,
+      role: user[0].role as UserRole,
+      dateJoined: user[0].dateJoined
+    }) : setnewUser({ id: "", username: "", email: "", role: "professor", dateJoined: new Date(Date.now()) });
+  }
+
+  const handleRoleChange = async (id: string, role: UserRole) => {
+    if (!id || !role) return;
+
+    setnewUser({ ...newUser, role: role })
+    await alterUserRole(id, role);
+  }
+
+  useEffect(() => {
+    const fetchAdmins = async () => {
+      const users = await fetchAllAdmins();
+      if (!users) return;
+
+      const formattedUsers: User[] = users.map((user) => ({
+        id: user.id,
+        username: user.username,
+        email: user.email,
+        role: user.role as UserRole,
+        dateJoined: new Date(user.dateJoined),
+      })).filter((fetchedUsers) => fetchedUsers.id !== user.id);
+
+      setAdmins(formattedUsers);
+    };
+
+    fetchAdmins();
+  }, []);
+
 
   return (
     <div className="min-h-screen">
@@ -103,9 +144,9 @@ const AdminProfile = ({ user }: {
               </div>
               <p className="text-sm text-slate-600">Manage your platform, users, and admin team.</p>
               <div className="flex gap-4 mt-3 text-xs text-slate-600">
-                <span className="flex items-center gap-1.5"><Crown size={13} className="text-orange-500" /> root_admin</span>
-                <span className="flex items-center gap-1.5"><Mail size={13} /> root@algocraft.dev</span>
-                <span className="flex items-center gap-1.5"><Calendar size={13} /> Since Oct 2024</span>
+                <span className="flex items-center gap-1.5"><Crown size={13} className="text-orange-500" /> {user.role}</span>
+                <span className="flex items-center gap-1.5"><Mail size={13} /> {user.email}</span>
+                <span className="flex items-center gap-1.5"><Calendar size={13} /> Since {new Date(user.dateJoined).toLocaleString("default", { month: "short" })}{" "} {new Date(user.dateJoined).getFullYear()}</span>
               </div>
             </div>
           </div>
@@ -149,7 +190,7 @@ const AdminProfile = ({ user }: {
         )}
 
         {/* Manage Admins */}
-        {activeTab === "admins" && (
+        {activeTab === "admins" && (user.role === "admin" || user.role === "super_admin") && (
           <div className="space-y-4">
             {/* Toolbar */}
             <div className="flex flex-col sm:flex-row gap-3 justify-between">
@@ -159,15 +200,15 @@ const AdminProfile = ({ user }: {
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Search admins..."
+                  placeholder="Enter Email..."
                   className="w-full h-9 rounded-lg border border-slate-500 bg-secondary pl-9 pr-3 text-sm text-foreground placeholder:text-slate-600 outline-none focus:ring-2 focus:ring-blue-500 transition-all"
                 />
               </div>
               <button
-                onClick={() => setShowAddModal(true)}
-                className="h-9 px-4 rounded-lg bg-blue-500 text-black font-mono text-xs font-semibold hover:bg-blue-500/90 transition-colors flex items-center gap-2 shrink-0"
+                onClick={handleSearchCandidate}
+                className="h-9 px-4 rounded-lg bg-blue-500 text-white font-mono text-xs font-semibold hover:bg-blue-500/90 transition-colors flex items-center gap-2 shrink-0"
               >
-                <Plus size={15} /> Add Admin
+                <Plus size={15} /> Search
               </button>
             </div>
 
@@ -179,14 +220,14 @@ const AdminProfile = ({ user }: {
                     <th className="text-left px-5 py-3 text-xs font-medium text-slate-600">User</th>
                     <th className="text-left px-5 py-3 text-xs font-medium text-slate-600 hidden md:table-cell">Role</th>
                     <th className="text-left px-5 py-3 text-xs font-medium text-slate-600 hidden lg:table-cell">Added</th>
-                    <th className="text-left px-5 py-3 text-xs font-medium text-slate-600 hidden sm:table-cell">Last Active</th>
-                    <th className="text-left px-5 py-3 text-xs font-medium text-slate-600">Status</th>
+                    {/* <th className="text-left px-5 py-3 text-xs font-medium text-slate-600 hidden sm:table-cell">Last Active</th>
+                    <th className="text-left px-5 py-3 text-xs font-medium text-slate-600">Status</th> */}
                     <th className="text-right px-5 py-3 text-xs font-medium text-slate-600">Actions</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {filteredAdmins.map((admin) => (
-                    <tr key={admin.id} className="border-b border-slate-500 last:border-0 hover:bg-muted/30 transition-colors">
+                  {filteredUsers.map((admin, index) => (
+                    <tr key={index} className="border-b border-slate-500 last:border-0 hover:bg-muted/30 transition-colors">
                       <td className="px-5 py-3">
                         <div>
                           <p className="font-medium text-foreground font-mono">{admin.username}</p>
@@ -198,17 +239,17 @@ const AdminProfile = ({ user }: {
                           {admin.role.replace("_", " ")}
                         </span>
                       </td>
-                      <td className="px-5 py-3 text-slate-600 hidden lg:table-cell">{admin.addedDate}</td>
-                      <td className="px-5 py-3 text-slate-600 hidden sm:table-cell">{admin.lastActive}</td>
-                      <td className="px-5 py-3">
+                      <td className="px-5 py-3 text-slate-600 hidden lg:table-cell">{admin.dateJoined.toLocaleDateString()}</td>
+                      {/* <td className="px-5 py-3 text-slate-600 hidden sm:table-cell">{admin.lastActive}</td> */}
+                      {/* <td className="px-5 py-3">
                         <span className={`inline-flex items-center gap-1 text-xs font-medium ${admin.status === "active" ? "text-blue-500" : "text-slate-600"
                           }`}>
                           <span className={`h-1.5 w-1.5 rounded-full ${admin.status === "active" ? "bg-blue-500" : "bg-slate-600text-slate-600"}`} />
                           {admin.status}
                         </span>
-                      </td>
+                      </td> */}
                       <td className="px-5 py-3 text-right">
-                        {admin.role !== "super_admin" && (
+                        {admin.role !== "super_admin" && !isAddingAdmin && (
                           <button
                             onClick={() => handleRemoveAdmin(admin.id)}
                             className="p-1.5 rounded-md text-slate-600 hover:text-red-border-red-500 hover:bg-red-border-red-500/10 transition-colors"
@@ -218,9 +259,27 @@ const AdminProfile = ({ user }: {
                           </button>
                         )}
                       </td>
+
+                      <td>
+                        {admin.role !== "super_admin" && (
+                          <select
+                            value={admin.role}
+                            onChange={(e) => handleRoleChange(admin.id, e.target.value as UserRole)}
+                            className="px-3 py-2 rounded-lg border border-gray-300 bg-white text-sm 
+                 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 
+                 focus:border-blue-500 transition-all duration-200 
+                 hover:border-gray-400 cursor-pointer"
+                          >
+                            <option value="">Select role</option>
+                            <option value="admin">Admin</option>
+                            <option value="user">User</option>
+                            <option value="professor">Professor</option>
+                          </select>
+                        )}
+                      </td>
                     </tr>
                   ))}
-                  {filteredAdmins.length === 0 && (
+                  {filteredUsers.length === 0 && (
                     <tr>
                       <td colSpan={6} className="px-5 py-10 text-center text-slate-600">
                         No admins found.
@@ -286,8 +345,8 @@ const AdminProfile = ({ user }: {
                   <input
                     type="text"
                     required
-                    value={newAdmin.username}
-                    onChange={(e) => setNewAdmin({ ...newAdmin, username: e.target.value })}
+                    value={newUser.username}
+                    onChange={(e) => setnewUser({ ...newUser, username: e.target.value })}
                     placeholder="new_admin"
                     className="w-full h-10 rounded-lg border border-slate-500 bg-secondary px-3 text-sm text-foreground placeholder:text-slate-600 outline-none focus:ring-2 focus:ring-blue-500 transition-all"
                   />
@@ -297,8 +356,8 @@ const AdminProfile = ({ user }: {
                   <input
                     type="email"
                     required
-                    value={newAdmin.email}
-                    onChange={(e) => setNewAdmin({ ...newAdmin, email: e.target.value })}
+                    value={newUser.email}
+                    onChange={(e) => setnewUser({ ...newUser, email: e.target.value })}
                     placeholder="admin@algocraft.dev"
                     className="w-full h-10 rounded-lg border border-slate-500 bg-secondary px-3 text-sm text-foreground placeholder:text-slate-600 outline-none focus:ring-2 focus:ring-blue-500 transition-all"
                   />
@@ -306,8 +365,8 @@ const AdminProfile = ({ user }: {
                 <div className="space-y-1.5">
                   <label className="block text-sm font-medium text-foreground">Role</label>
                   <select
-                    value={newAdmin.role}
-                    onChange={(e) => setNewAdmin({ ...newAdmin, role: e.target.value as Admin["role"] })}
+                    value={newUser.role}
+                    onChange={(e) => setnewUser({ ...newUser, role: e.target.value as UserRole })}
                     className="w-full h-10 rounded-lg border border-slate-500 bg-secondary px-3 text-sm text-foreground outline-none focus:ring-2 focus:ring-blue-500 transition-all"
                   >
                     <option value="moderator">Moderator</option>

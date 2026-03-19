@@ -1,12 +1,7 @@
 'use client'
 
 import React, { useContext, createContext, useState, useEffect } from 'react'
-
-type User = {
-    id: string;
-    username: string;
-    role: "user" | "admin";
-}
+import { UserRole, User } from '../utils/type';
 
 type UserContextType = {
     user: User;
@@ -28,7 +23,9 @@ const UserProvider = ({ children }: { children: React.ReactNode }) => {
     const [user, setUser] = useState<User>({
         id: "",
         username: "",
-        role: "user"
+        email: "",
+        role: "user",
+        dateJoined: new Date(Date.now())
     });
 
     useEffect(() => {
@@ -47,11 +44,13 @@ const UserProvider = ({ children }: { children: React.ReactNode }) => {
                 setUser({
                     id: userData.user.id,
                     username: userData.user.username,
-                    role: userData.user.role
+                    email: userData.user.email,
+                    role: userData.user.role,
+                    dateJoined: userData.user.dateJoined
                 });
 
             } catch {
-                setUser({ id: "", username: "", role: "user" });
+                setUser({ id: "", username: "", role: "user", email: "", dateJoined: new Date(Date.now()) });
             }
         };
 

@@ -13,7 +13,7 @@ const page = () => {
 
     return (
         <div>
-            {user.id !== "" && (user?.role === "admin" ? <AdminProfile user={user} /> : <UserProfile user={user} />)}
+            {user.id !== "" && (user?.role === "admin" || user?.role === "super_admin" ? <AdminProfile user={user} /> : <UserProfile user={user} />)}
         </div>
     )
 }

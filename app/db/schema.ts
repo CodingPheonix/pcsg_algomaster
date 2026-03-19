@@ -1,4 +1,4 @@
-import { mysqlTable, varchar, json, date } from 'drizzle-orm/mysql-core';
+import { mysqlTable, varchar, json, date, datetime } from 'drizzle-orm/mysql-core';
 import { VisualizerAction } from '../admin/visual/create/tools';
 import { array } from 'zod';
 
@@ -53,6 +53,7 @@ export const usersTable = mysqlTable('users_table', {
   password: varchar({ length: 255 }).notNull(),
   email: varchar({ length: 255 }).notNull().unique(),
   role: varchar({ length: 50 }).notNull().default('user'),
+  dateJoined: datetime().notNull().default(new Date(Date.now()))
 });
 
 export const tutorialsTable = mysqlTable('tutorials_table', {
