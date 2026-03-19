@@ -57,6 +57,7 @@ export async function signup(state: FormState, formData: FormData) {
                 username,
                 email,
                 password: hashedPassword,
+                dateJoined: new Date(Date.now())
             })
             .$returningId()
     } catch (error) {

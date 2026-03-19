@@ -101,7 +101,7 @@ const AdminProfile = ({ user }: {
   const handleRoleChange = async (id: string, role: UserRole) => {
     if (!id || !role) return;
 
-    setnewUser({ ...newUser, role: role })
+    isAddingAdmin ? setnewUser({ ...newUser, role: role }) : setAdmins(admins.map((admin, _) => admin.id === id ? {...admin, role: role} : admin));
     await alterUserRole(id, role);
   }
 
@@ -139,12 +139,12 @@ const AdminProfile = ({ user }: {
               <div className="flex items-center gap-3 mb-1">
                 <h1 className="text-2xl font-bold font-mono text-blue-500">Admin Panel</h1>
                 <span className="px-2.5 py-0.5 rounded-full bg-blue-500/90 text-white text-xs font-semibold font-mono border border-blue-300">
-                  Super Admin
+                  {user.role[0].toUpperCase() + user.role.substring(1).replace("_", " ")}
                 </span>
               </div>
               <p className="text-sm text-slate-600">Manage your platform, users, and admin team.</p>
               <div className="flex gap-4 mt-3 text-xs text-slate-600">
-                <span className="flex items-center gap-1.5"><Crown size={13} className="text-orange-500" /> {user.role}</span>
+                <span className="flex items-center gap-1.5"><Crown size={13} className="text-orange-500" /> {user.role[0].toUpperCase() + user.role.substring(1).replace("_", " ")}</span>
                 <span className="flex items-center gap-1.5"><Mail size={13} /> {user.email}</span>
                 <span className="flex items-center gap-1.5"><Calendar size={13} /> Since {new Date(user.dateJoined).toLocaleString("default", { month: "short" })}{" "} {new Date(user.dateJoined).getFullYear()}</span>
               </div>
@@ -154,18 +154,22 @@ const AdminProfile = ({ user }: {
 
         {/* Tabs */}
         <div className="flex gap-1 mb-6 border-b border-slate-500">
-          {(["dashboard", "admins", "app_management", "settings"] as const).map((tab) => (
-            <button
-              key={tab}
-              onClick={() => setActiveTab(tab)}
-              className={`px-4 py-2.5 text-sm font-medium capitalize transition-colors border-b-2 -mb-px ${activeTab === tab
-                ? "text-blue-500 border-blue-500"
-                : "text-slate-600 border-transparent hover:text-blue-500 hover:border-blue-500"
-                }`}
-            >
-              {tab === "admins" ? "Manage Admins" : tab.replace("_", " ")}
-            </button>
-          ))}
+          {(["dashboard", "admins", "app_management", "settings"] as const)
+            .filter((tab) => user.role !== "professor" || tab !== "admins")
+            .map((tab) => (
+              <button
+                key={tab}
+                onClick={() => setActiveTab(tab)}
+                className={`px-4 py-2.5 text-sm font-medium capitalize transition-colors border-b-2 -mb-px ${activeTab === tab
+                  ? "text-blue-500 border-blue-500"
+                  : "text-slate-600 border-transparent hover:text-blue-500 hover:border-blue-500"
+                  }`}
+              >
+                {tab === "admins"
+                  ? "Manage Admins"
+                  : tab.replace("_", " ")}
+              </button>
+            ))}
         </div>
 
         {/* Dashboard */}
@@ -222,7 +226,7 @@ const AdminProfile = ({ user }: {
                     <th className="text-left px-5 py-3 text-xs font-medium text-slate-600 hidden lg:table-cell">Added</th>
                     {/* <th className="text-left px-5 py-3 text-xs font-medium text-slate-600 hidden sm:table-cell">Last Active</th>
                     <th className="text-left px-5 py-3 text-xs font-medium text-slate-600">Status</th> */}
-                    <th className="text-right px-5 py-3 text-xs font-medium text-slate-600">Actions</th>
+                    <th className="text-left px-5 py-3 text-xs font-medium text-slate-600">Actions</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -240,26 +244,6 @@ const AdminProfile = ({ user }: {
                         </span>
                       </td>
                       <td className="px-5 py-3 text-slate-600 hidden lg:table-cell">{admin.dateJoined.toLocaleDateString()}</td>
-                      {/* <td className="px-5 py-3 text-slate-600 hidden sm:table-cell">{admin.lastActive}</td> */}
-                      {/* <td className="px-5 py-3">
-                        <span className={`inline-flex items-center gap-1 text-xs font-medium ${admin.status === "active" ? "text-blue-500" : "text-slate-600"
-                          }`}>
-                          <span className={`h-1.5 w-1.5 rounded-full ${admin.status === "active" ? "bg-blue-500" : "bg-slate-600text-slate-600"}`} />
-                          {admin.status}
-                        </span>
-                      </td> */}
-                      <td className="px-5 py-3 text-right">
-                        {admin.role !== "super_admin" && !isAddingAdmin && (
-                          <button
-                            onClick={() => handleRemoveAdmin(admin.id)}
-                            className="p-1.5 rounded-md text-slate-600 hover:text-red-border-red-500 hover:bg-red-border-red-500/10 transition-colors"
-                            title="Remove admin"
-                          >
-                            <Trash2 size={15} />
-                          </button>
-                        )}
-                      </td>
-
                       <td>
                         {admin.role !== "super_admin" && (
                           <select
@@ -277,6 +261,17 @@ const AdminProfile = ({ user }: {
                           </select>
                         )}
                       </td>
+                      {/* <td className="px-5 py-3 text-right">
+                        {admin.role !== "super_admin" && !isAddingAdmin && (
+                          <button
+                            onClick={() => handleRemoveAdmin(admin.id)}
+                            className="p-1.5 rounded-md text-slate-600 hover:text-red-border-red-500 hover:bg-red-border-red-500/10 transition-colors"
+                            title="Remove admin"
+                          >
+                            <Trash2 size={15} />
+                          </button>
+                        )}
+                      </td> */}
                     </tr>
                   ))}
                   {filteredUsers.length === 0 && (
