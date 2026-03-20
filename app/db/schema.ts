@@ -1,6 +1,6 @@
-import { mysqlTable, varchar, json, date, datetime } from 'drizzle-orm/mysql-core';
+import { mysqlTable, varchar, json, date, datetime, boolean, text } from 'drizzle-orm/mysql-core';
 import { VisualizerAction } from '../admin/visual/create/tools';
-import { array } from 'zod';
+import { array, string } from 'zod';
 
 export type heading = {
   id: string;
@@ -111,7 +111,7 @@ export const problemTable = mysqlTable('problem_table', {
   link: varchar({ length: 100 }).notNull(),
   difficulty: varchar({ length: 10 }).notNull().default("Easy"),
   video_link: varchar({ length: 100 }),
-  set_id: varchar({ length: 40 }).notNull().references(() => setTable.id),
+  set_id: varchar({ length: 40 }).notNull().references(() => setTable.id), // remove this later
   author_id: varchar({ length: 40 }).notNull().references(() => usersTable.id),
   hints: json().$type<string[]>()
 })
@@ -135,4 +135,10 @@ export const problemVisualsTable = mysqlTable('problem_visuals', {
   code_text: varchar({ length: 500 }).notNull(),
   code_steps: json().$type<VisualizerAction[]>().notNull(),
   input_array: varchar({ length: 500 }).notNull()
+})
+
+export const userProblemTable = mysqlTable('user_problem', {
+  id: varchar({ length: 40 }).primaryKey(),
+  user_id: varchar({length: 40}).notNull(),
+  problem_ids: json().$type<string[]>()
 })
