@@ -138,6 +138,6 @@ export const problemVisualsTable = mysqlTable('problem_visuals', {
 
 export const userProblemTable = mysqlTable('user_problem', {
   id: varchar({ length: 40 }).primaryKey(),
-  user_id: varchar({length: 40}).notNull(),
+  user_id: varchar({length: 40}).notNull().unique().references(() => usersTable.id),
   problem_ids: json().$type<string[]>()
 })

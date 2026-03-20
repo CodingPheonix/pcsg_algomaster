@@ -24,8 +24,6 @@ export type Problem = {
 const allProblems = await fetchAllSetProblemWithSolutionAndAnimations() as SetWithProblems[]
 
 const page = () => {
-
-  console.log(allProblems)
   return (
     <div>
       <Client allProblems={allProblems} />

@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import Navbar from "../components/Navbar";
 import { SetWithProblems } from "./page";
 import { useUserContext } from "../context/userContext";
-import { fetchAllProblemStatus } from "../db/operations/userProblem";
+import { fetchAllProblemStatus, updateAddProblemStatus, updateRemoveProblemStatus } from "../db/operations/userProblem";
 
 type Status = "not_started" | "in_progress" | "completed";
 
@@ -60,8 +60,10 @@ const ProblemSections = ({ allProblems }: { allProblems: SetWithProblems[] }) =>
         () => Object.fromEntries(allProblems.map((s) => [s.id, true]))
     );
     const [statuses, setStatuses] = useState<Record<string, Status>>({});
-    
-    const {user} = useUserContext()
+    const [problemStatusList, setProblemStatusList] = useState<string[]>([]);
+    const [problemList, setProblemList] = useState<SetWithProblems[]>([])
+
+    const { user } = useUserContext()
     const router = useRouter();
 
     const toggleSection = (id: string) => {
@@ -91,24 +93,66 @@ const ProblemSections = ({ allProblems }: { allProblems: SetWithProblems[] }) =>
             total += 1
         })
 
-        return {completed, total}
+        return { completed, total }
     };
 
-    const handleProblemStatusChange = (problemId: string) => {
+    // const handleProblemStatusChange = async (problemId: string, isChecked: boolean) => {
+    //     if (!problemId) return;
 
+    //     allProblems.forEach((set) => set.problems.forEach((problem) => problem.id === problemId ? problem.status = isChecked : problem.status))
+
+    //     isChecked ? await updateAddProblemStatus(user.id, problemId) : await updateRemoveProblemStatus(user.id, problemId);
+    // }
+
+    const handleProblemStatusChange = async (problemId: string, isChecked: boolean) => {
+        if (!problemId) return;
+
+        // ✅ Update UI state properly
+        setProblemList(prev =>
+            prev.map(set => ({
+                ...set,
+                problems: set.problems.map(problem =>
+                    problem.id === problemId
+                        ? { ...problem, status: isChecked }
+                        : problem
+                )
+            }))
+        )
+
+        // ✅ Backend call
+        if (isChecked) {
+            await updateAddProblemStatus(user.id, problemId)
+        } else {
+            await updateRemoveProblemStatus(user.id, problemId)
+        }
     }
 
     useEffect(() => {
-      const fetchProblemStatuses = async () => {
-        const problemList = await fetchAllProblemStatus(user.id) as unknown as string[];
+        const fetchProblemStatuses = async () => {
+            const allProblemList = await fetchAllProblemStatus(user.id)
 
-        if (!problemList) return;
+            if (!allProblemList || !allProblemList[0]?.problemList) {
+                setProblemList(allProblems)
+                return
+            }
 
-        allProblems.forEach((set) => set.problems.forEach((problem) => problemList.includes(problem.id) ? problem.status = true : problem.status = false))
-      }
-      fetchProblemStatuses()
-    }, [])
-    
+            const list = allProblemList[0].problemList as string[]
+
+            // ✅ create new state immutably
+            const updated = allProblems.map(set => ({
+                ...set,
+                problems: set.problems.map(problem => ({
+                    ...problem,
+                    status: list.includes(problem.id)
+                }))
+            }))
+
+            setProblemList(updated)
+        }
+
+        fetchProblemStatuses()
+    }, [user.id, allProblems])
+
 
     return (
         <div className="min-h-screen bg-background text-foreground">
@@ -126,7 +170,7 @@ const ProblemSections = ({ allProblems }: { allProblems: SetWithProblems[] }) =>
 
             {/* Sections */}
             <div className="max-w-6xl mx-auto px-6 py-8 space-y-5">
-                {allProblems.map((section) => {
+                {problemList.map((section) => {
                     const { completed, total } = getSectionProgress(section);
                     const isExpanded = expandedSections[section.id];
 
@@ -241,7 +285,12 @@ const ProblemSections = ({ allProblems }: { allProblems: SetWithProblems[] }) =>
                                                         </td>
                                                         <td className="px-4 py-3">
                                                             <span className="flex justify-center items-center">
-                                                                <input type="checkbox" name="" id="" className="w-5 h-5" onChange={() => { handleProblemStatusChange(problem.id) }} />
+                                                                <input
+                                                                    type="checkbox"
+                                                                    className="w-5 h-5"
+                                                                    checked={problem.status === true}
+                                                                    onChange={(e) => { handleProblemStatusChange(problem.id, e.target.checked) }}
+                                                                />
                                                             </span>
                                                         </td>
                                                     </tr>
