@@ -6,7 +6,7 @@ import { problemDescriptionTable, problemTable, problemVisualsTable, setProblemT
 import { eq } from "drizzle-orm";
 
 
-export const insertProblem = async (problem: Problem, setId: string, authorId: string) => {
+export const insertProblem = async (problem: Problem, authorId: string) => {
     try {
         await db
             .insert(problemTable)
@@ -16,7 +16,6 @@ export const insertProblem = async (problem: Problem, setId: string, authorId: s
                 link: problem.link,
                 difficulty: problem.difficulty,
                 video_link: problem.videoLink,
-                set_id: setId,
                 author_id: authorId
             })
     } catch (error) {

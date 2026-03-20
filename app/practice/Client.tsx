@@ -166,7 +166,7 @@ const ProblemSections = ({ allProblems }: { allProblems: SetWithProblems[] }) =>
                                 <div className="overflow-x-auto">
                                     <table className="w-full text-sm">
                                         <thead>
-                                            <tr className="border-b border-border bg-muted/20">
+                                            <tr className="border-b border-border bg-blue-100">
                                                 <th className="text-left px-6 py-3 font-medium text-muted-foreground w-10">#</th>
                                                 <th className="text-left px-4 py-3 font-medium text-muted-foreground">Problem</th>
                                                 <th className="text-left px-4 py-3 font-medium text-muted-foreground w-24">Difficulty</th>
@@ -180,7 +180,7 @@ const ProblemSections = ({ allProblems }: { allProblems: SetWithProblems[] }) =>
                                                 return (
                                                     <tr
                                                         key={problem.id}
-                                                        className="border-b border-border last:border-0 hover:bg-muted/20 transition-colors"
+                                                        className="border-b border-border last:border-0 hover:bg-blue-100 transition-colors"
                                                     >
                                                         <td className="px-6 py-3 text-muted-foreground">{idx + 1}</td>
                                                         <td className="px-4 py-3">

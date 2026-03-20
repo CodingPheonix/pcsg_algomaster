@@ -169,7 +169,7 @@ const SetProblems = () => {
 
       toast("Problem Updated")
     } else {
-      await insertProblem(newProblem, setId, user.id);
+      await insertProblem(newProblem, user.id);
       await insertSetProblem(setId, newProblem.id);
 
       setSets((prev) =>

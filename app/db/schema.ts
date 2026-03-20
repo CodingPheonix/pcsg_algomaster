@@ -107,11 +107,10 @@ export const setTable = mysqlTable('set_table', {
 
 export const problemTable = mysqlTable('problem_table', {
   id: varchar({ length: 40 }).primaryKey(),
-  name: varchar({ length: 50 }).notNull(),
-  link: varchar({ length: 100 }).notNull(),
+  name: varchar({ length: 200 }).notNull(),
+  link: varchar({ length: 1000 }).notNull(),
   difficulty: varchar({ length: 10 }).notNull().default("Easy"),
-  video_link: varchar({ length: 100 }),
-  set_id: varchar({ length: 40 }).notNull().references(() => setTable.id), // remove this later
+  video_link: varchar({ length: 1000 }),
   author_id: varchar({ length: 40 }).notNull().references(() => usersTable.id),
   hints: json().$type<string[]>()
 })
