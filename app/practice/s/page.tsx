@@ -8,7 +8,7 @@ import { fetchTopics } from '@/app/db/operations/topics'
 import { Mixed } from '@/app/db/schema'
 import { ArrowLeft, MessageSquare, Send } from 'lucide-react'
 import { useSearchParams } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import { Suspense, useEffect, useState } from 'react'
 import { v4 as UUIDv4 } from 'uuid'
 
 interface Comment {
@@ -18,7 +18,7 @@ interface Comment {
     time: Date;
 }
 
-const page = () => {
+const PracticeSolutions = () => {
 
     // State list
     const [blocks, setBlocks] = useState<Mixed[]>([]);
@@ -192,6 +192,14 @@ const page = () => {
             )}
         </div>
     )
+}
+
+const page = () => {
+  return (
+    <Suspense>
+      <PracticeSolutions />
+    </Suspense>
+  )
 }
 
 export default page

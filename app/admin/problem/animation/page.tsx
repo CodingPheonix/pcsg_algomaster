@@ -4,7 +4,7 @@ import ArrayAnimators from '@/app/components/animators/ArrayAnimators'
 import { useSearchParams } from 'next/navigation'
 import { VisualizerAction } from '../../visual/create/tools'
 import { fetchProblemVisuals, insertProblemVisuals } from '@/app/db/operations/problemVisuals'
-import { useEffect, useState } from 'react'
+import { Suspense, useEffect, useState } from 'react'
 
 const TOPIC = "Problem"
 
@@ -15,7 +15,7 @@ type ArrayAnimationProps = {
   arrayInput: string;
 }
 
-const page = () => {
+const Animation = () => {
 
   const [ArrayVisualizerData, setArrayVisualizerData] = useState<ArrayAnimationProps>({
     problemId: "",
@@ -46,6 +46,14 @@ const page = () => {
     <div>
       <ArrayAnimators topic={TOPIC} onSubmit={handleSubmit} problemId={problemId} prevData={{codetext: ArrayVisualizerData.code, inputArray: ArrayVisualizerData.arrayInput, actionSteps: ArrayVisualizerData.algoSteps}} />
     </div>
+  )
+}
+
+const page = () => {
+  return (
+    <Suspense fallback={<p>Loading...</p>}>
+      <Animation />
+    </Suspense>
   )
 }
 

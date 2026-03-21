@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Suspense } from 'react'
 import Client from './Client'
 import { fetchAllSetProblemWithSolutionAndAnimations } from '../db/operations/problems'
 import { Difficulty } from '../utils/type'
@@ -25,9 +25,9 @@ const allProblems = await fetchAllSetProblemWithSolutionAndAnimations() as SetWi
 
 const page = () => {
   return (
-    <div>
+    <Suspense fallback={<p>Loading...</p>}>
       <Client allProblems={allProblems} />
-    </div>
+    </Suspense>
   )
 }
 
