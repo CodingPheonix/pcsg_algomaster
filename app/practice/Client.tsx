@@ -246,8 +246,8 @@ const ProblemSections = ({ allProblems }: { allProblems: SetWithProblems[] }) =>
                                                         <td className="px-4 py-3">
                                                             <div className="grid grid-cols-4 gap-2 justify-items-center" style={{ minWidth: '380px' }}>
                                                                 <button
-                                                                    onClick={() => router.push(`/solution/${problem.id}`)}
-                                                                    className="flex items-center gap-1.5 px-2.5 py-1 rounded-md border border-input bg-background text-xs font-medium hover:bg-muted transition-colors w-[85px] justify-center hover:bg-slate-100"
+                                                                    onClick={() => router.push(`/practice/s?id=${problem.id}`)}
+                                                                    className="flex items-center gap-1.5 px-2.5 py-1 rounded-md border border-input bg-background text-xs font-medium hover:bg-muted transition-colors w-full justify-center hover:bg-slate-100"
                                                                 >
                                                                     <FileText className="h-3.5 w-3.5 shrink-0" />
                                                                     Solution
@@ -267,13 +267,19 @@ const ProblemSections = ({ allProblems }: { allProblems: SetWithProblems[] }) =>
                                                                         <span className="w-full" />
                                                                     )}
                                                                 </div>
-                                                                <button
-                                                                    onClick={() => router.push(`/animation/${problem.id}`)}
-                                                                    className="flex items-center gap-1.5 px-2.5 py-1 rounded-md border border-input bg-background text-xs font-medium hover:bg-muted transition-colors w-[85px] justify-center hover:bg-slate-100"
-                                                                >
-                                                                    <Wand2 className="h-3.5 w-3.5 shrink-0" />
-                                                                    Animation
-                                                                </button>
+                                                                <div className="w-[85px] flex justify-center">
+                                                                    {problem.visualsId ? (
+                                                                        <button
+                                                                            onClick={() => router.push(`practice/a?id=${problem.id}`)}
+                                                                            className="flex items-center gap-1.5 px-2.5 py-1 rounded-md border border-input bg-background text-xs font-medium hover:bg-muted transition-colors w-full justify-center hover:bg-slate-100"
+                                                                        >
+                                                                            <Wand2 className="h-3.5 w-3.5 shrink-0" />
+                                                                            Animation
+                                                                        </button>
+                                                                    ) : (
+                                                                        <span className="w-full"></span>
+                                                                    )}
+                                                                </div>
                                                                 <button
                                                                     onClick={() => router.push(`/notes/${problem.id}`)}
                                                                     className="flex items-center gap-1.5 px-2.5 py-1 rounded-md border border-input bg-background text-xs font-medium hover:bg-muted transition-colors w-[85px] justify-center hover:bg-slate-100"

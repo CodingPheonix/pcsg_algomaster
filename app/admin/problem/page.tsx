@@ -11,6 +11,7 @@ import { deleteSetProblem, insertSetProblem } from "@/app/db/operations/setProbl
 import { v4 } from "uuid";
 import { deleteProblemDescription } from "@/app/db/operations/problemDescription";
 import { deleteProblemVisuals } from "@/app/db/operations/problemVisuals";
+import Navbar from "@/app/components/Navbar";
 
 export interface Problem {
   id: string;
@@ -241,9 +242,10 @@ const SetProblems = () => {
   return (
     <div className="min-h-screen">
       <Toaster />
+      <Navbar />
 
       {/* Header */}
-      <div className="border-b border-border bg-blue-500 text-white">
+      <div className="border-b border-border bg-blue-500 text-white mt-16">
         <div className="max-w-6xl mx-auto px-6 py-5 flex items-center justify-between">
           <div>
             <h1 className="text-2xl font-bold tracking-tight">Problem Sets</h1>

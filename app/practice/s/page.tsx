@@ -1,16 +1,15 @@
 'use client'
 
-import { useState, Suspense } from "react";
-import { ArrowLeft, Code, MessageSquare, Send } from "lucide-react";
-import CodeBlockViewer from "@/app/components/CodeBlockViewer";
-import { BlockRenderer } from "@/app/components/BlockRenderer";
-import { Mixed } from "@/app/db/schema";
-import { useSearchParams } from "next/navigation";
-import { useEffect } from "react";
-import { fetchTopics } from "@/app/db/operations/topics";
-import { useUserContext } from "@/app/context/userContext";
-import { v4 as UUIDv4 } from "uuid";
-import { fetchComments, uploadComment } from "@/app/db/operations/comments";
+import { BlockRenderer } from '@/app/components/BlockRenderer'
+import { useUserContext } from '@/app/context/userContext'
+import { uploadComment, fetchComments } from '@/app/db/operations/comments'
+import { fetchProblemDescription } from '@/app/db/operations/problemDescription'
+import { fetchTopics } from '@/app/db/operations/topics'
+import { Mixed } from '@/app/db/schema'
+import { ArrowLeft, MessageSquare, Send } from 'lucide-react'
+import { useSearchParams } from 'next/navigation'
+import { useEffect, useState } from 'react'
+import { v4 as UUIDv4 } from 'uuid'
 
 interface Comment {
     id: string;
@@ -19,7 +18,8 @@ interface Comment {
     time: Date;
 }
 
-const TopicPage = () => {
+const page = () => {
+
     // State list
     const [blocks, setBlocks] = useState<Mixed[]>([]);
     const [comments, setComments] = useState<Comment[]>([]);
@@ -27,7 +27,7 @@ const TopicPage = () => {
 
     // Hooks
     const searchParams = useSearchParams()
-    const id = searchParams.get('id')
+    const id = searchParams.get('id') as string;
 
     const userContext = useUserContext()
     const { user } = userContext
@@ -81,8 +81,8 @@ const TopicPage = () => {
         const fetchtopics = async () => {
             if (!id) return;
 
-            const topics = await fetchTopics(id as string)
-            topics[0].content !== null && setBlocks(topics[0].content as unknown as Mixed[])
+            const topics = await fetchProblemDescription(id as string)
+            topics && topics[0].content !== null && setBlocks(topics[0].content as unknown as Mixed[])
         }
 
         const fetchComment = async () => {
@@ -185,13 +185,7 @@ const TopicPage = () => {
                 </div>
             </div>
         </div>
-    );
-};
-
-export default function Page() {
-  return (
-    <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
-      <TopicPage />
-    </Suspense>
-  );
+    )
 }
+
+export default page
