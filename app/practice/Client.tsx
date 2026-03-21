@@ -7,6 +7,7 @@ import Navbar from "../components/Navbar";
 import { SetWithProblems } from "./page";
 import { useUserContext } from "../context/userContext";
 import { fetchAllProblemStatus, updateAddProblemStatus, updateRemoveProblemStatus } from "../db/operations/userProblem";
+import HintPopup from "../components/HintPopup";
 
 type Status = "not_started" | "in_progress" | "completed";
 
@@ -59,9 +60,10 @@ const ProblemSections = ({ allProblems }: { allProblems: SetWithProblems[] }) =>
     const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>(
         () => Object.fromEntries(allProblems.map((s) => [s.id, true]))
     );
-    const [statuses, setStatuses] = useState<Record<string, Status>>({});
+    const [open, setOpen] = useState(false);
     const [problemStatusList, setProblemStatusList] = useState<string[]>([]);
-    const [problemList, setProblemList] = useState<SetWithProblems[]>([])
+    const [problemList, setProblemList] = useState<SetWithProblems[]>([]);
+    const [displayedHints, setDisplayedHints] = useState<string[]>([])
 
     const { user } = useUserContext()
     const router = useRouter();
@@ -127,9 +129,18 @@ const ProblemSections = ({ allProblems }: { allProblems: SetWithProblems[] }) =>
         }
     }
 
+    const showHints = async (hints: string[]) => {
+        console.log(hints)
+
+        setDisplayedHints(hints || [])
+        setOpen(true)
+    }
+
+
     useEffect(() => {
         const fetchProblemStatuses = async () => {
             const allProblemList = await fetchAllProblemStatus(user.id)
+            console.log(allProblemList)
 
             if (!allProblemList || !allProblemList[0]?.problemList) {
                 setProblemList(allProblems)
@@ -220,7 +231,6 @@ const ProblemSections = ({ allProblems }: { allProblems: SetWithProblems[] }) =>
                                         </thead>
                                         <tbody>
                                             {section.problems.map((problem, idx) => {
-                                                const status = statuses[problem.id] || "not_started";
                                                 return (
                                                     <tr
                                                         key={problem.id}
@@ -281,7 +291,7 @@ const ProblemSections = ({ allProblems }: { allProblems: SetWithProblems[] }) =>
                                                                     )}
                                                                 </div>
                                                                 <button
-                                                                    onClick={() => router.push(`/notes/${problem.id}`)}
+                                                                    onClick={() => { showHints(problem.hints as string[]) }}
                                                                     className="flex items-center gap-1.5 px-2.5 py-1 rounded-md border border-input bg-background text-xs font-medium hover:bg-muted transition-colors w-[85px] justify-center hover:bg-slate-100"
                                                                 >
                                                                     <StickyNote className="h-3.5 w-3.5 shrink-0" />
@@ -309,6 +319,10 @@ const ProblemSections = ({ allProblems }: { allProblems: SetWithProblems[] }) =>
                         </div>
                     );
                 })}
+
+                {open && (
+                    <HintPopup hints={displayedHints} onClose={() => setOpen(false)} />
+                )}
             </div>
         </div>
     );
