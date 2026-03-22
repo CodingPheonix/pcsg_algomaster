@@ -23,6 +23,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { BlockEditor } from "@/app/components/BlockEditor";
 import { addTopicContent, fetchTopics } from "@/app/db/operations/topics";
 import { useSearchParams } from "next/navigation";
+import { toast, Toaster } from "sonner";
 
 type BlockType = "text" | "heading" | "subheading" | "code" | "highlight";
 
@@ -121,6 +122,8 @@ const TopicPage = () => {
   const handleContentUpload = () => {
     if (subtopicId === null) return;
     addTopicContent(subtopicId as string, title, blocks)
+
+    toast("Topic Uploaded");
   }
 
   useEffect(() => {
@@ -131,10 +134,12 @@ const TopicPage = () => {
     }
     fetchTopicData();
   }, [subtopicId])
-  
+
 
   return (
     <div className="min-h-screen">
+      <Toaster />
+
       {/* Top bar */}
       <div className="sticky top-0 z-40 border-b backdrop-blur-xl">
         <div className="container mx-auto flex h-14 items-center justify-between px-4">

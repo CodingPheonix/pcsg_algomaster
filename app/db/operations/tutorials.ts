@@ -139,6 +139,18 @@ export const fetchAllTutorialsWithSubtopic = async () => {
     }
 };
 
+export const editTutorial = async (id: string, title: string) => {
+    try {
+        await db
+            .update(tutorialsTable)
+            .set({ title })
+            .where(eq(tutorialsTable.id, id));
+    } catch (error) {
+        console.error("Error editing tutorial:", error);
+        throw error;
+    }
+};
+
 export const getTotalTutorialCount = async () => {
     try {
         return await db

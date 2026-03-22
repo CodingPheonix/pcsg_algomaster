@@ -15,7 +15,7 @@ import {
   ArrowUpRight,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { fetchTutorials, fetchTutorialsWithSubtopic, insertTutorial } from "@/app/db/operations/tutorials";
+import { fetchTutorials, fetchTutorialsWithSubtopic, insertTutorial, editTutorial } from "@/app/db/operations/tutorials";
 import { v4 as UUIDv4 } from "uuid";
 import { useUserContext } from "@/app/context/userContext";
 import { deleteTopic, insertTopic } from "@/app/db/operations/topics";
@@ -76,15 +76,18 @@ const ManageTopics = () => {
 
   const addTopic = () => {
     if (!newTopic.name.trim() || !newTopic.type) return;
+
+    const newId = generateId()
+
     setTopics((prev) => [
       ...prev,
-      { id: generateId(), name: newTopic.name.trim(), subtopics: [], expanded: true, type: newTopic.type },
+      { id: newId, name: newTopic.name.trim(), subtopics: [], expanded: true, type: newTopic.type },
     ]);
 
     console.log(newTopic)
 
     insertTutorial({
-      id: UUIDv4(),
+      id: newId,
       title: newTopic.name.trim(),
       authorId: user?.id || "unknown",
       type: newTopic.type
@@ -112,7 +115,7 @@ const ManageTopics = () => {
   };
 
   const confirmSubTopicEdit = (topicId: string) => {
-    if (!editingSubTopic.id || !editingSubTopic.name.trim) return;
+    if (!editingSubTopic.id || !editingSubTopic.name.trim()) return;
 
     setTopics(prev =>
       prev.map(topic => {
@@ -143,7 +146,7 @@ const ManageTopics = () => {
     })
   }
 
-  const confirmEdit = () => {
+  const confirmEdit = async () => {
     if (!editingId || !editingValue.trim()) return;
     setTopics((prev) =>
       prev.map((t) => {
@@ -156,6 +159,11 @@ const ManageTopics = () => {
         };
       })
     );
+
+    console.log("hhhhhhhhhhhh")
+
+    await editTutorial(editingId, editingValue.trim());
+
     setEditingId(null);
     setEditingValue("");
   };
