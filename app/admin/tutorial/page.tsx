@@ -18,7 +18,7 @@ import { useRouter } from "next/navigation";
 import { fetchTutorials, fetchTutorialsWithSubtopic, insertTutorial } from "@/app/db/operations/tutorials";
 import { v4 as UUIDv4 } from "uuid";
 import { useUserContext } from "@/app/context/userContext";
-import { insertTopic } from "@/app/db/operations/topics";
+import { deleteTopic, insertTopic } from "@/app/db/operations/topics";
 import { addSubTopic, editSubTopic, remove_Subtopic } from "@/app/db/operations/subtopics";
 import { addTutorialSubtopicsRelation, removeTutorialSubTopicRelation } from "@/app/db/operations/tutorialSubtopics";
 
@@ -93,7 +93,10 @@ const ManageTopics = () => {
     setNewTopic({name: "", type: "algorithm"});
   };
 
-  const removeTopic = (id: string) => {
+  const removeTopic = async (id: string) => {
+
+    await deleteTopic(id);
+
     setTopics((prev) => prev.filter((t) => t.id !== id));
   };
 

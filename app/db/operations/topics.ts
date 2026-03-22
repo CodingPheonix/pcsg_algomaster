@@ -1,8 +1,8 @@
 "use server"
 
-import { eq } from "drizzle-orm"
+import { eq, inArray } from "drizzle-orm"
 import { db } from ".."
-import { Mixed, topicstable } from "../schema"
+import { Mixed, subtopicTable, topicstable, tutorialsTable, tutorialSubtopicsTable } from "../schema"
 
 export const insertTopic = async ({ id, title, content, tutorial_id }: { id: string, title?: string, content?: Mixed[], tutorial_id: string }) => {
     try {
@@ -47,3 +47,27 @@ export const addTopicContent = async ( topicId: string, title?: string | "untitl
         throw error;
     }
 }
+
+
+export const deleteTopic = async (topicId: string) => {
+  const subtopics = await db
+    .select({ subtopicId: tutorialSubtopicsTable.subtopicId })
+    .from(tutorialSubtopicsTable)
+    .where(eq(tutorialSubtopicsTable.tutorialId, topicId));
+
+  const subtopicIds = subtopics.map(s => s.subtopicId);
+
+  await db
+    .delete(tutorialSubtopicsTable)
+    .where(eq(tutorialSubtopicsTable.tutorialId, topicId));
+
+  if (subtopicIds.length > 0) {
+    await db
+      .delete(subtopicTable)
+      .where(inArray(subtopicTable.id, subtopicIds));
+  }
+
+  await db
+    .delete(tutorialsTable)
+    .where(eq(tutorialsTable.id, topicId));
+};
