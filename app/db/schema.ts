@@ -68,7 +68,7 @@ export const subtopicTable = mysqlTable('subtopic_table', {
   name: varchar({ length: 255 }).notNull(),
   description: varchar({ length: 255 }),
   difficulty: varchar({ length: 255 }).notNull().default("Easy"),
-  external_video: varchar({ length: 255 })
+  external_video: varchar({ length: 1000 })
 })
 
 export const tutorialSubtopicsTable = mysqlTable("tutorial_subtopics", {

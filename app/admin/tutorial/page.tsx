@@ -19,8 +19,8 @@ import { fetchTutorials, fetchTutorialsWithSubtopic, insertTutorial } from "@/ap
 import { v4 as UUIDv4 } from "uuid";
 import { useUserContext } from "@/app/context/userContext";
 import { insertTopic } from "@/app/db/operations/topics";
-import { addSubTopic, editSubTopic } from "@/app/db/operations/subtopics";
-import { addTutorialSubtopicsRelation } from "@/app/db/operations/tutorialSubtopics";
+import { addSubTopic, editSubTopic, remove_Subtopic } from "@/app/db/operations/subtopics";
+import { addTutorialSubtopicsRelation, removeTutorialSubTopicRelation } from "@/app/db/operations/tutorialSubtopics";
 
 interface SubTopic {
   id: string;
@@ -211,7 +211,11 @@ const ManageTopics = () => {
     setAddingSubFor(null);
   };
 
-  const removeSubtopic = (topicId: string, subId: string) => {
+  const removeSubtopic = async (topicId: string, subId: string) => {
+
+    await removeTutorialSubTopicRelation(subId);
+    await remove_Subtopic(subId);
+
     setTopics((prev) =>
       prev.map((t) =>
         t.id === topicId

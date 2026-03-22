@@ -37,3 +37,13 @@ export const editSubTopic = async (subTopic: SubTopic) => {
         console.error(error)
     }
 }
+
+export const remove_Subtopic = async (subtopicId: string) => {
+    try {
+        await db
+            .delete(subtopicTable)
+            .where(eq(subtopicTable.id, subtopicId))
+    } catch (error) {
+        console.error(error)
+    }
+}
