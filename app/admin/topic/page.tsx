@@ -204,10 +204,10 @@ const TopicPage = () => {
           )}
 
           {blocks.map((block, index) => (
-            <div key={block.id} className="group relative">
+            <div key={block.id} className="group relative pl-10">
               {/* Edit mode block */}
               {!previewMode && (
-                <div className="absolute -left-10 top-2 flex-col items-center gap-0.5 hidden group-hover:flex">
+                <div className="absolute left-0 top-2 flex-col items-center gap-0.5 hidden group-hover:flex">
                   <button
                     onClick={() => moveBlock(index, "up")}
                     disabled={index === 0}

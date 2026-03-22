@@ -134,6 +134,15 @@ const ManageTopics = () => {
 
     // Update db
     editSubTopic(editingSubTopic)
+
+
+    seteditingSubTopic({
+      id: "",
+      name: "",
+      description: "",
+      difficulty: "Easy",
+      external_video: ""
+    })
   }
 
   const cancelSubTopicEdit = () => {

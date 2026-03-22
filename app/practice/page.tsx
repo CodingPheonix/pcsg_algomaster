@@ -21,9 +21,10 @@ export type Problem = {
   status: boolean
 }
 
-const allProblems = await fetchAllSetProblemWithSolutionAndAnimations() as SetWithProblems[]
 
-const page = () => {
+const page = async () => {
+  const allProblems = await fetchAllSetProblemWithSolutionAndAnimations() as SetWithProblems[]
+
   return (
     <Suspense fallback={<p>Loading...</p>}>
       <Client allProblems={allProblems} />
