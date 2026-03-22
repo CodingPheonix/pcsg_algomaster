@@ -39,14 +39,6 @@ export interface TutorialBlock {
   activeLanguage?: string;
 }
 
-interface Comment {
-  id: string;
-  author: string;
-  avatar: string;
-  text: string;
-  time: string;
-}
-
 const BLOCK_OPTIONS: { type: BlockType; label: string; icon: React.ReactNode; desc: string }[] = [
   { type: "heading", label: "Heading", icon: <Heading1 size={18} />, desc: "Section title" },
   { type: "subheading", label: "Subheading", icon: <Heading2 size={18} />, desc: "Subsection title" },
@@ -65,23 +57,6 @@ const TopicPage = () => {
   const [showAddMenu, setShowAddMenu] = useState(false);
   const [addMenuIndex, setAddMenuIndex] = useState<number | null>(null);
   const [previewMode, setPreviewMode] = useState(false);
-  const [comments, setComments] = useState<Comment[]>([
-    {
-      id: "1",
-      author: "Alice",
-      avatar: "A",
-      text: "Great tutorial! The code examples really helped me understand the concept.",
-      time: "2 hours ago",
-    },
-    {
-      id: "2",
-      author: "Bob",
-      avatar: "B",
-      text: "Could you add an example for Rust as well?",
-      time: "45 minutes ago",
-    },
-  ]);
-  const [newComment, setNewComment] = useState("");
 
   const searchParams = useSearchParams()
   const subtopicId = searchParams.get('sub')
@@ -136,21 +111,6 @@ const TopicPage = () => {
       [copy[index], copy[newIndex]] = [copy[newIndex], copy[index]];
       return copy;
     });
-  };
-
-  const addComment = () => {
-    if (!newComment.trim()) return;
-    setComments((prev) => [
-      ...prev,
-      {
-        id: generateId(),
-        author: "You",
-        avatar: "Y",
-        text: newComment.trim(),
-        time: "Just now",
-      },
-    ]);
-    setNewComment("");
   };
 
   const openAddMenu = (index: number | null) => {
@@ -322,63 +282,6 @@ const TopicPage = () => {
             </div>
           </div>
         )}
-
-        {/* Divider */}
-        <div className="my-12 border-t border-border" />
-
-        {/* Comment Section */}
-        <div className="pb-16">
-          <div className="flex items-center gap-2 mb-6">
-            <MessageSquare size={20} className="text-blue-500bg-blue-500" />
-            <h2 className="text-lg font-mono font-bold text-foreground">
-              Comments <span className="text-muted-foreground font-normal">({comments.length})</span>
-            </h2>
-          </div>
-
-          {/* Add comment */}
-          <div className="mb-6 flex gap-3">
-            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-blue-500 text-xs font-bold text-blue-500bg-blue-500-foreground font-mono">
-              Y
-            </div>
-            <div className="flex-1">
-              <textarea
-                value={newComment}
-                onChange={(e) => setNewComment(e.target.value)}
-                placeholder="Add a comment..."
-                rows={2}
-                className="w-full resize-none rounded-lg border border-border bg-secondary px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground outline-none focus:ring-1 focus:ring-blue-500bg-blue-500 transition-colors"
-              />
-              <div className="flex justify-end mt-2">
-                <button
-                  onClick={addComment}
-                  disabled={!newComment.trim()}
-                  className="flex items-center gap-1.5 rounded-lg bg-blue-500 px-3 py-1.5 text-xs font-mono font-medium text-blue-500bg-blue-500-foreground hover:bg-blue-500/90 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
-                >
-                  <Send size={12} />
-                  Post
-                </button>
-              </div>
-            </div>
-          </div>
-
-          {/* Comments list */}
-          <div className="space-y-4">
-            {comments.map((c) => (
-              <div key={c.id} className="flex gap-3">
-                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-muted text-xs font-bold text-muted-foreground font-mono">
-                  {c.avatar}
-                </div>
-                <div className="flex-1 rounded-lg border border-border bg-card p-3">
-                  <div className="flex items-center gap-2 mb-1">
-                    <span className="text-sm font-medium text-foreground">{c.author}</span>
-                    <span className="text-[10px] text-muted-foreground">{c.time}</span>
-                  </div>
-                  <p className="text-sm text-secondary-foreground leading-relaxed">{c.text}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
       </div>
     </div>
   );
