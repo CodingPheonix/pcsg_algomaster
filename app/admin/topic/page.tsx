@@ -130,7 +130,7 @@ const TopicPage = () => {
     const fetchTopicData = async () => {
       const data = await fetchTopics(subtopicId as string);
       setTitle(data[0].title as string);
-      setBlocks((data[0].content as TutorialBlock[]) ?? [])
+      setBlocks((JSON.parse(data[0].content as unknown as string) as TutorialBlock[]) ?? [])
     }
     fetchTopicData();
   }, [subtopicId])
@@ -203,7 +203,7 @@ const TopicPage = () => {
             </div>
           )}
 
-          {blocks.map((block, index) => (
+          {blocks.length !== 0 && blocks.map((block, index) => (
             <div key={block.id} className="group relative pl-10">
               {/* Edit mode block */}
               {!previewMode && (

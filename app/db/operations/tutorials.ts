@@ -34,6 +34,7 @@ export const fetchTutorials = async (authorId: string) => {
 }
 
 export const fetchTutorialsWithSubtopic = async (authorId: string) => {
+    if (!authorId) return;
     try {
         const rows = await db
             .select({
