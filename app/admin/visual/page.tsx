@@ -2,6 +2,8 @@ import Navbar from '@/app/components/Navbar'
 import Client from './Client'
 import { fetchAllTutorialsWithSubtopic } from '@/app/db/operations/tutorials'
 
+export const dynamic = "force-dynamic";
+
 export type Topic = {
     id: string,
     title: string,
