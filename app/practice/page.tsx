@@ -2,6 +2,7 @@ import React, { Suspense } from 'react'
 import Client from './Client'
 import { fetchAllSetProblemWithSolutionAndAnimations } from '../db/operations/problems'
 import { Difficulty } from '../utils/type'
+import { verifySession } from '../lib/dal'
 
 export type SetWithProblems = {
   id: string
@@ -23,11 +24,12 @@ export type Problem = {
 
 
 const page = async () => {
+  const isVerified = await verifySession().then((res) => res.isAuth)
   const allProblems = await fetchAllSetProblemWithSolutionAndAnimations() as SetWithProblems[]
 
   return (
     <Suspense fallback={<p>Loading...</p>}>
-      <Client allProblems={allProblems} />
+      <Client allProblems={allProblems} isVerified={isVerified} />
     </Suspense>
   )
 }

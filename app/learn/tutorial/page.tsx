@@ -6,6 +6,7 @@ import { VisualizerAction, ActionColors, getInstruction } from '@/app/admin/visu
 import { insertVisuals, fetchVisuals } from '@/app/db/operations/algoVisuals';
 import { ArrowLeft, Copy, ChevronUp, ChevronDown, Pause, Play, SkipForward, RotateCcw } from 'lucide-react';
 import { useSearchParams } from 'next/navigation'
+import { parse } from 'path';
 import { Suspense, useCallback, useEffect, useRef, useState } from 'react'
 import { toast, Toaster } from 'sonner';
 
@@ -18,7 +19,7 @@ const TutorialPage = () => {
   const [arrayInput, setArrayInput] = useState("");
   const [currentArray, setCurrentArray] = useState<Elements[]>([]);
   const [steps, setSteps] = useState<VisualizerAction[]>([]);
-  const [stepIndex, setStepIndex] = useState(-1);
+  const [stepIndex, setStepIndex] = useState<number>(-1);
   const [isPlaying, setIsPlaying] = useState(false);
   const [speed] = useState(400);
   const [textValue, setTextValue] = useState("")
@@ -86,8 +87,6 @@ const TutorialPage = () => {
       return;
     }
 
-    console.log("running...")
-
     setStepIndex((prev) => {
       if (prev >= steps.length - 1) {
         handleReset();
@@ -95,11 +94,14 @@ const TutorialPage = () => {
       }
       setCurrentArray(prevArr => {
         const newArr = [...prevArr.map(e => ({ ...e, colour: '#6c9eef' }))]; // deep copy
-        mapping(prev, newArr, steps[prev]);
-        setStepDesc({
-          action: steps[prev].action[0].toUpperCase() + steps[prev].action.substring(1).replace("_", " "),
-          colour: ActionColors[steps[prev].action]
-        })
+        const step = steps[prev];
+        if (step) {
+          mapping(prev, newArr, step);
+          setStepDesc({
+            action: step.action[0].toUpperCase() + step.action.substring(1).replace("_", " "),
+            colour: ActionColors[step.action]
+          });
+        }
         return newArr;
       });
       return prev + 1;
@@ -108,6 +110,8 @@ const TutorialPage = () => {
 
   // UseEffects
   useEffect(() => {
+    if (steps.length === 0) return;
+
     if (isPlaying && steps.length > 0) {
       intervalRef.current = setInterval(() => {
         setStepIndex((prev) => {
@@ -118,11 +122,14 @@ const TutorialPage = () => {
           }
           setCurrentArray(prevArr => {
             const newArr = [...prevArr.map(e => ({ ...e, colour: '#6c9eef' }))]; // deep copy
-            mapping(prev, newArr, steps[prev]);
-            setStepDesc({
-              action: steps[prev].action[0].toUpperCase() + steps[prev].action.substring(1).replace("_", " "),
-              colour: ActionColors[steps[prev].action]
-            })
+            const step = steps[prev];
+            if (step) {
+              mapping(prev, newArr, step);
+              setStepDesc({
+                action: step.action[0].toUpperCase() + step.action.substring(1).replace("_", " "),
+                colour: ActionColors[step.action]
+              });
+            }
             return newArr;
           });
           return prev + 1;
@@ -142,7 +149,7 @@ const TutorialPage = () => {
       setArrayInput(fetchData[0]?.inputArray || "")
       setTextValue(JSON.stringify(fetchData[0]?.steps || []))
       const parsed = JSON.parse(JSON.stringify(fetchData[0]?.steps || {}));
-      setAlgoSteps(parsed || []);
+      setAlgoSteps(JSON.parse(parsed) || []);
       setCode(fetchData[0]?.code || "Data not Available")
       syncArray(fetchData[0]?.inputArray || "0, 0, 0, 0, 0")
     }

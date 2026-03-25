@@ -8,6 +8,7 @@ import { SetWithProblems } from "./page";
 import { useUserContext } from "../context/userContext";
 import { fetchAllProblemStatus, updateAddProblemStatus, updateRemoveProblemStatus } from "../db/operations/userProblem";
 import HintPopup from "../components/HintPopup";
+import { verifySession } from "../lib/dal";
 
 type Status = "not_started" | "in_progress" | "completed";
 
@@ -56,7 +57,7 @@ type Status = "not_started" | "in_progress" | "completed";
 //     },
 // ];
 
-const ProblemSections = ({ allProblems }: { allProblems: SetWithProblems[] }) => {
+const ProblemSections = ({ allProblems, isVerified }: { allProblems: SetWithProblems[], isVerified: boolean }) => {
     const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>(
         () => Object.fromEntries(allProblems.map((s) => [s.id, true]))
     );
@@ -305,7 +306,7 @@ const ProblemSections = ({ allProblems }: { allProblems: SetWithProblems[] }) =>
                                                                     type="checkbox"
                                                                     className="w-5 h-5"
                                                                     checked={problem.status === true}
-                                                                    onChange={(e) => { handleProblemStatusChange(problem.id, e.target.checked) }}
+                                                                    onChange={(e) => { isVerified && handleProblemStatusChange(problem.id, e.target.checked) }}
                                                                 />
                                                             </span>
                                                         </td>
