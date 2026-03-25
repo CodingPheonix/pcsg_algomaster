@@ -13,9 +13,8 @@ type Subtopic = {
     name: string
 }
 
-const topics: Topic[] = await fetchAllTutorialsWithSubtopic()
-
-const page = () => {
+const page = async () => {
+    const topics: Topic[] = await fetchAllTutorialsWithSubtopic()
     return (
         <div>
             <Navbar />
