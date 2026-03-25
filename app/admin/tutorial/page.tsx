@@ -250,9 +250,8 @@ const ManageTopics = () => {
       if (!user?.id) return;
 
       const tutorials = await fetchTutorialsWithSubtopic(user?.id);
-      console.log(tutorials)
-      setTopics(tutorials.map((t) => {
-        console.log(t)
+
+      if (tutorials) setTopics(tutorials.map((t) => {
         return {
           id: t.id,
           name: t.title,
