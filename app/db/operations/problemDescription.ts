@@ -5,18 +5,28 @@ import { db } from ".."
 import { problemDescriptionTable } from "../schema"
 import { TutorialBlock } from "@/app/components/TextEditor"
 import { eq } from "drizzle-orm"
+import { prisma } from "../prisma"
 
 
 export const insertProblemDescription = async (title: string, content: TutorialBlock[], problemId: string) => {
     try {
-        await db
-            .insert(problemDescriptionTable)
-            .values({
+        // await db
+        //     .insert(problemDescriptionTable)
+        //     .values({
+        //         id: v4(),
+        //         title,
+        //         content,
+        //         problem_id: problemId
+        //     })
+
+        await prisma.problem_description.create({
+            data: {
                 id: v4(),
                 title,
-                content,
+                content: content.toString(),
                 problem_id: problemId
-            })
+            }
+        })
     } catch (error) {
         console.error(error)
     }
@@ -24,10 +34,16 @@ export const insertProblemDescription = async (title: string, content: TutorialB
 
 export const fetchProblemDescription = async (problemId: string) => {
     try {
-        return await db
-            .select()
-            .from(problemDescriptionTable)
-            .where(eq(problemDescriptionTable.problem_id, problemId))
+        // return await db
+        //     .select()
+        //     .from(problemDescriptionTable)
+        //     .where(eq(problemDescriptionTable.problem_id, problemId))
+
+        return await prisma.problem_description.findFirst({
+            where: {
+                problem_id: problemId
+            }
+        })
     } catch (error) {
         console.error(error)
     }
@@ -39,13 +55,23 @@ export const updateProblemDescription = async (
     content: TutorialBlock[]
 ) => {
     try {
-        await db
-            .update(problemDescriptionTable)
-            .set({
+        // await db
+        //     .update(problemDescriptionTable)
+        //     .set({
+        //         title,
+        //         content
+        //     })
+        //     .where(eq(problemDescriptionTable.problem_id, problemId));
+
+        await prisma.problem_description.update({
+            where: {
+                problem_id: problemId
+            },
+            data: {
                 title,
-                content
-            })
-            .where(eq(problemDescriptionTable.problem_id, problemId));
+                content: content.toString()
+            }
+        })
     } catch (error) {
         console.error(error);
     }
@@ -53,9 +79,15 @@ export const updateProblemDescription = async (
 
 export const deleteProblemDescription = async (problemId: string) => {
     try {
-        await db
-            .delete(problemDescriptionTable)
-            .where(eq(problemDescriptionTable.problem_id, problemId));
+        // await db
+        //     .delete(problemDescriptionTable)
+        //     .where(eq(problemDescriptionTable.problem_id, problemId));
+
+        await prisma.problem_description.delete({
+            where: {
+                problem_id: problemId
+            }
+        })
     } catch (error) {
         console.error(error);
     }
