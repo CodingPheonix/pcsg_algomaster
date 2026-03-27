@@ -250,25 +250,25 @@ const ManageTopics = () => {
       if (!user?.id) return;
 
       const tutorials = await fetchTutorialsWithSubtopic(user?.id);
+console.log(tutorials)
 
       if (tutorials) setTopics(tutorials.map((t) => {
         return {
           id: t.id,
           name: t.title,
-          type: t.type,
-          subtopics: t.subtopics ? t.subtopics.map((s:
-            {
+          type: t.type as "algorithm" | "data_structure",
+          subtopics: t.subtopics ? t.subtopics.map((s: {
               id: string,
               name: string,
-              description: string,
-              difficulty: "Easy" | "Normal" | "Hard",
-              external_video: string
+              description: string | null,
+              difficulty: string,
+              external_video: string | null
             }) => ({
               id: s.id,
               name: s.name,
-              description: s.description,
-              difficulty: s.difficulty,
-              external_video: s.external_video
+              description: s.description || "",
+              difficulty: (s.difficulty || "Easy") as "Easy" | "Normal" | "Hard",
+              external_video: s.external_video || ""
             })) : [],
           expanded: false
         }

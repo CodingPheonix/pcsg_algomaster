@@ -1,0 +1,153 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "mysql"
+}
+
+model algovisuals_table {
+  id             String          @id @db.VarChar(40)
+  subtopic_id    String?         @db.VarChar(40)
+  code_text      String          @db.VarChar(500)
+  code_steps     String          @db.LongText
+  input_array    String          @db.VarChar(30)
+  subtopic_table subtopic_table? @relation(fields: [subtopic_id], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "algovisuals_table_subtopic_id_subtopic_table_id_fk")
+
+  @@index([subtopic_id], map: "algovisuals_table_subtopic_id_subtopic_table_id_fk")
+}
+
+model comments_table {
+  id           String       @id @db.VarChar(40)
+  username     String       @db.VarChar(100)
+  message      String       @db.VarChar(500)
+  time         DateTime?    @db.Date
+  topic_id     String       @db.VarChar(40)
+  topics_table topics_table @relation(fields: [topic_id], references: [id], onUpdate: Restrict, map: "comments_table_topic_id_topics_table_id_fk")
+
+  @@index([topic_id], map: "comments_table_topic_id_topics_table_id_fk")
+}
+
+model problem_description {
+  id            String        @id @db.VarChar(40)
+  title         String?       @db.VarChar(255)
+  content       String?       @db.LongText
+  problem_id    String        @unique(map: "problem_description_problem_id_unique") @db.VarChar(40)
+  problem_table problem_table @relation(fields: [problem_id], references: [id], onUpdate: Restrict, map: "problem_description_problem_id_problem_table_id_fk")
+}
+
+model problem_table {
+  id                  String               @id @db.VarChar(40)
+  name                String               @db.VarChar(200)
+  link                String               @db.VarChar(1000)
+  difficulty          String               @default("Easy") @db.VarChar(10)
+  video_link          String?              @db.VarChar(1000)
+  author_id           String               @db.VarChar(40)
+  hints               String?              @db.LongText
+  problem_description problem_description?
+  users_table         users_table          @relation(fields: [author_id], references: [id], onUpdate: Restrict, map: "problem_table_author_id_users_table_id_fk")
+  problem_visuals     problem_visuals?
+  set_problem         set_problem?
+
+  @@index([author_id], map: "problem_table_author_id_users_table_id_fk")
+}
+
+model problem_visuals {
+  id            String        @id @db.VarChar(40)
+  problem_id    String        @unique(map: "problem_visuals_problem_id_unique") @db.VarChar(40)
+  code_text     String        @db.VarChar(500)
+  code_steps    String        @db.LongText
+  input_array   String        @db.VarChar(500)
+  problem_table problem_table @relation(fields: [problem_id], references: [id], onUpdate: Restrict, map: "problem_visuals_problem_id_problem_table_id_fk")
+}
+
+model set_problem {
+  id            String        @id @db.VarChar(40)
+  set_id        String        @db.VarChar(40)
+  problem_id    String        @unique(map: "set_problem_problem_id_unique") @db.VarChar(40)
+  problem_table problem_table @relation(fields: [problem_id], references: [id], onUpdate: Restrict, map: "set_problem_problem_id_problem_table_id_fk")
+  set_table     set_table     @relation(fields: [set_id], references: [id], onUpdate: Restrict, map: "set_problem_set_id_set_table_id_fk")
+
+  @@index([set_id], map: "set_problem_set_id_set_table_id_fk")
+}
+
+model set_table {
+  id          String        @id @db.VarChar(40)
+  name        String        @db.VarChar(100)
+  author_id   String        @db.VarChar(40)
+  set_problem set_problem[]
+  users_table users_table   @relation(fields: [author_id], references: [id], onUpdate: Restrict, map: "set_table_author_id_users_table_id_fk")
+
+  @@index([author_id], map: "set_table_author_id_users_table_id_fk")
+}
+
+model subtopic_table {
+  id                 String               @id @db.VarChar(40)
+  name               String               @db.VarChar(255)
+  description        String?              @db.VarChar(255)
+  difficulty         String               @default("Easy") @db.VarChar(255)
+  external_video     String?              @db.VarChar(1000)
+
+  tutorial_id        String               @db.VarChar(40)
+  tutorial_table     tutorials_table      @relation(fields: [tutorial_id], references: [id], onUpdate: Restrict)
+
+  algovisuals_table  algovisuals_table[]
+
+  @@index([tutorial_id])
+}
+
+model topics_table {
+  id              String           @id @db.VarChar(40)
+  title           String?          @db.VarChar(255)
+  content         String?          @db.LongText
+  tutorial_id     String           @db.VarChar(40)
+  comments_table  comments_table[]
+  tutorials_table tutorials_table  @relation(fields: [tutorial_id], references: [id], onUpdate: Restrict, map: "topics_table_tutorial_id_tutorials_table_id_fk")
+
+  @@index([tutorial_id], map: "topics_table_tutorial_id_tutorials_table_id_fk")
+}
+
+// model tutorial_subtopics {
+//   id              String          @id
+//   tutorialId      String          @db.VarChar(40)
+//   subtopicId      String          @db.VarChar(40)
+//   subtopic_table  subtopic_table  @relation(fields: [subtopicId], references: [id], onUpdate: Restrict, map: "tutorial_subtopics_subtopicId_subtopic_table_id_fk")
+//   tutorials_table tutorials_table @relation(fields: [tutorialId], references: [id], onUpdate: Restrict, map: "tutorial_subtopics_tutorialId_tutorials_table_id_fk")
+
+//   @@index([subtopicId], map: "tutorial_subtopics_subtopicId_subtopic_table_id_fk")
+//   @@index([tutorialId], map: "tutorial_subtopics_tutorialId_tutorials_table_id_fk")
+// }
+
+model tutorials_table {
+  id                 String               @id @db.VarChar(40)
+  title              String               @db.VarChar(255)
+  authorId           String               @db.VarChar(255)
+  type               String               @default("algorithm") @db.VarChar(20)
+  topics_table       topics_table[]
+  // tutorial_subtopics tutorial_subtopics[] 
+  subtopic_table     subtopic_table[]
+  users_table        users_table          @relation(fields: [authorId], references: [id], onUpdate: Restrict, map: "tutorials_table_authorId_users_table_id_fk")
+
+  @@index([authorId], map: "tutorials_table_authorId_users_table_id_fk")
+}
+
+model user_problem {
+  id          String      @id @db.VarChar(40)
+  user_id     String      @unique(map: "user_problem_user_id_unique") @db.VarChar(40)
+  problem_ids String?     @db.LongText
+  users_table users_table @relation(fields: [user_id], references: [id], onUpdate: Restrict, map: "user_problem_user_id_users_table_id_fk")
+}
+
+model users_table {
+  id              String            @id @db.VarChar(40)
+  username        String            @db.VarChar(255)
+  password        String            @db.VarChar(255)
+  email           String            @unique(map: "users_table_email_unique") @db.VarChar(255)
+  role            String            @default("user") @db.VarChar(50)
+  dateJoined      DateTime          @default(dbgenerated("('2026-03-22 05:25:50')")) @db.DateTime(0)
+  problem_table   problem_table[]
+  set_table       set_table[]
+  tutorials_table tutorials_table[]
+  user_problem    user_problem?
+}

@@ -2,8 +2,12 @@
 
 import { SignupFormSchema, FormState, LoginFormSchema } from "../lib/definations"
 import bcrypt from 'bcrypt'
+
 import { usersTable } from "../db/schema"
 import { db } from "../db"
+
+import { prisma } from "../db/prisma"
+
 import { redirect } from "next/navigation"
 import { createSession, deleteSession } from "../lib/sessions"
 import { eq, or } from "drizzle-orm"
@@ -31,13 +35,17 @@ export async function signup(state: FormState, formData: FormData) {
 
 
     // check if user exists
-    const existingUser = await db
-        .select()
-        .from(usersTable)
-        .where(or(eq(usersTable.email, email), eq(usersTable.username, username)))
-        .execute()
+    // const existingUser = await db
+    //     .select()
+    //     .from(usersTable)
+    //     .where(or(eq(usersTable.email, email), eq(usersTable.username, username)))
+    //     .execute()
 
-    if (existingUser.length > 0) {
+    const existingUser = await prisma.users_table.findUnique({
+        where: { "email": email}
+    })
+
+    if (existingUser) {
         return {
             errors: {
                 email: ['Email already exists.'],
@@ -50,16 +58,26 @@ export async function signup(state: FormState, formData: FormData) {
 
     //   3. Insert the user into the database or call an Auth Library's API
     try {
-        await db
-            .insert(usersTable)
-            .values({
+        // await db
+        //     .insert(usersTable)
+        //     .values({
+        //         id: userId,
+        //         username,
+        //         email,
+        //         password: hashedPassword,
+        //         dateJoined: new Date(Date.now())
+        //     })
+        //     .$returningId()
+
+        await prisma.users_table.create({
+            data: {
                 id: userId,
                 username,
                 email,
                 password: hashedPassword,
                 dateJoined: new Date(Date.now())
-            })
-            .$returningId()
+            }
+        })
     } catch (error) {
         return {
             message: 'An error occurred while creating your account.',
@@ -73,6 +91,10 @@ export async function signup(state: FormState, formData: FormData) {
 }
 
 export async function login(state: FormState, formData: FormData) {
+    if (!formData.get('email') || !formData.get('password')) return;
+
+    console.log(formData)
+
     // Validate form fields
     const validatedFields = LoginFormSchema.safeParse({
         email: formData.get('email'),
@@ -86,22 +108,32 @@ export async function login(state: FormState, formData: FormData) {
         }
     }
 
+    console.log(process.env.DATABASE_URL)
+
     // 2. Prepare data for insertion into database
     const { email, password } = validatedFields.data
     // e.g. Hash the user's password before storing it
     const hashedPassword = await bcrypt.hash(password, 10)
 
+    console.log(hashedPassword)
+
 
     // check if user exists
-    const existingUser = await db
-        .select()
-        .from(usersTable)
-        .where(or(eq(usersTable.email, email), eq(usersTable.password, hashedPassword)))
-        .execute()
+    // const existingUser = await db
+    //     .select()
+    //     .from(usersTable)
+    //     .where(or(eq(usersTable.email, email), eq(usersTable.password, hashedPassword)))
+    //     .execute()
+
+    const existingUser = await prisma.users_table.findFirst({
+        where: {
+            email: email
+        }
+    })
 
     console.log('Existing user:', existingUser)
 
-    if (existingUser.length === 0) {
+    if (!existingUser) {
         return {
             errors: {
                 email: ['Email does not exist.'],
@@ -110,7 +142,7 @@ export async function login(state: FormState, formData: FormData) {
     }
 
     // 4. Create user session
-    await createSession(existingUser[0].id as unknown as string)
+    await createSession(existingUser.id as unknown as string)
     // 5. Redirect user
     redirect('/');
 }
