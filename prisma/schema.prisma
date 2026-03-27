@@ -44,11 +44,13 @@ model problem_table {
   difficulty          String               @default("Easy") @db.VarChar(10)
   video_link          String?              @db.VarChar(1000)
   author_id           String               @db.VarChar(40)
-  hints               String?              @db.LongText
+  hints               Json?                @db.Json
   problem_description problem_description?
   users_table         users_table          @relation(fields: [author_id], references: [id], onUpdate: Restrict, map: "problem_table_author_id_users_table_id_fk")
   problem_visuals     problem_visuals?
-  set_problem         set_problem?
+
+  set_id              String                @db.VarChar(40)
+  set_table           set_table             @relation(fields: [set_id], references: [id], onUpdate: Restrict)
 
   @@index([author_id], map: "problem_table_author_id_users_table_id_fk")
 }
@@ -62,21 +64,22 @@ model problem_visuals {
   problem_table problem_table @relation(fields: [problem_id], references: [id], onUpdate: Restrict, map: "problem_visuals_problem_id_problem_table_id_fk")
 }
 
-model set_problem {
-  id            String        @id @db.VarChar(40)
-  set_id        String        @db.VarChar(40)
-  problem_id    String        @unique(map: "set_problem_problem_id_unique") @db.VarChar(40)
-  problem_table problem_table @relation(fields: [problem_id], references: [id], onUpdate: Restrict, map: "set_problem_problem_id_problem_table_id_fk")
-  set_table     set_table     @relation(fields: [set_id], references: [id], onUpdate: Restrict, map: "set_problem_set_id_set_table_id_fk")
+// model set_problem {
+//   id            String        @id @db.VarChar(40)
+//   set_id        String        @db.VarChar(40)
+//   problem_id    String        @unique(map: "set_problem_problem_id_unique") @db.VarChar(40)
+//   problem_table problem_table @relation(fields: [problem_id], references: [id], onUpdate: Restrict, map: "set_problem_problem_id_problem_table_id_fk")
+//   set_table     set_table     @relation(fields: [set_id], references: [id], onUpdate: Restrict, map: "set_problem_set_id_set_table_id_fk")
 
-  @@index([set_id], map: "set_problem_set_id_set_table_id_fk")
-}
+//   @@index([set_id], map: "set_problem_set_id_set_table_id_fk")
+// }
 
 model set_table {
   id          String        @id @db.VarChar(40)
   name        String        @db.VarChar(100)
   author_id   String        @db.VarChar(40)
-  set_problem set_problem[]
+  // set_problem set_problem[]
+  problem_table     problem_table[]
   users_table users_table   @relation(fields: [author_id], references: [id], onUpdate: Restrict, map: "set_table_author_id_users_table_id_fk")
 
   @@index([author_id], map: "set_table_author_id_users_table_id_fk")
