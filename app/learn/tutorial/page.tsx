@@ -145,13 +145,15 @@ const TutorialPage = () => {
     const fetchDetails = async () => {
       const fetchData = await fetchVisuals(subtopicId);
 
+      console.log("Fetched visualizer data:", fetchData);
+
       if (!fetchData) return;
-      setArrayInput(fetchData[0]?.inputArray || "")
-      setTextValue(JSON.stringify(fetchData[0]?.steps || []))
-      const parsed = JSON.parse(JSON.stringify(fetchData[0]?.steps || {}));
-      setAlgoSteps(JSON.parse(parsed) || []);
-      setCode(fetchData[0]?.code || "Data not Available")
-      syncArray(fetchData[0]?.inputArray || "0, 0, 0, 0, 0")
+      setArrayInput(fetchData?.inputArray || "")
+      setTextValue(JSON.stringify(fetchData?.steps || []))
+      const parsed = JSON.parse(JSON.stringify(fetchData?.steps || []));
+      setAlgoSteps(Array.isArray(parsed) ? parsed : []);
+      setCode(fetchData?.code || "Data not Available")
+      syncArray(fetchData?.inputArray || "0, 0, 0, 0, 0")
     }
 
     fetchDetails()

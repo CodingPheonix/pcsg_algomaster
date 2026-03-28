@@ -37,7 +37,7 @@ export const fetchTopics = async (id: string) => {
         //     .from(topicstable)
         //     .where(eq(topicstable.id, id))
 
-        return await prisma.topics_table.findMany({
+        return await prisma.topics_table.findFirst({
             where: {
                 subtopic_tableId: id
             }

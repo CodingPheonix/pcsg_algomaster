@@ -33,67 +33,69 @@ const TopicPage = () => {
     const { user } = userContext
 
     // Functions
-    const addComment = async () => {
-        if (!newComment.trim()) return;
+    // const addComment = async () => {
+    //     if (!newComment.trim()) return;
 
-        const payload = {
-            id: UUIDv4() as string,
-            topic_id: id as string,
-            username: user.username,
-            message: newComment.trim(),
-            time: new Date(Date.now()),
-        }
+    //     const payload = {
+    //         id: UUIDv4() as string,
+    //         topic_id: id as string,
+    //         username: user.username,
+    //         message: newComment.trim(),
+    //         time: new Date(Date.now()),
+    //     }
 
-        setComments((prev) => [
-            ...prev, payload
-        ]);
+    //     setComments((prev) => [
+    //         ...prev, payload
+    //     ]);
 
-        // add comments to db
-        await uploadComment(payload)
+    //     // add comments to db
+    //     await uploadComment(payload)
 
-        setNewComment("");
-    };
+    //     setNewComment("");
+    // };
 
-    function timeAgo(date: Date) {
-        const seconds = Math.floor((Date.now() - date.getTime()) / 1000);
+    // function timeAgo(date: Date) {
+    //     const seconds = Math.floor((Date.now() - date.getTime()) / 1000);
 
-        const intervals = [
-            { label: "year", seconds: 31536000 },
-            { label: "month", seconds: 2592000 },
-            { label: "day", seconds: 86400 },
-            { label: "hr", seconds: 3600 },
-            { label: "min", seconds: 60 },
-            { label: "sec", seconds: 1 },
-        ];
+    //     const intervals = [
+    //         { label: "year", seconds: 31536000 },
+    //         { label: "month", seconds: 2592000 },
+    //         { label: "day", seconds: 86400 },
+    //         { label: "hr", seconds: 3600 },
+    //         { label: "min", seconds: 60 },
+    //         { label: "sec", seconds: 1 },
+    //     ];
 
-        for (const i of intervals) {
-            const value = Math.floor(seconds / i.seconds);
-            if (value >= 1) {
-                return `${value} ${i.label}${value > 1 && i.label !== "hr" ? "s" : ""} ago`;
-            }
-        }
+    //     for (const i of intervals) {
+    //         const value = Math.floor(seconds / i.seconds);
+    //         if (value >= 1) {
+    //             return `${value} ${i.label}${value > 1 && i.label !== "hr" ? "s" : ""} ago`;
+    //         }
+    //     }
 
-        return "just now";
-    }
+    //     return "just now";
+    // }
 
     // UseEffects
+    
     useEffect(() => {
         const fetchtopics = async () => {
             if (!id) return;
 
             const topics = await fetchTopics(id as string)
-            topics[0].content !== null && setBlocks(topics[0].content as unknown as Mixed[])
+            console.log("Fetched topic content:", topics);
+            (topics !== null && topics?.content !== null) && setBlocks(JSON.parse(topics.content) as unknown as Mixed[])
         }
 
-        const fetchComment = async () => {
-            if (!id) return;
+        // const fetchComment = async () => {
+        //     if (!id) return;
 
-            const all_comments = await fetchComments(id);
-            setComments(all_comments as Comment[])
-        }
+        //     const all_comments = await fetchComments(id);
+        //     setComments(all_comments as Comment[])
+        // }
 
         fetchtopics()
-        fetchComment()
+        // fetchComment()
     }, [id])
 
     return (
@@ -121,10 +123,10 @@ const TopicPage = () => {
                 </div>
 
                 {/* Divider */}
-                <div className="my-12 border-t border-border" />
+                {/* <div className="my-12 border-t border-border" /> */}
 
                 {/* Comments */}
-                <div className="pb-16">
+                {/* <div className="pb-16">
                     <div className="flex items-center gap-2 mb-6">
                         <MessageSquare size={20} className="text-blue-500" />
                         <h2 className="text-lg font-mono font-bold text-foreground">
@@ -182,7 +184,7 @@ const TopicPage = () => {
                             </div>
                         ))}
                     </div>
-                </div>
+                </div> */}
             </div>
         </div>
     );
