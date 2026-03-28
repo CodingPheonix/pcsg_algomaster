@@ -7,7 +7,7 @@ import { deleteSetById, fetchSetWithProblemsById, insertSet } from "@/app/db/ope
 import { useUserContext } from "@/app/context/userContext";
 import { toast, Toaster } from "sonner";
 import { insertProblem, removeProblem, updateProblem } from "@/app/db/operations/problems";
-import { deleteSetProblem, insertSetProblem } from "@/app/db/operations/setProblem";
+// import { deleteSetProblem, insertSetProblem } from "@/app/db/operations/setProblem";
 import { v4 } from "uuid";
 import { deleteProblemDescription } from "@/app/db/operations/problemDescription";
 import { deleteProblemVisuals } from "@/app/db/operations/problemVisuals";
@@ -170,8 +170,8 @@ const SetProblems = () => {
 
       toast("Problem Updated")
     } else {
-      await insertProblem(newProblem, user.id);
-      await insertSetProblem(setId, newProblem.id);
+      await insertProblem(newProblem, user.id, setId);
+      // await insertSetProblem(setId, newProblem.id);
 
       setSets((prev) =>
         prev.map((s) =>
@@ -198,7 +198,7 @@ const SetProblems = () => {
       )
     );
 
-    await deleteSetProblem(problemId);
+    // await deleteSetProblem(problemId);
     await deleteProblemDescription(problemId);
     await deleteProblemVisuals(problemId);
     await removeProblem(problemId);
@@ -226,11 +226,11 @@ const SetProblems = () => {
           name: set.name,
           isExpanded: false,
           problems: set.problems.map(problem => ({
-            id: problem.id,
+            id: problem.id as string,
             name: problem.name,
             link: problem.link,
             difficulty: problem.difficulty,
-            videoLink: problem.videoLink
+            videoLink: problem.videoLink || ""
           }))
         }))
       );

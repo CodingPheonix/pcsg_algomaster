@@ -143,12 +143,12 @@ const ProblemSections = ({ allProblems, isVerified }: { allProblems: SetWithProb
             const allProblemList = await fetchAllProblemStatus(user.id)
             console.log(allProblemList)
 
-            if (!allProblemList || !allProblemList[0]?.problemList) {
+            if (!allProblemList || !allProblemList) {
                 setProblemList(allProblems)
                 return
             }
 
-            const list = allProblemList[0].problemList as string[]
+            const list = allProblemList as string[]
 
             // ✅ create new state immutably
             const updated = allProblems.map(set => ({
@@ -232,6 +232,7 @@ const ProblemSections = ({ allProblems, isVerified }: { allProblems: SetWithProb
                                         </thead>
                                         <tbody>
                                             {section.problems.map((problem, idx) => {
+                                                console.log(problem)
                                                 return (
                                                     <tr
                                                         key={problem.id}

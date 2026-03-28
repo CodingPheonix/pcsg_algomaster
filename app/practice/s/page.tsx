@@ -84,18 +84,39 @@ const PracticeSolutions = () => {
             if (!id) return;
 
             const topics = await fetchProblemDescription(id as string)
-            topics && topics[0]?.content !== null && setBlocks(topics[0]?.content as unknown as Mixed[])
+            if (!topics?.content) {
+                setBlocks([])
+                return
+            }
+
+            if (Array.isArray(topics.content)) {
+                setBlocks(topics.content as Mixed[])
+                return
+            }
+
+            if (typeof topics.content === "string") {
+                try {
+                    const parsed = JSON.parse(topics.content)
+                    setBlocks(Array.isArray(parsed) ? parsed as Mixed[] : [])
+                } catch (error) {
+                    console.error("Failed to parse problem description content:", error)
+                    setBlocks([])
+                }
+                return
+            }
+
+            setBlocks([])
         }
 
-        const fetchComment = async () => {
-            if (!id) return;
+        // const fetchComment = async () => {
+        //     if (!id) return;
 
-            const all_comments = await fetchComments(id);
-            setComments(all_comments as Comment[])
-        }
+        //     const all_comments = await fetchComments(id);
+        //     setComments(all_comments as Comment[])
+        // }
 
         fetchtopics()
-        fetchComment()
+        // fetchComment()
     }, [id])
 
     return (
@@ -124,10 +145,10 @@ const PracticeSolutions = () => {
                     </div>
 
                     {/* Divider */}
-                    <div className="my-12 border-t border-border" />
+                    {/* <div className="my-12 border-t border-border" /> */}
 
                     {/* Comments */}
-                    <div className="pb-16">
+                    {/* <div className="pb-16">
                         <div className="flex items-center gap-2 mb-6">
                             <MessageSquare size={20} className="text-blue-500" />
                             <h2 className="text-lg font-mono font-bold text-foreground">
@@ -185,7 +206,7 @@ const PracticeSolutions = () => {
                                 </div>
                             ))}
                         </div>
-                    </div>
+                    </div> */}
                 </div>
             ) : (
                 <span className='w-screen h-screen flex justify-center items-center'>No Content Available</span>

@@ -23,7 +23,7 @@ export const insertProblemDescription = async (title: string, content: TutorialB
             data: {
                 id: v4(),
                 title,
-                content: content.toString(),
+                content: JSON.stringify(content),
                 problem_id: problemId
             }
         })
@@ -69,7 +69,7 @@ export const updateProblemDescription = async (
             },
             data: {
                 title,
-                content: content.toString()
+                content: JSON.stringify(content)
             }
         })
     } catch (error) {

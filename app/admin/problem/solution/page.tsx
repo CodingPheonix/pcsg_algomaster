@@ -12,7 +12,7 @@ type HintKeys = "hint1" | "hint2" | "hint3";
 
 const ProblemDescription = () => {
 
-    const [prevBlocks, setprevBlocks] = useState<Mixed[] | null>([]);
+    const [prevBlocks, setprevBlocks] = useState<Mixed[] | null>(null);
     const [hints, setHints] = useState<Record<HintKeys, string>>({
         hint1: "",
         hint2: "",
@@ -46,10 +46,10 @@ const ProblemDescription = () => {
 
             const [blocks, problem] = await Promise.all([fetchProblemDescription(problem_id), fetchProblemHints(problem_id)]);
 
-            blocks && setprevBlocks(blocks[0]?.content)
-            problem && problem[0].Hints?.map((hint, index) => {
-                setHints(prev => ({ ...prev, [`hint${index + 1}` as HintKeys]: hint }));
-            }) 
+            blocks && setprevBlocks(blocks?.content ? JSON.parse(blocks.content) : []);
+            // problem && JSON.parse(problem as string[]).map((hint, index) => {
+            //     setHints(prev => ({ ...prev, [`hint${index + 1}` as HintKeys]: hint }));
+            // }) 
         }
         fetchBlocks()
     }, [problem_id])
