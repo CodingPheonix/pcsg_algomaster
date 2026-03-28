@@ -129,13 +129,13 @@ const AdminProfile = ({ user }: {
         totalofficials: users.length
       })
 
-      const formattedUsers: User[] = users.map((user) => ({
+      const formattedUsers: User[] = users.map((user: { id: any; username: any; email: any; role: string; dateJoined: string | number | Date; }) => ({
         id: user.id,
         username: user.username,
         email: user.email,
         role: user.role as UserRole,
         dateJoined: new Date(user.dateJoined),
-      })).filter((fetchedUsers) => fetchedUsers.id !== user.id);
+      })).filter((fetchedUsers: { id: string; }) => fetchedUsers.id !== user.id);
 
       setAdmins(formattedUsers);
     };

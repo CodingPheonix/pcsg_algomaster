@@ -110,7 +110,7 @@ export const fetchTutorialsWithSubtopic = async (authorId: string) => {
 
         console.log(res)
 
-        return res.map(tutorial => ({
+        return res.map((tutorial: { id: any; title: any; type: any; subtopic_table: any[] }) => ({
             id: tutorial.id,
             title: tutorial.title,
             type: tutorial.type,
@@ -182,7 +182,7 @@ export const fetchAllTutorialsWithSubtopic = async () => {
             }
         });
 
-        return res.map(tutorial => ({
+        return res.map((tutorial: { id: any; title: any; type: any; subtopic_table: any[] }) => ({
             id: tutorial.id,
             title: tutorial.title,
             type: tutorial.type,

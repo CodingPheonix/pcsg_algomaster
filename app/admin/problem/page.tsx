@@ -221,7 +221,7 @@ const SetProblems = () => {
       const data = await fetchSetWithProblemsById(user.id);
 
       setSets(
-        data.map(set => ({
+        data.map((set: { id: any; name: any; problems: any[]; }) => ({
           id: set.id,
           name: set.name,
           isExpanded: false,

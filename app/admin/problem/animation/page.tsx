@@ -37,7 +37,7 @@ const Animation = () => {
     const fetchData = async () => {
       const [arrayData] = await Promise.all([fetchProblemVisuals(problemId)])
 
-      arrayData && setArrayVisualizerData({problemId: problemId, code: arrayData[0]?.codeText, algoSteps: arrayData[0]?.codeSteps, arrayInput: arrayData[0]?.inputArray});
+      arrayData && setArrayVisualizerData({problemId: problemId, code: arrayData?.codeText, algoSteps: arrayData?.codeSteps, arrayInput: arrayData?.inputArray});
     }
     fetchData();
   }, [problemId])

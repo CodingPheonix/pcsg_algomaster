@@ -108,7 +108,7 @@ export const deleteTopic = async (topicId: string) => {
         }
     })
 
-    const subtopicIds = subtopics.map(s => s.id);
+    const subtopicIds = subtopics.map((s: { id: any }) => s.id);
 
     if (subtopicIds.length > 0) {
         // await db
@@ -154,7 +154,7 @@ export const deleteTopic = async (topicId: string) => {
         }
     })
 
-    const topicIds = topics.map(t => t.id);
+    const topicIds = topics.map((t: { id: any }) => t.id);
 
     if (topicIds.length > 0) {
         // await db

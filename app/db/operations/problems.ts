@@ -218,7 +218,7 @@ export const fetchAllSetProblemWithSolutionAndAnimations = async () => {
         });
 
         // Transform to match your previous structure
-        const result = sets.map(set => ({
+        const result = sets.map((set: { id: any; name: any; problem_table: any[]; }) => ({
             id: set.id,
             title: set.name,
             problems: set.problem_table.map(problem => ({

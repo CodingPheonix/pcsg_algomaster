@@ -253,7 +253,7 @@ const ManageTopics = () => {
       const tutorials = await fetchTutorialsWithSubtopic(user?.id);
 console.log(tutorials)
 
-      if (tutorials) setTopics(tutorials.map((t) => {
+      if (tutorials) setTopics(tutorials.map((t: { id: any; title: any; type: string; subtopics: { id: string; name: string; description: string | null; difficulty: string; external_video: string | null; }[]; }) => {
         return {
           id: t.id,
           name: t.title,

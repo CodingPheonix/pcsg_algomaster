@@ -82,7 +82,7 @@ export const fetchAllAdmins = async () => {
             }
         })
 
-        return res.map(user => {
+        return res.map((user: { id: any; username: any; email: any; role: any; dateJoined: any }) => {
             return {
                 id: user.id,
                 username: user.username,
