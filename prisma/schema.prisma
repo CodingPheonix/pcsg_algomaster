@@ -49,8 +49,8 @@ model problem_table {
   users_table         users_table          @relation(fields: [author_id], references: [id], onUpdate: Restrict, map: "problem_table_author_id_users_table_id_fk")
   problem_visuals     problem_visuals?
 
-  set_id              String                @db.VarChar(40)
-  set_table           set_table             @relation(fields: [set_id], references: [id], onUpdate: Restrict)
+  set_id    String    @db.VarChar(40)
+  set_table set_table @relation(fields: [set_id], references: [id], onUpdate: Restrict)
 
   @@index([author_id], map: "problem_table_author_id_users_table_id_fk")
 }
@@ -75,27 +75,27 @@ model problem_visuals {
 // }
 
 model set_table {
-  id          String        @id @db.VarChar(40)
-  name        String        @db.VarChar(100)
-  author_id   String        @db.VarChar(40)
+  id            String          @id @db.VarChar(40)
+  name          String          @db.VarChar(100)
+  author_id     String          @db.VarChar(40)
   // set_problem set_problem[]
-  problem_table     problem_table[]
-  users_table users_table   @relation(fields: [author_id], references: [id], onUpdate: Restrict, map: "set_table_author_id_users_table_id_fk")
+  problem_table problem_table[]
+  users_table   users_table     @relation(fields: [author_id], references: [id], onUpdate: Restrict, map: "set_table_author_id_users_table_id_fk")
 
   @@index([author_id], map: "set_table_author_id_users_table_id_fk")
 }
 
 model subtopic_table {
-  id                 String               @id @db.VarChar(40)
-  name               String               @db.VarChar(255)
-  description        String?              @db.VarChar(255)
-  difficulty         String               @default("Easy") @db.VarChar(255)
-  external_video     String?              @db.VarChar(1000)
+  id             String  @id @db.VarChar(40)
+  name           String  @db.VarChar(255)
+  description    String? @db.VarChar(255)
+  difficulty     String  @default("Easy") @db.VarChar(255)
+  external_video String? @db.VarChar(1000)
 
-  tutorial_id        String               @db.VarChar(40)
-  tutorial_table     tutorials_table      @relation(fields: [tutorial_id], references: [id], onUpdate: Restrict)
+  tutorial_id    String          @db.VarChar(40)
+  tutorial_table tutorials_table @relation(fields: [tutorial_id], references: [id], onUpdate: Restrict)
 
-  algovisuals_table  algovisuals_table[]
+  algovisuals_table algovisuals_table[]
 
   @@index([tutorial_id])
 }
@@ -123,14 +123,14 @@ model topics_table {
 // }
 
 model tutorials_table {
-  id                 String               @id @db.VarChar(40)
-  title              String               @db.VarChar(255)
-  authorId           String               @db.VarChar(255)
-  type               String               @default("algorithm") @db.VarChar(20)
-  topics_table       topics_table[]
+  id             String           @id @db.VarChar(40)
+  title          String           @db.VarChar(255)
+  authorId       String           @db.VarChar(255)
+  type           String           @default("algorithm") @db.VarChar(20)
+  topics_table   topics_table[]
   // tutorial_subtopics tutorial_subtopics[] 
-  subtopic_table     subtopic_table[]
-  users_table        users_table          @relation(fields: [authorId], references: [id], onUpdate: Restrict, map: "tutorials_table_authorId_users_table_id_fk")
+  subtopic_table subtopic_table[]
+  users_table    users_table      @relation(fields: [authorId], references: [id], onUpdate: Restrict, map: "tutorials_table_authorId_users_table_id_fk")
 
   @@index([authorId], map: "tutorials_table_authorId_users_table_id_fk")
 }
@@ -138,7 +138,7 @@ model tutorials_table {
 model user_problem {
   id          String      @id @db.VarChar(40)
   user_id     String      @unique(map: "user_problem_user_id_unique") @db.VarChar(40)
-  problem_ids String?     @db.LongText
+  problem_ids Json?       @db.Json
   users_table users_table @relation(fields: [user_id], references: [id], onUpdate: Restrict, map: "user_problem_user_id_users_table_id_fk")
 }
 
