@@ -93,11 +93,11 @@ const AdminProfile = ({ user }: {
     const user = await fetchfilteredUsers(searchQuery);
     console.log(user)
     user ? setnewUser({
-      id: user[0].id,
-      username: user[0].username,
-      email: user[0].email,
-      role: user[0].role as UserRole,
-      dateJoined: user[0].dateJoined
+      id: user.id,
+      username: user.username,
+      email: user.email,
+      role: user.role as UserRole,
+      dateJoined: user.dateJoined
     }) : setnewUser({ id: "", username: "", email: "", role: "professor", dateJoined: new Date(Date.now()) });
   }
 
@@ -118,12 +118,14 @@ const AdminProfile = ({ user }: {
         getAllUsersCount()
       ])
       
-      if (!users || !problemCount || !tutorialCount || !totalUsers) return;
-
+      
+      // console.log(users, problemCount, tutorialCount, totalUsers)
+      if (!users) return;
+      
       setStatusBar({
-        totalUsers: totalUsers,
-        problemsCreated: problemCount,
-        tutorialsCreated: tutorialCount,
+        totalUsers: totalUsers || 0,
+        problemsCreated: problemCount || 0,
+        tutorialsCreated: tutorialCount || 0,
         totalofficials: users.length
       })
 
@@ -141,6 +143,7 @@ const AdminProfile = ({ user }: {
     fetchAdmins();
   }, []);
 
+  console.log(statusBar)
 
   return (
     <div className="min-h-screen">

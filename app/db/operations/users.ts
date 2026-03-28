@@ -27,13 +27,13 @@ export const fetchfilteredUsers = async (email: string) => {
             }
         })
 
-        return {
-            id: res?.id,
-            username: res?.username,
-            email: res?.email,
-            role: res?.role,
-            dateJoined: res?.dateJoined
-        }
+        return res? {
+            id: res.id,
+            username: res.username,
+            email: res.email,
+            role: res.role,
+            dateJoined: res.dateJoined
+        } : null
     } catch (error) {
         console.error(error)
     }
