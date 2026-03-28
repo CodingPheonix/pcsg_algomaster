@@ -5,7 +5,7 @@ import { db } from ".."
 import { algoVisualsTable, commentsTable, Mixed, subtopicTable, topicstable, tutorialsTable, tutorialSubtopicsTable } from "../schema"
 import { prisma } from "../prisma"
 
-export const insertTopic = async ({ id, title, content, tutorial_id }: { id: string, title?: string, content?: Mixed[], tutorial_id: string }) => {
+export const insertTopic = async ({ id, title, content, subtopic_tableId }: { id: string, title?: string, content?: Mixed[], subtopic_tableId: string }) => {
     try {
         // await db
         //     .insert(topicstable)
@@ -13,7 +13,7 @@ export const insertTopic = async ({ id, title, content, tutorial_id }: { id: str
         //         id,
         //         title: title || 'Untitled',
         //         content: content || null,
-        //         tutorial_id
+        //         subtopic_tableId
         //     })
 
         await prisma.topics_table.create({
@@ -21,7 +21,7 @@ export const insertTopic = async ({ id, title, content, tutorial_id }: { id: str
                 id,
                 title: title || 'Untitled',
                 content: content?.toString() || null,
-                tutorial_id
+                subtopic_tableId
             }
         })
     } catch (error) {
@@ -39,7 +39,7 @@ export const fetchTopics = async (id: string) => {
 
         return await prisma.topics_table.findMany({
             where: {
-                id
+                subtopic_tableId: id
             }
         })
 
@@ -72,7 +72,7 @@ export const editTopic = async (id: string, value: string) => {
     }
 }
 
-export const addTopicContent = async (topicId: string, title?: string | "untitled", content?: Mixed[] | []) => {
+export const addTopicContent = async (subtopicId: string, title?: string | "untitled", content?: Mixed[] | []) => {
     try {
         // await db
         //     .update(topicstable)
@@ -85,10 +85,10 @@ export const addTopicContent = async (topicId: string, title?: string | "untitle
         await prisma.topics_table.update({
             data: {
                 title: title,
-                content: content?.toString()
+                content: JSON.stringify(content)
             },
             where: {
-                id: topicId
+                subtopic_tableId: subtopicId
             }
         })
     } catch (error) {
@@ -150,7 +150,7 @@ export const deleteTopic = async (topicId: string) => {
 
     const topics = await prisma.topics_table.findMany({
         where: {
-            tutorial_id: topicId
+            subtopic_tableId: topicId
         }
     })
 
@@ -176,7 +176,7 @@ export const deleteTopic = async (topicId: string) => {
 
     await prisma.topics_table.deleteMany({
         where: {
-            tutorial_id: topicId
+            subtopic_tableId: topicId
         }
     })
 

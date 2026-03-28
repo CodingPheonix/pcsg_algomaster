@@ -29,7 +29,7 @@ export const insertVisuals = async ({ subTopicId, code, codeSteps, inputValues }
                 id: UUIDv4(),
                 subtopic_id: subTopicId,
                 code_text: code,
-                code_steps: codeSteps.toString(),
+                code_steps: JSON.stringify(codeSteps),
                 input_array: inputValues
             }
         })

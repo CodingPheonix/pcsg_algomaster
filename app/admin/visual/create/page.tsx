@@ -161,12 +161,12 @@ const Visualizer = () => {
             const fetchData = await fetchVisuals(subtopicId);
 
             if (!fetchData) return;
-            setArrayInput(fetchData[0]?.inputArray || "")
-            setTextValue(JSON.stringify(fetchData[0]?.steps || []))
-            const parsed = JSON.parse(JSON.stringify(fetchData[0]?.steps || {}));
+            setArrayInput(fetchData?.inputArray || "")
+            setTextValue(JSON.stringify(fetchData?.steps || []))
+            const parsed = JSON.parse(JSON.stringify(fetchData?.steps || {}));
             setAlgoSteps(parsed || []);
-            setCode(fetchData[0]?.code || "")
-            syncArray(fetchData[0]?.inputArray || "")
+            setCode(fetchData?.code || "")
+            syncArray(fetchData?.inputArray || "")
         }
 
         fetchDetails()

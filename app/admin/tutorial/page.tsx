@@ -20,7 +20,7 @@ import { v4 as UUIDv4 } from "uuid";
 import { useUserContext } from "@/app/context/userContext";
 import { deleteTopic, insertTopic } from "@/app/db/operations/topics";
 import { addSubTopic, editSubTopic, remove_Subtopic } from "@/app/db/operations/subtopics";
-import { addTutorialSubtopicsRelation, removeTutorialSubTopicRelation } from "@/app/db/operations/tutorialSubtopics";
+// import { addTutorialSubtopicsRelation, removeTutorialSubTopicRelation } from "@/app/db/operations/tutorialSubtopics";
 
 interface SubTopic {
   id: string;
@@ -89,7 +89,7 @@ const ManageTopics = () => {
     insertTutorial({
       id: newId,
       title: newTopic.name.trim(),
-      authorId: user?.id || "unknown",
+      authorId: user?.id || "",
       type: newTopic.type
     })
 
@@ -213,14 +213,15 @@ const ManageTopics = () => {
       description: subTopicFor.description.trim(),
       difficulty: subTopicFor.difficulty,
       external_video: subTopicFor.external_video.trim()
-    });
+    }, topicId);
 
     await insertTopic({
-      id: subtopicId,
-      tutorial_id: topicId
+      id: UUIDv4(),
+      title: subTopicFor.newSubName.trim(),
+      subtopic_tableId: subtopicId
     })
 
-    await addTutorialSubtopicsRelation(topicId, subtopicId);
+    // await addTutorialSubtopicsRelation(topicId, subtopicId);
 
     setSubTopicFor({
       newSubName: "",
@@ -233,7 +234,7 @@ const ManageTopics = () => {
 
   const removeSubtopic = async (topicId: string, subId: string) => {
 
-    await removeTutorialSubTopicRelation(subId);
+    // await removeTutorialSubTopicRelation(subId);
     await remove_Subtopic(subId);
 
     setTopics((prev) =>

@@ -108,6 +108,8 @@ export const fetchTutorialsWithSubtopic = async (authorId: string) => {
             }
         });
 
+        console.log(res)
+
         return res.map(tutorial => ({
             id: tutorial.id,
             title: tutorial.title,

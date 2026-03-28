@@ -73,6 +73,13 @@ export const remove_Subtopic = async (subtopicId: string) => {
                 id: subtopicId
             }
         })
+
+        // await prisma.comments_table.deleteMany({
+        //     where: {
+                
+        //     }
+        // })
+
     } catch (error) {
         console.error(error)
     }

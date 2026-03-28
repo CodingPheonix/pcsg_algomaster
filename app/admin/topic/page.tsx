@@ -121,6 +121,7 @@ const TopicPage = () => {
 
   const handleContentUpload = () => {
     if (subtopicId === null) return;
+
     addTopicContent(subtopicId as string, title, blocks)
 
     toast("Topic Uploaded");
@@ -129,8 +130,9 @@ const TopicPage = () => {
   useEffect(() => {
     const fetchTopicData = async () => {
       const data = await fetchTopics(subtopicId as string);
-      setTitle(data[0].title as string);
-      setBlocks((JSON.parse(data[0].content as unknown as string) as TutorialBlock[]) ?? [])
+      console.log(data)
+      setTitle(data[0]?.title as string || "Untitled Tutorial");
+      setBlocks((JSON.parse(data[0]?.content as unknown as string) as TutorialBlock[]) ?? [])
     }
     fetchTopicData();
   }, [subtopicId])
