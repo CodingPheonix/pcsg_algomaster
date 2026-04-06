@@ -8,7 +8,7 @@
  *
  * 🟢 You can import this file directly.
  */
-import type * as runtime from "@prisma/client/runtime/library"
+import type * as runtime from "@prisma/client/runtime/client"
 import type * as $Enums from "../enums"
 import type * as Prisma from "../internal/prismaNamespace"
 
@@ -151,7 +151,7 @@ export type Problem_descriptionGroupByOutputType = {
   _max: Problem_descriptionMaxAggregateOutputType | null
 }
 
-type GetProblem_descriptionGroupByPayload<T extends problem_descriptionGroupByArgs> = Prisma.PrismaPromise<
+export type GetProblem_descriptionGroupByPayload<T extends problem_descriptionGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<Problem_descriptionGroupByOutputType, T['by']> &
       {
@@ -179,10 +179,11 @@ export type problem_descriptionWhereInput = {
 
 export type problem_descriptionOrderByWithRelationInput = {
   id?: Prisma.SortOrder
-  title?: Prisma.SortOrder
-  content?: Prisma.SortOrder
+  title?: Prisma.SortOrderInput | Prisma.SortOrder
+  content?: Prisma.SortOrderInput | Prisma.SortOrder
   problem_id?: Prisma.SortOrder
   problem_table?: Prisma.problem_tableOrderByWithRelationInput
+  _relevance?: Prisma.problem_descriptionOrderByRelevanceInput
 }
 
 export type problem_descriptionWhereUniqueInput = Prisma.AtLeast<{
@@ -198,8 +199,8 @@ export type problem_descriptionWhereUniqueInput = Prisma.AtLeast<{
 
 export type problem_descriptionOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
-  title?: Prisma.SortOrder
-  content?: Prisma.SortOrder
+  title?: Prisma.SortOrderInput | Prisma.SortOrder
+  content?: Prisma.SortOrderInput | Prisma.SortOrder
   problem_id?: Prisma.SortOrder
   _count?: Prisma.problem_descriptionCountOrderByAggregateInput
   _max?: Prisma.problem_descriptionMaxOrderByAggregateInput
@@ -231,12 +232,14 @@ export type problem_descriptionUncheckedCreateInput = {
 }
 
 export type problem_descriptionUpdateInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   content?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   problem_table?: Prisma.problem_tableUpdateOneRequiredWithoutProblem_descriptionNestedInput
 }
 
 export type problem_descriptionUncheckedUpdateInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   content?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   problem_id?: Prisma.StringFieldUpdateOperationsInput | string
@@ -250,19 +253,22 @@ export type problem_descriptionCreateManyInput = {
 }
 
 export type problem_descriptionUpdateManyMutationInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   content?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type problem_descriptionUncheckedUpdateManyInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   content?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   problem_id?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
-export type Problem_descriptionNullableScalarRelationFilter = {
-  is?: Prisma.problem_descriptionWhereInput | null
-  isNot?: Prisma.problem_descriptionWhereInput | null
+export type problem_descriptionOrderByRelevanceInput = {
+  fields: Prisma.problem_descriptionOrderByRelevanceFieldEnum | Prisma.problem_descriptionOrderByRelevanceFieldEnum[]
+  sort: Prisma.SortOrder
+  search: string
 }
 
 export type problem_descriptionCountOrderByAggregateInput = {
@@ -284,6 +290,15 @@ export type problem_descriptionMinOrderByAggregateInput = {
   title?: Prisma.SortOrder
   content?: Prisma.SortOrder
   problem_id?: Prisma.SortOrder
+}
+
+export type Problem_descriptionNullableScalarRelationFilter = {
+  is?: Prisma.problem_descriptionWhereInput | null
+  isNot?: Prisma.problem_descriptionWhereInput | null
+}
+
+export type NullableStringFieldUpdateOperationsInput = {
+  set?: string | null
 }
 
 export type problem_descriptionCreateNestedOneWithoutProblem_tableInput = {
@@ -347,11 +362,13 @@ export type problem_descriptionUpdateToOneWithWhereWithoutProblem_tableInput = {
 }
 
 export type problem_descriptionUpdateWithoutProblem_tableInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   content?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type problem_descriptionUncheckedUpdateWithoutProblem_tableInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   content?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
@@ -589,29 +606,6 @@ export interface problem_descriptionDelegate<ExtArgs extends runtime.Types.Exten
    * })
    */
   upsert<T extends problem_descriptionUpsertArgs>(args: Prisma.SelectSubset<T, problem_descriptionUpsertArgs<ExtArgs>>): Prisma.Prisma__problem_descriptionClient<runtime.Types.Result.GetResult<Prisma.$problem_descriptionPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-  /**
-   * Find zero or more Problem_descriptions that matches the filter.
-   * @param {problem_descriptionFindRawArgs} args - Select which filters you would like to apply.
-   * @example
-   * const problem_description = await prisma.problem_description.findRaw({
-   *   filter: { age: { $gt: 25 } }
-   * })
-   */
-  findRaw(args?: Prisma.problem_descriptionFindRawArgs): Prisma.PrismaPromise<Prisma.JsonObject>
-
-  /**
-   * Perform aggregation operations on a Problem_description.
-   * @param {problem_descriptionAggregateRawArgs} args - Select which aggregations you would like to apply.
-   * @example
-   * const problem_description = await prisma.problem_description.aggregateRaw({
-   *   pipeline: [
-   *     { $match: { status: "registered" } },
-   *     { $group: { _id: "$country", total: { $sum: 1 } } }
-   *   ]
-   * })
-   */
-  aggregateRaw(args?: Prisma.problem_descriptionAggregateRawArgs): Prisma.PrismaPromise<Prisma.JsonObject>
 
 
   /**
@@ -983,6 +977,11 @@ export type problem_descriptionFindManyArgs<ExtArgs extends runtime.Types.Extens
    * Skip the first `n` problem_descriptions.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of problem_descriptions.
+   */
   distinct?: Prisma.Problem_descriptionScalarFieldEnum | Prisma.Problem_descriptionScalarFieldEnum[]
 }
 
@@ -1016,6 +1015,7 @@ export type problem_descriptionCreateManyArgs<ExtArgs extends runtime.Types.Exte
    * The data used to create many problem_descriptions.
    */
   data: Prisma.problem_descriptionCreateManyInput | Prisma.problem_descriptionCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1126,34 +1126,6 @@ export type problem_descriptionDeleteManyArgs<ExtArgs extends runtime.Types.Exte
    * Limit how many problem_descriptions to delete.
    */
   limit?: number
-}
-
-/**
- * problem_description findRaw
- */
-export type problem_descriptionFindRawArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * The query predicate filter. If unspecified, then all documents in the collection will match the predicate. ${@link https://docs.mongodb.com/manual/reference/operator/query MongoDB Docs}.
-   */
-  filter?: runtime.InputJsonValue
-  /**
-   * Additional options to pass to the `find` command ${@link https://docs.mongodb.com/manual/reference/command/find/#command-fields MongoDB Docs}.
-   */
-  options?: runtime.InputJsonValue
-}
-
-/**
- * problem_description aggregateRaw
- */
-export type problem_descriptionAggregateRawArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * An array of aggregation stages to process and transform the document stream via the aggregation pipeline. ${@link https://docs.mongodb.com/manual/reference/operator/aggregation-pipeline MongoDB Docs}.
-   */
-  pipeline?: runtime.InputJsonValue[]
-  /**
-   * Additional options to pass to the `aggregate` command ${@link https://docs.mongodb.com/manual/reference/command/aggregate/#command-fields MongoDB Docs}.
-   */
-  options?: runtime.InputJsonValue
 }
 
 /**

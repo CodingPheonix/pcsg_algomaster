@@ -8,7 +8,7 @@
  *
  * 🟢 You can import this file directly.
  */
-import type * as runtime from "@prisma/client/runtime/library"
+import type * as runtime from "@prisma/client/runtime/client"
 import type * as $Enums from "../enums"
 import type * as Prisma from "../internal/prismaNamespace"
 
@@ -158,7 +158,7 @@ export type Comments_tableGroupByOutputType = {
   _max: Comments_tableMaxAggregateOutputType | null
 }
 
-type GetComments_tableGroupByPayload<T extends comments_tableGroupByArgs> = Prisma.PrismaPromise<
+export type GetComments_tableGroupByPayload<T extends comments_tableGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<Comments_tableGroupByOutputType, T['by']> &
       {
@@ -189,9 +189,10 @@ export type comments_tableOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   username?: Prisma.SortOrder
   message?: Prisma.SortOrder
-  time?: Prisma.SortOrder
+  time?: Prisma.SortOrderInput | Prisma.SortOrder
   topic_id?: Prisma.SortOrder
   topics_table?: Prisma.topics_tableOrderByWithRelationInput
+  _relevance?: Prisma.comments_tableOrderByRelevanceInput
 }
 
 export type comments_tableWhereUniqueInput = Prisma.AtLeast<{
@@ -210,7 +211,7 @@ export type comments_tableOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   username?: Prisma.SortOrder
   message?: Prisma.SortOrder
-  time?: Prisma.SortOrder
+  time?: Prisma.SortOrderInput | Prisma.SortOrder
   topic_id?: Prisma.SortOrder
   _count?: Prisma.comments_tableCountOrderByAggregateInput
   _max?: Prisma.comments_tableMaxOrderByAggregateInput
@@ -245,6 +246,7 @@ export type comments_tableUncheckedCreateInput = {
 }
 
 export type comments_tableUpdateInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.StringFieldUpdateOperationsInput | string
   message?: Prisma.StringFieldUpdateOperationsInput | string
   time?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -252,6 +254,7 @@ export type comments_tableUpdateInput = {
 }
 
 export type comments_tableUncheckedUpdateInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.StringFieldUpdateOperationsInput | string
   message?: Prisma.StringFieldUpdateOperationsInput | string
   time?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -267,12 +270,14 @@ export type comments_tableCreateManyInput = {
 }
 
 export type comments_tableUpdateManyMutationInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.StringFieldUpdateOperationsInput | string
   message?: Prisma.StringFieldUpdateOperationsInput | string
   time?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type comments_tableUncheckedUpdateManyInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.StringFieldUpdateOperationsInput | string
   message?: Prisma.StringFieldUpdateOperationsInput | string
   time?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -287,6 +292,12 @@ export type Comments_tableListRelationFilter = {
 
 export type comments_tableOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
+}
+
+export type comments_tableOrderByRelevanceInput = {
+  fields: Prisma.comments_tableOrderByRelevanceFieldEnum | Prisma.comments_tableOrderByRelevanceFieldEnum[]
+  sort: Prisma.SortOrder
+  search: string
 }
 
 export type comments_tableCountOrderByAggregateInput = {
@@ -357,7 +368,6 @@ export type comments_tableUncheckedUpdateManyWithoutTopics_tableNestedInput = {
 
 export type NullableDateTimeFieldUpdateOperationsInput = {
   set?: Date | string | null
-  unset?: boolean
 }
 
 export type comments_tableCreateWithoutTopics_tableInput = {
@@ -381,6 +391,7 @@ export type comments_tableCreateOrConnectWithoutTopics_tableInput = {
 
 export type comments_tableCreateManyTopics_tableInputEnvelope = {
   data: Prisma.comments_tableCreateManyTopics_tableInput | Prisma.comments_tableCreateManyTopics_tableInput[]
+  skipDuplicates?: boolean
 }
 
 export type comments_tableUpsertWithWhereUniqueWithoutTopics_tableInput = {
@@ -418,18 +429,21 @@ export type comments_tableCreateManyTopics_tableInput = {
 }
 
 export type comments_tableUpdateWithoutTopics_tableInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.StringFieldUpdateOperationsInput | string
   message?: Prisma.StringFieldUpdateOperationsInput | string
   time?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type comments_tableUncheckedUpdateWithoutTopics_tableInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.StringFieldUpdateOperationsInput | string
   message?: Prisma.StringFieldUpdateOperationsInput | string
   time?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type comments_tableUncheckedUpdateManyWithoutTopics_tableInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.StringFieldUpdateOperationsInput | string
   message?: Prisma.StringFieldUpdateOperationsInput | string
   time?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -671,29 +685,6 @@ export interface comments_tableDelegate<ExtArgs extends runtime.Types.Extensions
    * })
    */
   upsert<T extends comments_tableUpsertArgs>(args: Prisma.SelectSubset<T, comments_tableUpsertArgs<ExtArgs>>): Prisma.Prisma__comments_tableClient<runtime.Types.Result.GetResult<Prisma.$comments_tablePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-  /**
-   * Find zero or more Comments_tables that matches the filter.
-   * @param {comments_tableFindRawArgs} args - Select which filters you would like to apply.
-   * @example
-   * const comments_table = await prisma.comments_table.findRaw({
-   *   filter: { age: { $gt: 25 } }
-   * })
-   */
-  findRaw(args?: Prisma.comments_tableFindRawArgs): Prisma.PrismaPromise<Prisma.JsonObject>
-
-  /**
-   * Perform aggregation operations on a Comments_table.
-   * @param {comments_tableAggregateRawArgs} args - Select which aggregations you would like to apply.
-   * @example
-   * const comments_table = await prisma.comments_table.aggregateRaw({
-   *   pipeline: [
-   *     { $match: { status: "registered" } },
-   *     { $group: { _id: "$country", total: { $sum: 1 } } }
-   *   ]
-   * })
-   */
-  aggregateRaw(args?: Prisma.comments_tableAggregateRawArgs): Prisma.PrismaPromise<Prisma.JsonObject>
 
 
   /**
@@ -1066,6 +1057,11 @@ export type comments_tableFindManyArgs<ExtArgs extends runtime.Types.Extensions.
    * Skip the first `n` comments_tables.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of comments_tables.
+   */
   distinct?: Prisma.Comments_tableScalarFieldEnum | Prisma.Comments_tableScalarFieldEnum[]
 }
 
@@ -1099,6 +1095,7 @@ export type comments_tableCreateManyArgs<ExtArgs extends runtime.Types.Extension
    * The data used to create many comments_tables.
    */
   data: Prisma.comments_tableCreateManyInput | Prisma.comments_tableCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1209,34 +1206,6 @@ export type comments_tableDeleteManyArgs<ExtArgs extends runtime.Types.Extension
    * Limit how many comments_tables to delete.
    */
   limit?: number
-}
-
-/**
- * comments_table findRaw
- */
-export type comments_tableFindRawArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * The query predicate filter. If unspecified, then all documents in the collection will match the predicate. ${@link https://docs.mongodb.com/manual/reference/operator/query MongoDB Docs}.
-   */
-  filter?: runtime.InputJsonValue
-  /**
-   * Additional options to pass to the `find` command ${@link https://docs.mongodb.com/manual/reference/command/find/#command-fields MongoDB Docs}.
-   */
-  options?: runtime.InputJsonValue
-}
-
-/**
- * comments_table aggregateRaw
- */
-export type comments_tableAggregateRawArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * An array of aggregation stages to process and transform the document stream via the aggregation pipeline. ${@link https://docs.mongodb.com/manual/reference/operator/aggregation-pipeline MongoDB Docs}.
-   */
-  pipeline?: runtime.InputJsonValue[]
-  /**
-   * Additional options to pass to the `aggregate` command ${@link https://docs.mongodb.com/manual/reference/command/aggregate/#command-fields MongoDB Docs}.
-   */
-  options?: runtime.InputJsonValue
 }
 
 /**

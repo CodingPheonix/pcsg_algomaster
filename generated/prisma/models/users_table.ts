@@ -8,7 +8,7 @@
  *
  * 🟢 You can import this file directly.
  */
-import type * as runtime from "@prisma/client/runtime/library"
+import type * as runtime from "@prisma/client/runtime/client"
 import type * as $Enums from "../enums"
 import type * as Prisma from "../internal/prismaNamespace"
 
@@ -165,7 +165,7 @@ export type Users_tableGroupByOutputType = {
   _max: Users_tableMaxAggregateOutputType | null
 }
 
-type GetUsers_tableGroupByPayload<T extends users_tableGroupByArgs> = Prisma.PrismaPromise<
+export type GetUsers_tableGroupByPayload<T extends users_tableGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<Users_tableGroupByOutputType, T['by']> &
       {
@@ -207,6 +207,7 @@ export type users_tableOrderByWithRelationInput = {
   set_table?: Prisma.set_tableOrderByRelationAggregateInput
   tutorials_table?: Prisma.tutorials_tableOrderByRelationAggregateInput
   user_problem?: Prisma.user_problemOrderByWithRelationInput
+  _relevance?: Prisma.users_tableOrderByRelevanceInput
 }
 
 export type users_tableWhereUniqueInput = Prisma.AtLeast<{
@@ -276,6 +277,7 @@ export type users_tableUncheckedCreateInput = {
 }
 
 export type users_tableUpdateInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.StringFieldUpdateOperationsInput | string
   password?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
@@ -288,6 +290,7 @@ export type users_tableUpdateInput = {
 }
 
 export type users_tableUncheckedUpdateInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.StringFieldUpdateOperationsInput | string
   password?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
@@ -309,6 +312,7 @@ export type users_tableCreateManyInput = {
 }
 
 export type users_tableUpdateManyMutationInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.StringFieldUpdateOperationsInput | string
   password?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
@@ -317,11 +321,18 @@ export type users_tableUpdateManyMutationInput = {
 }
 
 export type users_tableUncheckedUpdateManyInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.StringFieldUpdateOperationsInput | string
   password?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.StringFieldUpdateOperationsInput | string
   dateJoined?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type users_tableOrderByRelevanceInput = {
+  fields: Prisma.users_tableOrderByRelevanceFieldEnum | Prisma.users_tableOrderByRelevanceFieldEnum[]
+  sort: Prisma.SortOrder
+  search: string
 }
 
 export type users_tableCountOrderByAggregateInput = {
@@ -461,6 +472,7 @@ export type users_tableUpdateToOneWithWhereWithoutSet_tableInput = {
 }
 
 export type users_tableUpdateWithoutSet_tableInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.StringFieldUpdateOperationsInput | string
   password?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
@@ -472,6 +484,7 @@ export type users_tableUpdateWithoutSet_tableInput = {
 }
 
 export type users_tableUncheckedUpdateWithoutSet_tableInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.StringFieldUpdateOperationsInput | string
   password?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
@@ -523,6 +536,7 @@ export type users_tableUpdateToOneWithWhereWithoutProblem_tableInput = {
 }
 
 export type users_tableUpdateWithoutProblem_tableInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.StringFieldUpdateOperationsInput | string
   password?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
@@ -534,6 +548,7 @@ export type users_tableUpdateWithoutProblem_tableInput = {
 }
 
 export type users_tableUncheckedUpdateWithoutProblem_tableInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.StringFieldUpdateOperationsInput | string
   password?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
@@ -585,6 +600,7 @@ export type users_tableUpdateToOneWithWhereWithoutUser_problemInput = {
 }
 
 export type users_tableUpdateWithoutUser_problemInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.StringFieldUpdateOperationsInput | string
   password?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
@@ -596,6 +612,7 @@ export type users_tableUpdateWithoutUser_problemInput = {
 }
 
 export type users_tableUncheckedUpdateWithoutUser_problemInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.StringFieldUpdateOperationsInput | string
   password?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
@@ -647,6 +664,7 @@ export type users_tableUpdateToOneWithWhereWithoutTutorials_tableInput = {
 }
 
 export type users_tableUpdateWithoutTutorials_tableInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.StringFieldUpdateOperationsInput | string
   password?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
@@ -658,6 +676,7 @@ export type users_tableUpdateWithoutTutorials_tableInput = {
 }
 
 export type users_tableUncheckedUpdateWithoutTutorials_tableInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.StringFieldUpdateOperationsInput | string
   password?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
@@ -965,29 +984,6 @@ export interface users_tableDelegate<ExtArgs extends runtime.Types.Extensions.In
    * })
    */
   upsert<T extends users_tableUpsertArgs>(args: Prisma.SelectSubset<T, users_tableUpsertArgs<ExtArgs>>): Prisma.Prisma__users_tableClient<runtime.Types.Result.GetResult<Prisma.$users_tablePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-  /**
-   * Find zero or more Users_tables that matches the filter.
-   * @param {users_tableFindRawArgs} args - Select which filters you would like to apply.
-   * @example
-   * const users_table = await prisma.users_table.findRaw({
-   *   filter: { age: { $gt: 25 } }
-   * })
-   */
-  findRaw(args?: Prisma.users_tableFindRawArgs): Prisma.PrismaPromise<Prisma.JsonObject>
-
-  /**
-   * Perform aggregation operations on a Users_table.
-   * @param {users_tableAggregateRawArgs} args - Select which aggregations you would like to apply.
-   * @example
-   * const users_table = await prisma.users_table.aggregateRaw({
-   *   pipeline: [
-   *     { $match: { status: "registered" } },
-   *     { $group: { _id: "$country", total: { $sum: 1 } } }
-   *   ]
-   * })
-   */
-  aggregateRaw(args?: Prisma.users_tableAggregateRawArgs): Prisma.PrismaPromise<Prisma.JsonObject>
 
 
   /**
@@ -1364,6 +1360,11 @@ export type users_tableFindManyArgs<ExtArgs extends runtime.Types.Extensions.Int
    * Skip the first `n` users_tables.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of users_tables.
+   */
   distinct?: Prisma.Users_tableScalarFieldEnum | Prisma.Users_tableScalarFieldEnum[]
 }
 
@@ -1397,6 +1398,7 @@ export type users_tableCreateManyArgs<ExtArgs extends runtime.Types.Extensions.I
    * The data used to create many users_tables.
    */
   data: Prisma.users_tableCreateManyInput | Prisma.users_tableCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1507,34 +1509,6 @@ export type users_tableDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.I
    * Limit how many users_tables to delete.
    */
   limit?: number
-}
-
-/**
- * users_table findRaw
- */
-export type users_tableFindRawArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * The query predicate filter. If unspecified, then all documents in the collection will match the predicate. ${@link https://docs.mongodb.com/manual/reference/operator/query MongoDB Docs}.
-   */
-  filter?: runtime.InputJsonValue
-  /**
-   * Additional options to pass to the `find` command ${@link https://docs.mongodb.com/manual/reference/command/find/#command-fields MongoDB Docs}.
-   */
-  options?: runtime.InputJsonValue
-}
-
-/**
- * users_table aggregateRaw
- */
-export type users_tableAggregateRawArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * An array of aggregation stages to process and transform the document stream via the aggregation pipeline. ${@link https://docs.mongodb.com/manual/reference/operator/aggregation-pipeline MongoDB Docs}.
-   */
-  pipeline?: runtime.InputJsonValue[]
-  /**
-   * Additional options to pass to the `aggregate` command ${@link https://docs.mongodb.com/manual/reference/command/aggregate/#command-fields MongoDB Docs}.
-   */
-  options?: runtime.InputJsonValue
 }
 
 /**

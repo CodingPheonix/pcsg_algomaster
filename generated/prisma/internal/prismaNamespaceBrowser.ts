@@ -24,35 +24,37 @@ export const Decimal = runtime.Decimal
 
 
 export const NullTypes = {
-  DbNull: runtime.objectEnumValues.classes.DbNull as (new (secret: never) => typeof runtime.objectEnumValues.instances.DbNull),
-  JsonNull: runtime.objectEnumValues.classes.JsonNull as (new (secret: never) => typeof runtime.objectEnumValues.instances.JsonNull),
-  AnyNull: runtime.objectEnumValues.classes.AnyNull as (new (secret: never) => typeof runtime.objectEnumValues.instances.AnyNull),
+  DbNull: runtime.NullTypes.DbNull as (new (secret: never) => typeof runtime.DbNull),
+  JsonNull: runtime.NullTypes.JsonNull as (new (secret: never) => typeof runtime.JsonNull),
+  AnyNull: runtime.NullTypes.AnyNull as (new (secret: never) => typeof runtime.AnyNull),
 }
 /**
  * Helper for filtering JSON entries that have `null` on the database (empty on the db)
  *
  * @see https://www.prisma.io/docs/concepts/components/prisma-client/working-with-fields/working-with-json-fields#filtering-on-a-json-field
  */
-export const DbNull = runtime.objectEnumValues.instances.DbNull
+export const DbNull = runtime.DbNull
+
 /**
  * Helper for filtering JSON entries that have JSON `null` values (not empty on the db)
  *
  * @see https://www.prisma.io/docs/concepts/components/prisma-client/working-with-fields/working-with-json-fields#filtering-on-a-json-field
  */
-export const JsonNull = runtime.objectEnumValues.instances.JsonNull
+export const JsonNull = runtime.JsonNull
+
 /**
  * Helper for filtering JSON entries that are `Prisma.DbNull` or `Prisma.JsonNull`
  *
  * @see https://www.prisma.io/docs/concepts/components/prisma-client/working-with-fields/working-with-json-fields#filtering-on-a-json-field
  */
-export const AnyNull = runtime.objectEnumValues.instances.AnyNull
+export const AnyNull = runtime.AnyNull
 
 
 export const ModelName = {
   users_table: 'users_table',
   set_table: 'set_table',
-  problem_table: 'problem_table',
   problem_description: 'problem_description',
+  problem_table: 'problem_table',
   problem_visuals: 'problem_visuals',
   user_problem: 'user_problem',
   tutorials_table: 'tutorials_table',
@@ -67,6 +69,16 @@ export type ModelName = (typeof ModelName)[keyof typeof ModelName]
 /*
  * Enums
  */
+
+export const TransactionIsolationLevel = runtime.makeStrictEnum({
+  ReadUncommitted: 'ReadUncommitted',
+  ReadCommitted: 'ReadCommitted',
+  RepeatableRead: 'RepeatableRead',
+  Serializable: 'Serializable'
+} as const)
+
+export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel]
+
 
 export const Users_tableScalarFieldEnum = {
   id: 'id',
@@ -89,6 +101,16 @@ export const Set_tableScalarFieldEnum = {
 export type Set_tableScalarFieldEnum = (typeof Set_tableScalarFieldEnum)[keyof typeof Set_tableScalarFieldEnum]
 
 
+export const Problem_descriptionScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  content: 'content',
+  problem_id: 'problem_id'
+} as const
+
+export type Problem_descriptionScalarFieldEnum = (typeof Problem_descriptionScalarFieldEnum)[keyof typeof Problem_descriptionScalarFieldEnum]
+
+
 export const Problem_tableScalarFieldEnum = {
   id: 'id',
   name: 'name',
@@ -101,16 +123,6 @@ export const Problem_tableScalarFieldEnum = {
 } as const
 
 export type Problem_tableScalarFieldEnum = (typeof Problem_tableScalarFieldEnum)[keyof typeof Problem_tableScalarFieldEnum]
-
-
-export const Problem_descriptionScalarFieldEnum = {
-  id: 'id',
-  title: 'title',
-  content: 'content',
-  problem_id: 'problem_id'
-} as const
-
-export type Problem_descriptionScalarFieldEnum = (typeof Problem_descriptionScalarFieldEnum)[keyof typeof Problem_descriptionScalarFieldEnum]
 
 
 export const Problem_visualsScalarFieldEnum = {
@@ -195,10 +207,150 @@ export const SortOrder = {
 export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
 
 
+export const NullableJsonNullValueInput = {
+  DbNull: DbNull,
+  JsonNull: JsonNull
+} as const
+
+export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
+
+
+export const users_tableOrderByRelevanceFieldEnum = {
+  id: 'id',
+  username: 'username',
+  password: 'password',
+  email: 'email',
+  role: 'role'
+} as const
+
+export type users_tableOrderByRelevanceFieldEnum = (typeof users_tableOrderByRelevanceFieldEnum)[keyof typeof users_tableOrderByRelevanceFieldEnum]
+
+
+export const set_tableOrderByRelevanceFieldEnum = {
+  id: 'id',
+  name: 'name',
+  author_id: 'author_id'
+} as const
+
+export type set_tableOrderByRelevanceFieldEnum = (typeof set_tableOrderByRelevanceFieldEnum)[keyof typeof set_tableOrderByRelevanceFieldEnum]
+
+
+export const NullsOrder = {
+  first: 'first',
+  last: 'last'
+} as const
+
+export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
+
+
+export const problem_descriptionOrderByRelevanceFieldEnum = {
+  id: 'id',
+  title: 'title',
+  content: 'content',
+  problem_id: 'problem_id'
+} as const
+
+export type problem_descriptionOrderByRelevanceFieldEnum = (typeof problem_descriptionOrderByRelevanceFieldEnum)[keyof typeof problem_descriptionOrderByRelevanceFieldEnum]
+
+
+export const JsonNullValueFilter = {
+  DbNull: DbNull,
+  JsonNull: JsonNull,
+  AnyNull: AnyNull
+} as const
+
+export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
+
+
 export const QueryMode = {
   default: 'default',
   insensitive: 'insensitive'
 } as const
 
 export type QueryMode = (typeof QueryMode)[keyof typeof QueryMode]
+
+
+export const problem_tableOrderByRelevanceFieldEnum = {
+  id: 'id',
+  name: 'name',
+  link: 'link',
+  difficulty: 'difficulty',
+  video_link: 'video_link',
+  author_id: 'author_id',
+  set_id: 'set_id'
+} as const
+
+export type problem_tableOrderByRelevanceFieldEnum = (typeof problem_tableOrderByRelevanceFieldEnum)[keyof typeof problem_tableOrderByRelevanceFieldEnum]
+
+
+export const problem_visualsOrderByRelevanceFieldEnum = {
+  id: 'id',
+  problem_id: 'problem_id',
+  code_text: 'code_text',
+  code_steps: 'code_steps',
+  input_array: 'input_array'
+} as const
+
+export type problem_visualsOrderByRelevanceFieldEnum = (typeof problem_visualsOrderByRelevanceFieldEnum)[keyof typeof problem_visualsOrderByRelevanceFieldEnum]
+
+
+export const user_problemOrderByRelevanceFieldEnum = {
+  id: 'id',
+  user_id: 'user_id'
+} as const
+
+export type user_problemOrderByRelevanceFieldEnum = (typeof user_problemOrderByRelevanceFieldEnum)[keyof typeof user_problemOrderByRelevanceFieldEnum]
+
+
+export const tutorials_tableOrderByRelevanceFieldEnum = {
+  id: 'id',
+  title: 'title',
+  authorId: 'authorId',
+  type: 'type'
+} as const
+
+export type tutorials_tableOrderByRelevanceFieldEnum = (typeof tutorials_tableOrderByRelevanceFieldEnum)[keyof typeof tutorials_tableOrderByRelevanceFieldEnum]
+
+
+export const subtopic_tableOrderByRelevanceFieldEnum = {
+  id: 'id',
+  name: 'name',
+  description: 'description',
+  difficulty: 'difficulty',
+  external_video: 'external_video',
+  tutorial_id: 'tutorial_id'
+} as const
+
+export type subtopic_tableOrderByRelevanceFieldEnum = (typeof subtopic_tableOrderByRelevanceFieldEnum)[keyof typeof subtopic_tableOrderByRelevanceFieldEnum]
+
+
+export const algovisuals_tableOrderByRelevanceFieldEnum = {
+  id: 'id',
+  subtopic_id: 'subtopic_id',
+  code_text: 'code_text',
+  code_steps: 'code_steps',
+  input_array: 'input_array'
+} as const
+
+export type algovisuals_tableOrderByRelevanceFieldEnum = (typeof algovisuals_tableOrderByRelevanceFieldEnum)[keyof typeof algovisuals_tableOrderByRelevanceFieldEnum]
+
+
+export const topics_tableOrderByRelevanceFieldEnum = {
+  id: 'id',
+  title: 'title',
+  content: 'content',
+  subtopic_tableId: 'subtopic_tableId'
+} as const
+
+export type topics_tableOrderByRelevanceFieldEnum = (typeof topics_tableOrderByRelevanceFieldEnum)[keyof typeof topics_tableOrderByRelevanceFieldEnum]
+
+
+export const comments_tableOrderByRelevanceFieldEnum = {
+  id: 'id',
+  username: 'username',
+  message: 'message',
+  topic_id: 'topic_id'
+} as const
+
+export type comments_tableOrderByRelevanceFieldEnum = (typeof comments_tableOrderByRelevanceFieldEnum)[keyof typeof comments_tableOrderByRelevanceFieldEnum]
 

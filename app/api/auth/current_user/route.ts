@@ -4,6 +4,7 @@ import { decrypt } from "@/app/lib/sessions";
 import { NextRequest, NextResponse } from "next/server";
 import { eq } from "drizzle-orm";
 import { Users } from "@/app/db/mongodb/mongo_schema";
+import { prisma } from "@/app/db/prisma";
 
 type sessionPayload = {
     userId: string,
@@ -27,9 +28,15 @@ export async function GET(request: NextRequest) {
         //     .where(eq(usersTable.id, decrypted.userId))
         //     .execute()
 
-        const data = await Users.findOne({
-            id: decrypted.userId
+        const data = await prisma.users_table.findUnique({
+            where: {
+                id: decrypted.userId
+            }
         })
+
+        // const data = await Users.findOne({
+        //     id: decrypted.userId
+        // })
 
         console.log("fetched decrypt data" , data)
 

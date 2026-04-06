@@ -8,7 +8,7 @@
  *
  * 🟢 You can import this file directly.
  */
-import type * as runtime from "@prisma/client/runtime/library"
+import type * as runtime from "@prisma/client/runtime/client"
 import type * as $Enums from "../enums"
 import type * as Prisma from "../internal/prismaNamespace"
 
@@ -165,7 +165,7 @@ export type Subtopic_tableGroupByOutputType = {
   _max: Subtopic_tableMaxAggregateOutputType | null
 }
 
-type GetSubtopic_tableGroupByPayload<T extends subtopic_tableGroupByArgs> = Prisma.PrismaPromise<
+export type GetSubtopic_tableGroupByPayload<T extends subtopic_tableGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<Subtopic_tableGroupByOutputType, T['by']> &
       {
@@ -190,21 +190,22 @@ export type subtopic_tableWhereInput = {
   difficulty?: Prisma.StringFilter<"subtopic_table"> | string
   external_video?: Prisma.StringNullableFilter<"subtopic_table"> | string | null
   tutorial_id?: Prisma.StringFilter<"subtopic_table"> | string
-  tutorial_table?: Prisma.XOR<Prisma.Tutorials_tableScalarRelationFilter, Prisma.tutorials_tableWhereInput>
   topics_table?: Prisma.Topics_tableListRelationFilter
+  tutorial_table?: Prisma.XOR<Prisma.Tutorials_tableScalarRelationFilter, Prisma.tutorials_tableWhereInput>
   algovisuals_table?: Prisma.Algovisuals_tableListRelationFilter
 }
 
 export type subtopic_tableOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
-  description?: Prisma.SortOrder
+  description?: Prisma.SortOrderInput | Prisma.SortOrder
   difficulty?: Prisma.SortOrder
-  external_video?: Prisma.SortOrder
+  external_video?: Prisma.SortOrderInput | Prisma.SortOrder
   tutorial_id?: Prisma.SortOrder
-  tutorial_table?: Prisma.tutorials_tableOrderByWithRelationInput
   topics_table?: Prisma.topics_tableOrderByRelationAggregateInput
+  tutorial_table?: Prisma.tutorials_tableOrderByWithRelationInput
   algovisuals_table?: Prisma.algovisuals_tableOrderByRelationAggregateInput
+  _relevance?: Prisma.subtopic_tableOrderByRelevanceInput
 }
 
 export type subtopic_tableWhereUniqueInput = Prisma.AtLeast<{
@@ -217,17 +218,17 @@ export type subtopic_tableWhereUniqueInput = Prisma.AtLeast<{
   difficulty?: Prisma.StringFilter<"subtopic_table"> | string
   external_video?: Prisma.StringNullableFilter<"subtopic_table"> | string | null
   tutorial_id?: Prisma.StringFilter<"subtopic_table"> | string
-  tutorial_table?: Prisma.XOR<Prisma.Tutorials_tableScalarRelationFilter, Prisma.tutorials_tableWhereInput>
   topics_table?: Prisma.Topics_tableListRelationFilter
+  tutorial_table?: Prisma.XOR<Prisma.Tutorials_tableScalarRelationFilter, Prisma.tutorials_tableWhereInput>
   algovisuals_table?: Prisma.Algovisuals_tableListRelationFilter
 }, "id">
 
 export type subtopic_tableOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
-  description?: Prisma.SortOrder
+  description?: Prisma.SortOrderInput | Prisma.SortOrder
   difficulty?: Prisma.SortOrder
-  external_video?: Prisma.SortOrder
+  external_video?: Prisma.SortOrderInput | Prisma.SortOrder
   tutorial_id?: Prisma.SortOrder
   _count?: Prisma.subtopic_tableCountOrderByAggregateInput
   _max?: Prisma.subtopic_tableMaxOrderByAggregateInput
@@ -252,8 +253,8 @@ export type subtopic_tableCreateInput = {
   description?: string | null
   difficulty?: string
   external_video?: string | null
-  tutorial_table: Prisma.tutorials_tableCreateNestedOneWithoutSubtopic_tableInput
   topics_table?: Prisma.topics_tableCreateNestedManyWithoutSubtopicTableInput
+  tutorial_table: Prisma.tutorials_tableCreateNestedOneWithoutSubtopic_tableInput
   algovisuals_table?: Prisma.algovisuals_tableCreateNestedManyWithoutSubtopic_tableInput
 }
 
@@ -269,16 +270,18 @@ export type subtopic_tableUncheckedCreateInput = {
 }
 
 export type subtopic_tableUpdateInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   difficulty?: Prisma.StringFieldUpdateOperationsInput | string
   external_video?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  tutorial_table?: Prisma.tutorials_tableUpdateOneRequiredWithoutSubtopic_tableNestedInput
   topics_table?: Prisma.topics_tableUpdateManyWithoutSubtopicTableNestedInput
+  tutorial_table?: Prisma.tutorials_tableUpdateOneRequiredWithoutSubtopic_tableNestedInput
   algovisuals_table?: Prisma.algovisuals_tableUpdateManyWithoutSubtopic_tableNestedInput
 }
 
 export type subtopic_tableUncheckedUpdateInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   difficulty?: Prisma.StringFieldUpdateOperationsInput | string
@@ -298,6 +301,7 @@ export type subtopic_tableCreateManyInput = {
 }
 
 export type subtopic_tableUpdateManyMutationInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   difficulty?: Prisma.StringFieldUpdateOperationsInput | string
@@ -305,6 +309,7 @@ export type subtopic_tableUpdateManyMutationInput = {
 }
 
 export type subtopic_tableUncheckedUpdateManyInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   difficulty?: Prisma.StringFieldUpdateOperationsInput | string
@@ -320,6 +325,12 @@ export type Subtopic_tableListRelationFilter = {
 
 export type subtopic_tableOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
+}
+
+export type subtopic_tableOrderByRelevanceInput = {
+  fields: Prisma.subtopic_tableOrderByRelevanceFieldEnum | Prisma.subtopic_tableOrderByRelevanceFieldEnum[]
+  sort: Prisma.SortOrder
+  search: string
 }
 
 export type subtopic_tableCountOrderByAggregateInput = {
@@ -406,7 +417,7 @@ export type subtopic_tableUpdateOneWithoutAlgovisuals_tableNestedInput = {
   create?: Prisma.XOR<Prisma.subtopic_tableCreateWithoutAlgovisuals_tableInput, Prisma.subtopic_tableUncheckedCreateWithoutAlgovisuals_tableInput>
   connectOrCreate?: Prisma.subtopic_tableCreateOrConnectWithoutAlgovisuals_tableInput
   upsert?: Prisma.subtopic_tableUpsertWithoutAlgovisuals_tableInput
-  disconnect?: boolean
+  disconnect?: Prisma.subtopic_tableWhereInput | boolean
   delete?: Prisma.subtopic_tableWhereInput | boolean
   connect?: Prisma.subtopic_tableWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.subtopic_tableUpdateToOneWithWhereWithoutAlgovisuals_tableInput, Prisma.subtopic_tableUpdateWithoutAlgovisuals_tableInput>, Prisma.subtopic_tableUncheckedUpdateWithoutAlgovisuals_tableInput>
@@ -422,7 +433,7 @@ export type subtopic_tableUpdateOneWithoutTopics_tableNestedInput = {
   create?: Prisma.XOR<Prisma.subtopic_tableCreateWithoutTopics_tableInput, Prisma.subtopic_tableUncheckedCreateWithoutTopics_tableInput>
   connectOrCreate?: Prisma.subtopic_tableCreateOrConnectWithoutTopics_tableInput
   upsert?: Prisma.subtopic_tableUpsertWithoutTopics_tableInput
-  disconnect?: boolean
+  disconnect?: Prisma.subtopic_tableWhereInput | boolean
   delete?: Prisma.subtopic_tableWhereInput | boolean
   connect?: Prisma.subtopic_tableWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.subtopic_tableUpdateToOneWithWhereWithoutTopics_tableInput, Prisma.subtopic_tableUpdateWithoutTopics_tableInput>, Prisma.subtopic_tableUncheckedUpdateWithoutTopics_tableInput>
@@ -455,6 +466,7 @@ export type subtopic_tableCreateOrConnectWithoutTutorial_tableInput = {
 
 export type subtopic_tableCreateManyTutorial_tableInputEnvelope = {
   data: Prisma.subtopic_tableCreateManyTutorial_tableInput | Prisma.subtopic_tableCreateManyTutorial_tableInput[]
+  skipDuplicates?: boolean
 }
 
 export type subtopic_tableUpsertWithWhereUniqueWithoutTutorial_tableInput = {
@@ -491,8 +503,8 @@ export type subtopic_tableCreateWithoutAlgovisuals_tableInput = {
   description?: string | null
   difficulty?: string
   external_video?: string | null
-  tutorial_table: Prisma.tutorials_tableCreateNestedOneWithoutSubtopic_tableInput
   topics_table?: Prisma.topics_tableCreateNestedManyWithoutSubtopicTableInput
+  tutorial_table: Prisma.tutorials_tableCreateNestedOneWithoutSubtopic_tableInput
 }
 
 export type subtopic_tableUncheckedCreateWithoutAlgovisuals_tableInput = {
@@ -522,15 +534,17 @@ export type subtopic_tableUpdateToOneWithWhereWithoutAlgovisuals_tableInput = {
 }
 
 export type subtopic_tableUpdateWithoutAlgovisuals_tableInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   difficulty?: Prisma.StringFieldUpdateOperationsInput | string
   external_video?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  tutorial_table?: Prisma.tutorials_tableUpdateOneRequiredWithoutSubtopic_tableNestedInput
   topics_table?: Prisma.topics_tableUpdateManyWithoutSubtopicTableNestedInput
+  tutorial_table?: Prisma.tutorials_tableUpdateOneRequiredWithoutSubtopic_tableNestedInput
 }
 
 export type subtopic_tableUncheckedUpdateWithoutAlgovisuals_tableInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   difficulty?: Prisma.StringFieldUpdateOperationsInput | string
@@ -576,6 +590,7 @@ export type subtopic_tableUpdateToOneWithWhereWithoutTopics_tableInput = {
 }
 
 export type subtopic_tableUpdateWithoutTopics_tableInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   difficulty?: Prisma.StringFieldUpdateOperationsInput | string
@@ -585,6 +600,7 @@ export type subtopic_tableUpdateWithoutTopics_tableInput = {
 }
 
 export type subtopic_tableUncheckedUpdateWithoutTopics_tableInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   difficulty?: Prisma.StringFieldUpdateOperationsInput | string
@@ -602,6 +618,7 @@ export type subtopic_tableCreateManyTutorial_tableInput = {
 }
 
 export type subtopic_tableUpdateWithoutTutorial_tableInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   difficulty?: Prisma.StringFieldUpdateOperationsInput | string
@@ -611,6 +628,7 @@ export type subtopic_tableUpdateWithoutTutorial_tableInput = {
 }
 
 export type subtopic_tableUncheckedUpdateWithoutTutorial_tableInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   difficulty?: Prisma.StringFieldUpdateOperationsInput | string
@@ -620,6 +638,7 @@ export type subtopic_tableUncheckedUpdateWithoutTutorial_tableInput = {
 }
 
 export type subtopic_tableUncheckedUpdateManyWithoutTutorial_tableInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   difficulty?: Prisma.StringFieldUpdateOperationsInput | string
@@ -673,8 +692,8 @@ export type subtopic_tableSelect<ExtArgs extends runtime.Types.Extensions.Intern
   difficulty?: boolean
   external_video?: boolean
   tutorial_id?: boolean
-  tutorial_table?: boolean | Prisma.tutorials_tableDefaultArgs<ExtArgs>
   topics_table?: boolean | Prisma.subtopic_table$topics_tableArgs<ExtArgs>
+  tutorial_table?: boolean | Prisma.tutorials_tableDefaultArgs<ExtArgs>
   algovisuals_table?: boolean | Prisma.subtopic_table$algovisuals_tableArgs<ExtArgs>
   _count?: boolean | Prisma.Subtopic_tableCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["subtopic_table"]>
@@ -692,8 +711,8 @@ export type subtopic_tableSelectScalar = {
 
 export type subtopic_tableOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "description" | "difficulty" | "external_video" | "tutorial_id", ExtArgs["result"]["subtopic_table"]>
 export type subtopic_tableInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  tutorial_table?: boolean | Prisma.tutorials_tableDefaultArgs<ExtArgs>
   topics_table?: boolean | Prisma.subtopic_table$topics_tableArgs<ExtArgs>
+  tutorial_table?: boolean | Prisma.tutorials_tableDefaultArgs<ExtArgs>
   algovisuals_table?: boolean | Prisma.subtopic_table$algovisuals_tableArgs<ExtArgs>
   _count?: boolean | Prisma.Subtopic_tableCountOutputTypeDefaultArgs<ExtArgs>
 }
@@ -701,8 +720,8 @@ export type subtopic_tableInclude<ExtArgs extends runtime.Types.Extensions.Inter
 export type $subtopic_tablePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "subtopic_table"
   objects: {
-    tutorial_table: Prisma.$tutorials_tablePayload<ExtArgs>
     topics_table: Prisma.$topics_tablePayload<ExtArgs>[]
+    tutorial_table: Prisma.$tutorials_tablePayload<ExtArgs>
     algovisuals_table: Prisma.$algovisuals_tablePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
@@ -912,29 +931,6 @@ export interface subtopic_tableDelegate<ExtArgs extends runtime.Types.Extensions
    */
   upsert<T extends subtopic_tableUpsertArgs>(args: Prisma.SelectSubset<T, subtopic_tableUpsertArgs<ExtArgs>>): Prisma.Prisma__subtopic_tableClient<runtime.Types.Result.GetResult<Prisma.$subtopic_tablePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
-  /**
-   * Find zero or more Subtopic_tables that matches the filter.
-   * @param {subtopic_tableFindRawArgs} args - Select which filters you would like to apply.
-   * @example
-   * const subtopic_table = await prisma.subtopic_table.findRaw({
-   *   filter: { age: { $gt: 25 } }
-   * })
-   */
-  findRaw(args?: Prisma.subtopic_tableFindRawArgs): Prisma.PrismaPromise<Prisma.JsonObject>
-
-  /**
-   * Perform aggregation operations on a Subtopic_table.
-   * @param {subtopic_tableAggregateRawArgs} args - Select which aggregations you would like to apply.
-   * @example
-   * const subtopic_table = await prisma.subtopic_table.aggregateRaw({
-   *   pipeline: [
-   *     { $match: { status: "registered" } },
-   *     { $group: { _id: "$country", total: { $sum: 1 } } }
-   *   ]
-   * })
-   */
-  aggregateRaw(args?: Prisma.subtopic_tableAggregateRawArgs): Prisma.PrismaPromise<Prisma.JsonObject>
-
 
   /**
    * Count the number of Subtopic_tables.
@@ -1075,8 +1071,8 @@ readonly fields: subtopic_tableFieldRefs;
  */
 export interface Prisma__subtopic_tableClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  tutorial_table<T extends Prisma.tutorials_tableDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.tutorials_tableDefaultArgs<ExtArgs>>): Prisma.Prisma__tutorials_tableClient<runtime.Types.Result.GetResult<Prisma.$tutorials_tablePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   topics_table<T extends Prisma.subtopic_table$topics_tableArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.subtopic_table$topics_tableArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$topics_tablePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  tutorial_table<T extends Prisma.tutorials_tableDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.tutorials_tableDefaultArgs<ExtArgs>>): Prisma.Prisma__tutorials_tableClient<runtime.Types.Result.GetResult<Prisma.$tutorials_tablePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   algovisuals_table<T extends Prisma.subtopic_table$algovisuals_tableArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.subtopic_table$algovisuals_tableArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$algovisuals_tablePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -1309,6 +1305,11 @@ export type subtopic_tableFindManyArgs<ExtArgs extends runtime.Types.Extensions.
    * Skip the first `n` subtopic_tables.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of subtopic_tables.
+   */
   distinct?: Prisma.Subtopic_tableScalarFieldEnum | Prisma.Subtopic_tableScalarFieldEnum[]
 }
 
@@ -1342,6 +1343,7 @@ export type subtopic_tableCreateManyArgs<ExtArgs extends runtime.Types.Extension
    * The data used to create many subtopic_tables.
    */
   data: Prisma.subtopic_tableCreateManyInput | Prisma.subtopic_tableCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1452,34 +1454,6 @@ export type subtopic_tableDeleteManyArgs<ExtArgs extends runtime.Types.Extension
    * Limit how many subtopic_tables to delete.
    */
   limit?: number
-}
-
-/**
- * subtopic_table findRaw
- */
-export type subtopic_tableFindRawArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * The query predicate filter. If unspecified, then all documents in the collection will match the predicate. ${@link https://docs.mongodb.com/manual/reference/operator/query MongoDB Docs}.
-   */
-  filter?: runtime.InputJsonValue
-  /**
-   * Additional options to pass to the `find` command ${@link https://docs.mongodb.com/manual/reference/command/find/#command-fields MongoDB Docs}.
-   */
-  options?: runtime.InputJsonValue
-}
-
-/**
- * subtopic_table aggregateRaw
- */
-export type subtopic_tableAggregateRawArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * An array of aggregation stages to process and transform the document stream via the aggregation pipeline. ${@link https://docs.mongodb.com/manual/reference/operator/aggregation-pipeline MongoDB Docs}.
-   */
-  pipeline?: runtime.InputJsonValue[]
-  /**
-   * Additional options to pass to the `aggregate` command ${@link https://docs.mongodb.com/manual/reference/command/aggregate/#command-fields MongoDB Docs}.
-   */
-  options?: runtime.InputJsonValue
 }
 
 /**

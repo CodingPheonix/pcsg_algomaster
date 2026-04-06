@@ -8,7 +8,7 @@
  *
  * 🟢 You can import this file directly.
  */
-import type * as runtime from "@prisma/client/runtime/library"
+import type * as runtime from "@prisma/client/runtime/client"
 import type * as $Enums from "../enums"
 import type * as Prisma from "../internal/prismaNamespace"
 
@@ -158,7 +158,7 @@ export type Problem_visualsGroupByOutputType = {
   _max: Problem_visualsMaxAggregateOutputType | null
 }
 
-type GetProblem_visualsGroupByPayload<T extends problem_visualsGroupByArgs> = Prisma.PrismaPromise<
+export type GetProblem_visualsGroupByPayload<T extends problem_visualsGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<Problem_visualsGroupByOutputType, T['by']> &
       {
@@ -192,6 +192,7 @@ export type problem_visualsOrderByWithRelationInput = {
   code_steps?: Prisma.SortOrder
   input_array?: Prisma.SortOrder
   problem_table?: Prisma.problem_tableOrderByWithRelationInput
+  _relevance?: Prisma.problem_visualsOrderByRelevanceInput
 }
 
 export type problem_visualsWhereUniqueInput = Prisma.AtLeast<{
@@ -245,6 +246,7 @@ export type problem_visualsUncheckedCreateInput = {
 }
 
 export type problem_visualsUpdateInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   code_text?: Prisma.StringFieldUpdateOperationsInput | string
   code_steps?: Prisma.StringFieldUpdateOperationsInput | string
   input_array?: Prisma.StringFieldUpdateOperationsInput | string
@@ -252,6 +254,7 @@ export type problem_visualsUpdateInput = {
 }
 
 export type problem_visualsUncheckedUpdateInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   problem_id?: Prisma.StringFieldUpdateOperationsInput | string
   code_text?: Prisma.StringFieldUpdateOperationsInput | string
   code_steps?: Prisma.StringFieldUpdateOperationsInput | string
@@ -267,12 +270,14 @@ export type problem_visualsCreateManyInput = {
 }
 
 export type problem_visualsUpdateManyMutationInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   code_text?: Prisma.StringFieldUpdateOperationsInput | string
   code_steps?: Prisma.StringFieldUpdateOperationsInput | string
   input_array?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type problem_visualsUncheckedUpdateManyInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   problem_id?: Prisma.StringFieldUpdateOperationsInput | string
   code_text?: Prisma.StringFieldUpdateOperationsInput | string
   code_steps?: Prisma.StringFieldUpdateOperationsInput | string
@@ -282,6 +287,12 @@ export type problem_visualsUncheckedUpdateManyInput = {
 export type Problem_visualsNullableScalarRelationFilter = {
   is?: Prisma.problem_visualsWhereInput | null
   isNot?: Prisma.problem_visualsWhereInput | null
+}
+
+export type problem_visualsOrderByRelevanceInput = {
+  fields: Prisma.problem_visualsOrderByRelevanceFieldEnum | Prisma.problem_visualsOrderByRelevanceFieldEnum[]
+  sort: Prisma.SortOrder
+  search: string
 }
 
 export type problem_visualsCountOrderByAggregateInput = {
@@ -371,12 +382,14 @@ export type problem_visualsUpdateToOneWithWhereWithoutProblem_tableInput = {
 }
 
 export type problem_visualsUpdateWithoutProblem_tableInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   code_text?: Prisma.StringFieldUpdateOperationsInput | string
   code_steps?: Prisma.StringFieldUpdateOperationsInput | string
   input_array?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type problem_visualsUncheckedUpdateWithoutProblem_tableInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   code_text?: Prisma.StringFieldUpdateOperationsInput | string
   code_steps?: Prisma.StringFieldUpdateOperationsInput | string
   input_array?: Prisma.StringFieldUpdateOperationsInput | string
@@ -618,29 +631,6 @@ export interface problem_visualsDelegate<ExtArgs extends runtime.Types.Extension
    * })
    */
   upsert<T extends problem_visualsUpsertArgs>(args: Prisma.SelectSubset<T, problem_visualsUpsertArgs<ExtArgs>>): Prisma.Prisma__problem_visualsClient<runtime.Types.Result.GetResult<Prisma.$problem_visualsPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-  /**
-   * Find zero or more Problem_visuals that matches the filter.
-   * @param {problem_visualsFindRawArgs} args - Select which filters you would like to apply.
-   * @example
-   * const problem_visuals = await prisma.problem_visuals.findRaw({
-   *   filter: { age: { $gt: 25 } }
-   * })
-   */
-  findRaw(args?: Prisma.problem_visualsFindRawArgs): Prisma.PrismaPromise<Prisma.JsonObject>
-
-  /**
-   * Perform aggregation operations on a Problem_visuals.
-   * @param {problem_visualsAggregateRawArgs} args - Select which aggregations you would like to apply.
-   * @example
-   * const problem_visuals = await prisma.problem_visuals.aggregateRaw({
-   *   pipeline: [
-   *     { $match: { status: "registered" } },
-   *     { $group: { _id: "$country", total: { $sum: 1 } } }
-   *   ]
-   * })
-   */
-  aggregateRaw(args?: Prisma.problem_visualsAggregateRawArgs): Prisma.PrismaPromise<Prisma.JsonObject>
 
 
   /**
@@ -1013,6 +1003,11 @@ export type problem_visualsFindManyArgs<ExtArgs extends runtime.Types.Extensions
    * Skip the first `n` problem_visuals.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of problem_visuals.
+   */
   distinct?: Prisma.Problem_visualsScalarFieldEnum | Prisma.Problem_visualsScalarFieldEnum[]
 }
 
@@ -1046,6 +1041,7 @@ export type problem_visualsCreateManyArgs<ExtArgs extends runtime.Types.Extensio
    * The data used to create many problem_visuals.
    */
   data: Prisma.problem_visualsCreateManyInput | Prisma.problem_visualsCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1156,34 +1152,6 @@ export type problem_visualsDeleteManyArgs<ExtArgs extends runtime.Types.Extensio
    * Limit how many problem_visuals to delete.
    */
   limit?: number
-}
-
-/**
- * problem_visuals findRaw
- */
-export type problem_visualsFindRawArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * The query predicate filter. If unspecified, then all documents in the collection will match the predicate. ${@link https://docs.mongodb.com/manual/reference/operator/query MongoDB Docs}.
-   */
-  filter?: runtime.InputJsonValue
-  /**
-   * Additional options to pass to the `find` command ${@link https://docs.mongodb.com/manual/reference/command/find/#command-fields MongoDB Docs}.
-   */
-  options?: runtime.InputJsonValue
-}
-
-/**
- * problem_visuals aggregateRaw
- */
-export type problem_visualsAggregateRawArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * An array of aggregation stages to process and transform the document stream via the aggregation pipeline. ${@link https://docs.mongodb.com/manual/reference/operator/aggregation-pipeline MongoDB Docs}.
-   */
-  pipeline?: runtime.InputJsonValue[]
-  /**
-   * Additional options to pass to the `aggregate` command ${@link https://docs.mongodb.com/manual/reference/command/aggregate/#command-fields MongoDB Docs}.
-   */
-  options?: runtime.InputJsonValue
 }
 
 /**

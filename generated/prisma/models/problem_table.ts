@@ -8,7 +8,7 @@
  *
  * 🟢 You can import this file directly.
  */
-import type * as runtime from "@prisma/client/runtime/library"
+import type * as runtime from "@prisma/client/runtime/client"
 import type * as $Enums from "../enums"
 import type * as Prisma from "../internal/prismaNamespace"
 
@@ -175,7 +175,7 @@ export type Problem_tableGroupByOutputType = {
   _max: Problem_tableMaxAggregateOutputType | null
 }
 
-type GetProblem_tableGroupByPayload<T extends problem_tableGroupByArgs> = Prisma.PrismaPromise<
+export type GetProblem_tableGroupByPayload<T extends problem_tableGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<Problem_tableGroupByOutputType, T['by']> &
       {
@@ -203,8 +203,8 @@ export type problem_tableWhereInput = {
   hints?: Prisma.JsonNullableFilter<"problem_table">
   set_id?: Prisma.StringFilter<"problem_table"> | string
   problem_description?: Prisma.XOR<Prisma.Problem_descriptionNullableScalarRelationFilter, Prisma.problem_descriptionWhereInput> | null
-  problem_visuals?: Prisma.XOR<Prisma.Problem_visualsNullableScalarRelationFilter, Prisma.problem_visualsWhereInput> | null
   users_table?: Prisma.XOR<Prisma.Users_tableScalarRelationFilter, Prisma.users_tableWhereInput>
+  problem_visuals?: Prisma.XOR<Prisma.Problem_visualsNullableScalarRelationFilter, Prisma.problem_visualsWhereInput> | null
   set_table?: Prisma.XOR<Prisma.Set_tableScalarRelationFilter, Prisma.set_tableWhereInput>
 }
 
@@ -213,14 +213,15 @@ export type problem_tableOrderByWithRelationInput = {
   name?: Prisma.SortOrder
   link?: Prisma.SortOrder
   difficulty?: Prisma.SortOrder
-  video_link?: Prisma.SortOrder
+  video_link?: Prisma.SortOrderInput | Prisma.SortOrder
   author_id?: Prisma.SortOrder
-  hints?: Prisma.SortOrder
+  hints?: Prisma.SortOrderInput | Prisma.SortOrder
   set_id?: Prisma.SortOrder
   problem_description?: Prisma.problem_descriptionOrderByWithRelationInput
-  problem_visuals?: Prisma.problem_visualsOrderByWithRelationInput
   users_table?: Prisma.users_tableOrderByWithRelationInput
+  problem_visuals?: Prisma.problem_visualsOrderByWithRelationInput
   set_table?: Prisma.set_tableOrderByWithRelationInput
+  _relevance?: Prisma.problem_tableOrderByRelevanceInput
 }
 
 export type problem_tableWhereUniqueInput = Prisma.AtLeast<{
@@ -236,8 +237,8 @@ export type problem_tableWhereUniqueInput = Prisma.AtLeast<{
   hints?: Prisma.JsonNullableFilter<"problem_table">
   set_id?: Prisma.StringFilter<"problem_table"> | string
   problem_description?: Prisma.XOR<Prisma.Problem_descriptionNullableScalarRelationFilter, Prisma.problem_descriptionWhereInput> | null
-  problem_visuals?: Prisma.XOR<Prisma.Problem_visualsNullableScalarRelationFilter, Prisma.problem_visualsWhereInput> | null
   users_table?: Prisma.XOR<Prisma.Users_tableScalarRelationFilter, Prisma.users_tableWhereInput>
+  problem_visuals?: Prisma.XOR<Prisma.Problem_visualsNullableScalarRelationFilter, Prisma.problem_visualsWhereInput> | null
   set_table?: Prisma.XOR<Prisma.Set_tableScalarRelationFilter, Prisma.set_tableWhereInput>
 }, "id">
 
@@ -246,9 +247,9 @@ export type problem_tableOrderByWithAggregationInput = {
   name?: Prisma.SortOrder
   link?: Prisma.SortOrder
   difficulty?: Prisma.SortOrder
-  video_link?: Prisma.SortOrder
+  video_link?: Prisma.SortOrderInput | Prisma.SortOrder
   author_id?: Prisma.SortOrder
-  hints?: Prisma.SortOrder
+  hints?: Prisma.SortOrderInput | Prisma.SortOrder
   set_id?: Prisma.SortOrder
   _count?: Prisma.problem_tableCountOrderByAggregateInput
   _max?: Prisma.problem_tableMaxOrderByAggregateInput
@@ -275,10 +276,10 @@ export type problem_tableCreateInput = {
   link: string
   difficulty?: string
   video_link?: string | null
-  hints?: runtime.InputJsonValue | null
+  hints?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   problem_description?: Prisma.problem_descriptionCreateNestedOneWithoutProblem_tableInput
-  problem_visuals?: Prisma.problem_visualsCreateNestedOneWithoutProblem_tableInput
   users_table: Prisma.users_tableCreateNestedOneWithoutProblem_tableInput
+  problem_visuals?: Prisma.problem_visualsCreateNestedOneWithoutProblem_tableInput
   set_table: Prisma.set_tableCreateNestedOneWithoutProblem_tableInput
 }
 
@@ -289,31 +290,33 @@ export type problem_tableUncheckedCreateInput = {
   difficulty?: string
   video_link?: string | null
   author_id: string
-  hints?: runtime.InputJsonValue | null
+  hints?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   set_id: string
   problem_description?: Prisma.problem_descriptionUncheckedCreateNestedOneWithoutProblem_tableInput
   problem_visuals?: Prisma.problem_visualsUncheckedCreateNestedOneWithoutProblem_tableInput
 }
 
 export type problem_tableUpdateInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   link?: Prisma.StringFieldUpdateOperationsInput | string
   difficulty?: Prisma.StringFieldUpdateOperationsInput | string
   video_link?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  hints?: runtime.InputJsonValue | runtime.InputJsonValue | null
+  hints?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   problem_description?: Prisma.problem_descriptionUpdateOneWithoutProblem_tableNestedInput
-  problem_visuals?: Prisma.problem_visualsUpdateOneWithoutProblem_tableNestedInput
   users_table?: Prisma.users_tableUpdateOneRequiredWithoutProblem_tableNestedInput
+  problem_visuals?: Prisma.problem_visualsUpdateOneWithoutProblem_tableNestedInput
   set_table?: Prisma.set_tableUpdateOneRequiredWithoutProblem_tableNestedInput
 }
 
 export type problem_tableUncheckedUpdateInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   link?: Prisma.StringFieldUpdateOperationsInput | string
   difficulty?: Prisma.StringFieldUpdateOperationsInput | string
   video_link?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   author_id?: Prisma.StringFieldUpdateOperationsInput | string
-  hints?: runtime.InputJsonValue | runtime.InputJsonValue | null
+  hints?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   set_id?: Prisma.StringFieldUpdateOperationsInput | string
   problem_description?: Prisma.problem_descriptionUncheckedUpdateOneWithoutProblem_tableNestedInput
   problem_visuals?: Prisma.problem_visualsUncheckedUpdateOneWithoutProblem_tableNestedInput
@@ -326,25 +329,27 @@ export type problem_tableCreateManyInput = {
   difficulty?: string
   video_link?: string | null
   author_id: string
-  hints?: runtime.InputJsonValue | null
+  hints?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   set_id: string
 }
 
 export type problem_tableUpdateManyMutationInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   link?: Prisma.StringFieldUpdateOperationsInput | string
   difficulty?: Prisma.StringFieldUpdateOperationsInput | string
   video_link?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  hints?: runtime.InputJsonValue | runtime.InputJsonValue | null
+  hints?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
 }
 
 export type problem_tableUncheckedUpdateManyInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   link?: Prisma.StringFieldUpdateOperationsInput | string
   difficulty?: Prisma.StringFieldUpdateOperationsInput | string
   video_link?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   author_id?: Prisma.StringFieldUpdateOperationsInput | string
-  hints?: runtime.InputJsonValue | runtime.InputJsonValue | null
+  hints?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   set_id?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
@@ -356,6 +361,17 @@ export type Problem_tableListRelationFilter = {
 
 export type problem_tableOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
+}
+
+export type Problem_tableScalarRelationFilter = {
+  is?: Prisma.problem_tableWhereInput
+  isNot?: Prisma.problem_tableWhereInput
+}
+
+export type problem_tableOrderByRelevanceInput = {
+  fields: Prisma.problem_tableOrderByRelevanceFieldEnum | Prisma.problem_tableOrderByRelevanceFieldEnum[]
+  sort: Prisma.SortOrder
+  search: string
 }
 
 export type problem_tableCountOrderByAggregateInput = {
@@ -387,11 +403,6 @@ export type problem_tableMinOrderByAggregateInput = {
   video_link?: Prisma.SortOrder
   author_id?: Prisma.SortOrder
   set_id?: Prisma.SortOrder
-}
-
-export type Problem_tableScalarRelationFilter = {
-  is?: Prisma.problem_tableWhereInput
-  isNot?: Prisma.problem_tableWhereInput
 }
 
 export type problem_tableCreateNestedManyWithoutUsers_tableInput = {
@@ -478,11 +489,6 @@ export type problem_tableUncheckedUpdateManyWithoutSet_tableNestedInput = {
   deleteMany?: Prisma.problem_tableScalarWhereInput | Prisma.problem_tableScalarWhereInput[]
 }
 
-export type NullableStringFieldUpdateOperationsInput = {
-  set?: string | null
-  unset?: boolean
-}
-
 export type problem_tableCreateNestedOneWithoutProblem_descriptionInput = {
   create?: Prisma.XOR<Prisma.problem_tableCreateWithoutProblem_descriptionInput, Prisma.problem_tableUncheckedCreateWithoutProblem_descriptionInput>
   connectOrCreate?: Prisma.problem_tableCreateOrConnectWithoutProblem_descriptionInput
@@ -517,7 +523,7 @@ export type problem_tableCreateWithoutUsers_tableInput = {
   link: string
   difficulty?: string
   video_link?: string | null
-  hints?: runtime.InputJsonValue | null
+  hints?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   problem_description?: Prisma.problem_descriptionCreateNestedOneWithoutProblem_tableInput
   problem_visuals?: Prisma.problem_visualsCreateNestedOneWithoutProblem_tableInput
   set_table: Prisma.set_tableCreateNestedOneWithoutProblem_tableInput
@@ -529,7 +535,7 @@ export type problem_tableUncheckedCreateWithoutUsers_tableInput = {
   link: string
   difficulty?: string
   video_link?: string | null
-  hints?: runtime.InputJsonValue | null
+  hints?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   set_id: string
   problem_description?: Prisma.problem_descriptionUncheckedCreateNestedOneWithoutProblem_tableInput
   problem_visuals?: Prisma.problem_visualsUncheckedCreateNestedOneWithoutProblem_tableInput
@@ -542,6 +548,7 @@ export type problem_tableCreateOrConnectWithoutUsers_tableInput = {
 
 export type problem_tableCreateManyUsers_tableInputEnvelope = {
   data: Prisma.problem_tableCreateManyUsers_tableInput | Prisma.problem_tableCreateManyUsers_tableInput[]
+  skipDuplicates?: boolean
 }
 
 export type problem_tableUpsertWithWhereUniqueWithoutUsers_tableInput = {
@@ -580,10 +587,10 @@ export type problem_tableCreateWithoutSet_tableInput = {
   link: string
   difficulty?: string
   video_link?: string | null
-  hints?: runtime.InputJsonValue | null
+  hints?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   problem_description?: Prisma.problem_descriptionCreateNestedOneWithoutProblem_tableInput
-  problem_visuals?: Prisma.problem_visualsCreateNestedOneWithoutProblem_tableInput
   users_table: Prisma.users_tableCreateNestedOneWithoutProblem_tableInput
+  problem_visuals?: Prisma.problem_visualsCreateNestedOneWithoutProblem_tableInput
 }
 
 export type problem_tableUncheckedCreateWithoutSet_tableInput = {
@@ -593,7 +600,7 @@ export type problem_tableUncheckedCreateWithoutSet_tableInput = {
   difficulty?: string
   video_link?: string | null
   author_id: string
-  hints?: runtime.InputJsonValue | null
+  hints?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   problem_description?: Prisma.problem_descriptionUncheckedCreateNestedOneWithoutProblem_tableInput
   problem_visuals?: Prisma.problem_visualsUncheckedCreateNestedOneWithoutProblem_tableInput
 }
@@ -605,6 +612,7 @@ export type problem_tableCreateOrConnectWithoutSet_tableInput = {
 
 export type problem_tableCreateManySet_tableInputEnvelope = {
   data: Prisma.problem_tableCreateManySet_tableInput | Prisma.problem_tableCreateManySet_tableInput[]
+  skipDuplicates?: boolean
 }
 
 export type problem_tableUpsertWithWhereUniqueWithoutSet_tableInput = {
@@ -629,9 +637,9 @@ export type problem_tableCreateWithoutProblem_descriptionInput = {
   link: string
   difficulty?: string
   video_link?: string | null
-  hints?: runtime.InputJsonValue | null
-  problem_visuals?: Prisma.problem_visualsCreateNestedOneWithoutProblem_tableInput
+  hints?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   users_table: Prisma.users_tableCreateNestedOneWithoutProblem_tableInput
+  problem_visuals?: Prisma.problem_visualsCreateNestedOneWithoutProblem_tableInput
   set_table: Prisma.set_tableCreateNestedOneWithoutProblem_tableInput
 }
 
@@ -642,7 +650,7 @@ export type problem_tableUncheckedCreateWithoutProblem_descriptionInput = {
   difficulty?: string
   video_link?: string | null
   author_id: string
-  hints?: runtime.InputJsonValue | null
+  hints?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   set_id: string
   problem_visuals?: Prisma.problem_visualsUncheckedCreateNestedOneWithoutProblem_tableInput
 }
@@ -664,23 +672,25 @@ export type problem_tableUpdateToOneWithWhereWithoutProblem_descriptionInput = {
 }
 
 export type problem_tableUpdateWithoutProblem_descriptionInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   link?: Prisma.StringFieldUpdateOperationsInput | string
   difficulty?: Prisma.StringFieldUpdateOperationsInput | string
   video_link?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  hints?: runtime.InputJsonValue | runtime.InputJsonValue | null
-  problem_visuals?: Prisma.problem_visualsUpdateOneWithoutProblem_tableNestedInput
+  hints?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   users_table?: Prisma.users_tableUpdateOneRequiredWithoutProblem_tableNestedInput
+  problem_visuals?: Prisma.problem_visualsUpdateOneWithoutProblem_tableNestedInput
   set_table?: Prisma.set_tableUpdateOneRequiredWithoutProblem_tableNestedInput
 }
 
 export type problem_tableUncheckedUpdateWithoutProblem_descriptionInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   link?: Prisma.StringFieldUpdateOperationsInput | string
   difficulty?: Prisma.StringFieldUpdateOperationsInput | string
   video_link?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   author_id?: Prisma.StringFieldUpdateOperationsInput | string
-  hints?: runtime.InputJsonValue | runtime.InputJsonValue | null
+  hints?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   set_id?: Prisma.StringFieldUpdateOperationsInput | string
   problem_visuals?: Prisma.problem_visualsUncheckedUpdateOneWithoutProblem_tableNestedInput
 }
@@ -691,7 +701,7 @@ export type problem_tableCreateWithoutProblem_visualsInput = {
   link: string
   difficulty?: string
   video_link?: string | null
-  hints?: runtime.InputJsonValue | null
+  hints?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   problem_description?: Prisma.problem_descriptionCreateNestedOneWithoutProblem_tableInput
   users_table: Prisma.users_tableCreateNestedOneWithoutProblem_tableInput
   set_table: Prisma.set_tableCreateNestedOneWithoutProblem_tableInput
@@ -704,7 +714,7 @@ export type problem_tableUncheckedCreateWithoutProblem_visualsInput = {
   difficulty?: string
   video_link?: string | null
   author_id: string
-  hints?: runtime.InputJsonValue | null
+  hints?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   set_id: string
   problem_description?: Prisma.problem_descriptionUncheckedCreateNestedOneWithoutProblem_tableInput
 }
@@ -726,23 +736,25 @@ export type problem_tableUpdateToOneWithWhereWithoutProblem_visualsInput = {
 }
 
 export type problem_tableUpdateWithoutProblem_visualsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   link?: Prisma.StringFieldUpdateOperationsInput | string
   difficulty?: Prisma.StringFieldUpdateOperationsInput | string
   video_link?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  hints?: runtime.InputJsonValue | runtime.InputJsonValue | null
+  hints?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   problem_description?: Prisma.problem_descriptionUpdateOneWithoutProblem_tableNestedInput
   users_table?: Prisma.users_tableUpdateOneRequiredWithoutProblem_tableNestedInput
   set_table?: Prisma.set_tableUpdateOneRequiredWithoutProblem_tableNestedInput
 }
 
 export type problem_tableUncheckedUpdateWithoutProblem_visualsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   link?: Prisma.StringFieldUpdateOperationsInput | string
   difficulty?: Prisma.StringFieldUpdateOperationsInput | string
   video_link?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   author_id?: Prisma.StringFieldUpdateOperationsInput | string
-  hints?: runtime.InputJsonValue | runtime.InputJsonValue | null
+  hints?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   set_id?: Prisma.StringFieldUpdateOperationsInput | string
   problem_description?: Prisma.problem_descriptionUncheckedUpdateOneWithoutProblem_tableNestedInput
 }
@@ -753,38 +765,41 @@ export type problem_tableCreateManyUsers_tableInput = {
   link: string
   difficulty?: string
   video_link?: string | null
-  hints?: runtime.InputJsonValue | null
+  hints?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   set_id: string
 }
 
 export type problem_tableUpdateWithoutUsers_tableInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   link?: Prisma.StringFieldUpdateOperationsInput | string
   difficulty?: Prisma.StringFieldUpdateOperationsInput | string
   video_link?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  hints?: runtime.InputJsonValue | runtime.InputJsonValue | null
+  hints?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   problem_description?: Prisma.problem_descriptionUpdateOneWithoutProblem_tableNestedInput
   problem_visuals?: Prisma.problem_visualsUpdateOneWithoutProblem_tableNestedInput
   set_table?: Prisma.set_tableUpdateOneRequiredWithoutProblem_tableNestedInput
 }
 
 export type problem_tableUncheckedUpdateWithoutUsers_tableInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   link?: Prisma.StringFieldUpdateOperationsInput | string
   difficulty?: Prisma.StringFieldUpdateOperationsInput | string
   video_link?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  hints?: runtime.InputJsonValue | runtime.InputJsonValue | null
+  hints?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   set_id?: Prisma.StringFieldUpdateOperationsInput | string
   problem_description?: Prisma.problem_descriptionUncheckedUpdateOneWithoutProblem_tableNestedInput
   problem_visuals?: Prisma.problem_visualsUncheckedUpdateOneWithoutProblem_tableNestedInput
 }
 
 export type problem_tableUncheckedUpdateManyWithoutUsers_tableInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   link?: Prisma.StringFieldUpdateOperationsInput | string
   difficulty?: Prisma.StringFieldUpdateOperationsInput | string
   video_link?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  hints?: runtime.InputJsonValue | runtime.InputJsonValue | null
+  hints?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   set_id?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
@@ -795,38 +810,41 @@ export type problem_tableCreateManySet_tableInput = {
   difficulty?: string
   video_link?: string | null
   author_id: string
-  hints?: runtime.InputJsonValue | null
+  hints?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
 }
 
 export type problem_tableUpdateWithoutSet_tableInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   link?: Prisma.StringFieldUpdateOperationsInput | string
   difficulty?: Prisma.StringFieldUpdateOperationsInput | string
   video_link?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  hints?: runtime.InputJsonValue | runtime.InputJsonValue | null
+  hints?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   problem_description?: Prisma.problem_descriptionUpdateOneWithoutProblem_tableNestedInput
-  problem_visuals?: Prisma.problem_visualsUpdateOneWithoutProblem_tableNestedInput
   users_table?: Prisma.users_tableUpdateOneRequiredWithoutProblem_tableNestedInput
+  problem_visuals?: Prisma.problem_visualsUpdateOneWithoutProblem_tableNestedInput
 }
 
 export type problem_tableUncheckedUpdateWithoutSet_tableInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   link?: Prisma.StringFieldUpdateOperationsInput | string
   difficulty?: Prisma.StringFieldUpdateOperationsInput | string
   video_link?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   author_id?: Prisma.StringFieldUpdateOperationsInput | string
-  hints?: runtime.InputJsonValue | runtime.InputJsonValue | null
+  hints?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   problem_description?: Prisma.problem_descriptionUncheckedUpdateOneWithoutProblem_tableNestedInput
   problem_visuals?: Prisma.problem_visualsUncheckedUpdateOneWithoutProblem_tableNestedInput
 }
 
 export type problem_tableUncheckedUpdateManyWithoutSet_tableInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   link?: Prisma.StringFieldUpdateOperationsInput | string
   difficulty?: Prisma.StringFieldUpdateOperationsInput | string
   video_link?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   author_id?: Prisma.StringFieldUpdateOperationsInput | string
-  hints?: runtime.InputJsonValue | runtime.InputJsonValue | null
+  hints?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
 }
 
 
@@ -841,8 +859,8 @@ export type problem_tableSelect<ExtArgs extends runtime.Types.Extensions.Interna
   hints?: boolean
   set_id?: boolean
   problem_description?: boolean | Prisma.problem_table$problem_descriptionArgs<ExtArgs>
-  problem_visuals?: boolean | Prisma.problem_table$problem_visualsArgs<ExtArgs>
   users_table?: boolean | Prisma.users_tableDefaultArgs<ExtArgs>
+  problem_visuals?: boolean | Prisma.problem_table$problem_visualsArgs<ExtArgs>
   set_table?: boolean | Prisma.set_tableDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["problem_table"]>
 
@@ -862,8 +880,8 @@ export type problem_tableSelectScalar = {
 export type problem_tableOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "link" | "difficulty" | "video_link" | "author_id" | "hints" | "set_id", ExtArgs["result"]["problem_table"]>
 export type problem_tableInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   problem_description?: boolean | Prisma.problem_table$problem_descriptionArgs<ExtArgs>
-  problem_visuals?: boolean | Prisma.problem_table$problem_visualsArgs<ExtArgs>
   users_table?: boolean | Prisma.users_tableDefaultArgs<ExtArgs>
+  problem_visuals?: boolean | Prisma.problem_table$problem_visualsArgs<ExtArgs>
   set_table?: boolean | Prisma.set_tableDefaultArgs<ExtArgs>
 }
 
@@ -871,8 +889,8 @@ export type $problem_tablePayload<ExtArgs extends runtime.Types.Extensions.Inter
   name: "problem_table"
   objects: {
     problem_description: Prisma.$problem_descriptionPayload<ExtArgs> | null
-    problem_visuals: Prisma.$problem_visualsPayload<ExtArgs> | null
     users_table: Prisma.$users_tablePayload<ExtArgs>
+    problem_visuals: Prisma.$problem_visualsPayload<ExtArgs> | null
     set_table: Prisma.$set_tablePayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
@@ -1084,29 +1102,6 @@ export interface problem_tableDelegate<ExtArgs extends runtime.Types.Extensions.
    */
   upsert<T extends problem_tableUpsertArgs>(args: Prisma.SelectSubset<T, problem_tableUpsertArgs<ExtArgs>>): Prisma.Prisma__problem_tableClient<runtime.Types.Result.GetResult<Prisma.$problem_tablePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
-  /**
-   * Find zero or more Problem_tables that matches the filter.
-   * @param {problem_tableFindRawArgs} args - Select which filters you would like to apply.
-   * @example
-   * const problem_table = await prisma.problem_table.findRaw({
-   *   filter: { age: { $gt: 25 } }
-   * })
-   */
-  findRaw(args?: Prisma.problem_tableFindRawArgs): Prisma.PrismaPromise<Prisma.JsonObject>
-
-  /**
-   * Perform aggregation operations on a Problem_table.
-   * @param {problem_tableAggregateRawArgs} args - Select which aggregations you would like to apply.
-   * @example
-   * const problem_table = await prisma.problem_table.aggregateRaw({
-   *   pipeline: [
-   *     { $match: { status: "registered" } },
-   *     { $group: { _id: "$country", total: { $sum: 1 } } }
-   *   ]
-   * })
-   */
-  aggregateRaw(args?: Prisma.problem_tableAggregateRawArgs): Prisma.PrismaPromise<Prisma.JsonObject>
-
 
   /**
    * Count the number of Problem_tables.
@@ -1248,8 +1243,8 @@ readonly fields: problem_tableFieldRefs;
 export interface Prisma__problem_tableClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   problem_description<T extends Prisma.problem_table$problem_descriptionArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.problem_table$problem_descriptionArgs<ExtArgs>>): Prisma.Prisma__problem_descriptionClient<runtime.Types.Result.GetResult<Prisma.$problem_descriptionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-  problem_visuals<T extends Prisma.problem_table$problem_visualsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.problem_table$problem_visualsArgs<ExtArgs>>): Prisma.Prisma__problem_visualsClient<runtime.Types.Result.GetResult<Prisma.$problem_visualsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   users_table<T extends Prisma.users_tableDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.users_tableDefaultArgs<ExtArgs>>): Prisma.Prisma__users_tableClient<runtime.Types.Result.GetResult<Prisma.$users_tablePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  problem_visuals<T extends Prisma.problem_table$problem_visualsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.problem_table$problem_visualsArgs<ExtArgs>>): Prisma.Prisma__problem_visualsClient<runtime.Types.Result.GetResult<Prisma.$problem_visualsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   set_table<T extends Prisma.set_tableDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.set_tableDefaultArgs<ExtArgs>>): Prisma.Prisma__set_tableClient<runtime.Types.Result.GetResult<Prisma.$set_tablePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -1484,6 +1479,11 @@ export type problem_tableFindManyArgs<ExtArgs extends runtime.Types.Extensions.I
    * Skip the first `n` problem_tables.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of problem_tables.
+   */
   distinct?: Prisma.Problem_tableScalarFieldEnum | Prisma.Problem_tableScalarFieldEnum[]
 }
 
@@ -1517,6 +1517,7 @@ export type problem_tableCreateManyArgs<ExtArgs extends runtime.Types.Extensions
    * The data used to create many problem_tables.
    */
   data: Prisma.problem_tableCreateManyInput | Prisma.problem_tableCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1627,34 +1628,6 @@ export type problem_tableDeleteManyArgs<ExtArgs extends runtime.Types.Extensions
    * Limit how many problem_tables to delete.
    */
   limit?: number
-}
-
-/**
- * problem_table findRaw
- */
-export type problem_tableFindRawArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * The query predicate filter. If unspecified, then all documents in the collection will match the predicate. ${@link https://docs.mongodb.com/manual/reference/operator/query MongoDB Docs}.
-   */
-  filter?: runtime.InputJsonValue
-  /**
-   * Additional options to pass to the `find` command ${@link https://docs.mongodb.com/manual/reference/command/find/#command-fields MongoDB Docs}.
-   */
-  options?: runtime.InputJsonValue
-}
-
-/**
- * problem_table aggregateRaw
- */
-export type problem_tableAggregateRawArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * An array of aggregation stages to process and transform the document stream via the aggregation pipeline. ${@link https://docs.mongodb.com/manual/reference/operator/aggregation-pipeline MongoDB Docs}.
-   */
-  pipeline?: runtime.InputJsonValue[]
-  /**
-   * Additional options to pass to the `aggregate` command ${@link https://docs.mongodb.com/manual/reference/command/aggregate/#command-fields MongoDB Docs}.
-   */
-  options?: runtime.InputJsonValue
 }
 
 /**

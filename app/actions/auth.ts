@@ -49,13 +49,13 @@ export async function signup(state: FormState, formData: FormData) {
     //     .where(or(eq(usersTable.email, email), eq(usersTable.username, username)))
     //     .execute()
 
-    // const existingUser = await prisma.users_table.findUnique({
-    //     where: { "email": email}
-    // })
-
-    const existingUser = await Users.findOne({
-        email: email
+    const existingUser = await prisma.users_table.findUnique({
+        where: { "email": email}
     })
+
+    // const existingUser = await Users.findOne({
+    //     email: email
+    // })
 
     console.log('Existing user:', existingUser)
 
@@ -84,23 +84,23 @@ export async function signup(state: FormState, formData: FormData) {
         //     .$returningId()
         console.log("enter")
 
-        // const data = await prisma.users_table.create({
-        //     data: {
-        //         id: userId,
-        //         username,
-        //         email,
-        //         password: hashedPassword,
-        //         dateJoined: new Date(Date.now())
-        //     }
-        // })
-
-        const data = await Users.create({
-            id: userId,
-            username,
-            email,
-            password: hashedPassword,
-            dateJoined: new Date(Date.now())
+        const data = await prisma.users_table.create({
+            data: {
+                id: userId,
+                username,
+                email,
+                password: hashedPassword,
+                dateJoined: new Date(Date.now())
+            }
         })
+
+        // const data = await Users.create({
+        //     id: userId,
+        //     username,
+        //     email,
+        //     password: hashedPassword,
+        //     dateJoined: new Date(Date.now())
+        // })
 
         console.log('User created with ID:', data)
     } catch (error) {
@@ -149,13 +149,13 @@ export async function login(state: FormState, formData: FormData) {
     //     .where(or(eq(usersTable.email, email), eq(usersTable.password, hashedPassword)))
     //     .execute()
 
-    // const existingUser = await prisma.users_table.findFirst({
-    //     where: {
-    //         email: email
-    //     }
-    // })
+    const existingUser = await prisma.users_table.findFirst({
+        where: {
+            email: email
+        }
+    })
 
-    const existingUser = await Users.findOne({ email })
+    // const existingUser = await Users.findOne({ email })
 
     console.log('Existing user:', existingUser)
 

@@ -8,7 +8,7 @@
  *
  * 🟢 You can import this file directly.
  */
-import type * as runtime from "@prisma/client/runtime/library"
+import type * as runtime from "@prisma/client/runtime/client"
 import type * as $Enums from "../enums"
 import type * as Prisma from "../internal/prismaNamespace"
 
@@ -140,7 +140,7 @@ export type User_problemGroupByOutputType = {
   _max: User_problemMaxAggregateOutputType | null
 }
 
-type GetUser_problemGroupByPayload<T extends user_problemGroupByArgs> = Prisma.PrismaPromise<
+export type GetUser_problemGroupByPayload<T extends user_problemGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<User_problemGroupByOutputType, T['by']> &
       {
@@ -168,8 +168,9 @@ export type user_problemWhereInput = {
 export type user_problemOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   user_id?: Prisma.SortOrder
-  problem_ids?: Prisma.SortOrder
+  problem_ids?: Prisma.SortOrderInput | Prisma.SortOrder
   users_table?: Prisma.users_tableOrderByWithRelationInput
+  _relevance?: Prisma.user_problemOrderByRelevanceInput
 }
 
 export type user_problemWhereUniqueInput = Prisma.AtLeast<{
@@ -185,7 +186,7 @@ export type user_problemWhereUniqueInput = Prisma.AtLeast<{
 export type user_problemOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   user_id?: Prisma.SortOrder
-  problem_ids?: Prisma.SortOrder
+  problem_ids?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.user_problemCountOrderByAggregateInput
   _max?: Prisma.user_problemMaxOrderByAggregateInput
   _min?: Prisma.user_problemMinOrderByAggregateInput
@@ -202,44 +203,54 @@ export type user_problemScalarWhereWithAggregatesInput = {
 
 export type user_problemCreateInput = {
   id: string
-  problem_ids?: runtime.InputJsonValue | null
+  problem_ids?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   users_table: Prisma.users_tableCreateNestedOneWithoutUser_problemInput
 }
 
 export type user_problemUncheckedCreateInput = {
   id: string
   user_id: string
-  problem_ids?: runtime.InputJsonValue | null
+  problem_ids?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
 }
 
 export type user_problemUpdateInput = {
-  problem_ids?: runtime.InputJsonValue | runtime.InputJsonValue | null
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  problem_ids?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   users_table?: Prisma.users_tableUpdateOneRequiredWithoutUser_problemNestedInput
 }
 
 export type user_problemUncheckedUpdateInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   user_id?: Prisma.StringFieldUpdateOperationsInput | string
-  problem_ids?: runtime.InputJsonValue | runtime.InputJsonValue | null
+  problem_ids?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
 }
 
 export type user_problemCreateManyInput = {
   id: string
   user_id: string
-  problem_ids?: runtime.InputJsonValue | null
+  problem_ids?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
 }
 
 export type user_problemUpdateManyMutationInput = {
-  problem_ids?: runtime.InputJsonValue | runtime.InputJsonValue | null
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  problem_ids?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
 }
 
 export type user_problemUncheckedUpdateManyInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   user_id?: Prisma.StringFieldUpdateOperationsInput | string
-  problem_ids?: runtime.InputJsonValue | runtime.InputJsonValue | null
+  problem_ids?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
 }
 
 export type User_problemNullableScalarRelationFilter = {
   is?: Prisma.user_problemWhereInput | null
   isNot?: Prisma.user_problemWhereInput | null
+}
+
+export type user_problemOrderByRelevanceInput = {
+  fields: Prisma.user_problemOrderByRelevanceFieldEnum | Prisma.user_problemOrderByRelevanceFieldEnum[]
+  sort: Prisma.SortOrder
+  search: string
 }
 
 export type user_problemCountOrderByAggregateInput = {
@@ -292,12 +303,12 @@ export type user_problemUncheckedUpdateOneWithoutUsers_tableNestedInput = {
 
 export type user_problemCreateWithoutUsers_tableInput = {
   id: string
-  problem_ids?: runtime.InputJsonValue | null
+  problem_ids?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
 }
 
 export type user_problemUncheckedCreateWithoutUsers_tableInput = {
   id: string
-  problem_ids?: runtime.InputJsonValue | null
+  problem_ids?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
 }
 
 export type user_problemCreateOrConnectWithoutUsers_tableInput = {
@@ -317,11 +328,13 @@ export type user_problemUpdateToOneWithWhereWithoutUsers_tableInput = {
 }
 
 export type user_problemUpdateWithoutUsers_tableInput = {
-  problem_ids?: runtime.InputJsonValue | runtime.InputJsonValue | null
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  problem_ids?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
 }
 
 export type user_problemUncheckedUpdateWithoutUsers_tableInput = {
-  problem_ids?: runtime.InputJsonValue | runtime.InputJsonValue | null
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  problem_ids?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
 }
 
 
@@ -554,29 +567,6 @@ export interface user_problemDelegate<ExtArgs extends runtime.Types.Extensions.I
    * })
    */
   upsert<T extends user_problemUpsertArgs>(args: Prisma.SelectSubset<T, user_problemUpsertArgs<ExtArgs>>): Prisma.Prisma__user_problemClient<runtime.Types.Result.GetResult<Prisma.$user_problemPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-  /**
-   * Find zero or more User_problems that matches the filter.
-   * @param {user_problemFindRawArgs} args - Select which filters you would like to apply.
-   * @example
-   * const user_problem = await prisma.user_problem.findRaw({
-   *   filter: { age: { $gt: 25 } }
-   * })
-   */
-  findRaw(args?: Prisma.user_problemFindRawArgs): Prisma.PrismaPromise<Prisma.JsonObject>
-
-  /**
-   * Perform aggregation operations on a User_problem.
-   * @param {user_problemAggregateRawArgs} args - Select which aggregations you would like to apply.
-   * @example
-   * const user_problem = await prisma.user_problem.aggregateRaw({
-   *   pipeline: [
-   *     { $match: { status: "registered" } },
-   *     { $group: { _id: "$country", total: { $sum: 1 } } }
-   *   ]
-   * })
-   */
-  aggregateRaw(args?: Prisma.user_problemAggregateRawArgs): Prisma.PrismaPromise<Prisma.JsonObject>
 
 
   /**
@@ -947,6 +937,11 @@ export type user_problemFindManyArgs<ExtArgs extends runtime.Types.Extensions.In
    * Skip the first `n` user_problems.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of user_problems.
+   */
   distinct?: Prisma.User_problemScalarFieldEnum | Prisma.User_problemScalarFieldEnum[]
 }
 
@@ -980,6 +975,7 @@ export type user_problemCreateManyArgs<ExtArgs extends runtime.Types.Extensions.
    * The data used to create many user_problems.
    */
   data: Prisma.user_problemCreateManyInput | Prisma.user_problemCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1090,34 +1086,6 @@ export type user_problemDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.
    * Limit how many user_problems to delete.
    */
   limit?: number
-}
-
-/**
- * user_problem findRaw
- */
-export type user_problemFindRawArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * The query predicate filter. If unspecified, then all documents in the collection will match the predicate. ${@link https://docs.mongodb.com/manual/reference/operator/query MongoDB Docs}.
-   */
-  filter?: runtime.InputJsonValue
-  /**
-   * Additional options to pass to the `find` command ${@link https://docs.mongodb.com/manual/reference/command/find/#command-fields MongoDB Docs}.
-   */
-  options?: runtime.InputJsonValue
-}
-
-/**
- * user_problem aggregateRaw
- */
-export type user_problemAggregateRawArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * An array of aggregation stages to process and transform the document stream via the aggregation pipeline. ${@link https://docs.mongodb.com/manual/reference/operator/aggregation-pipeline MongoDB Docs}.
-   */
-  pipeline?: runtime.InputJsonValue[]
-  /**
-   * Additional options to pass to the `aggregate` command ${@link https://docs.mongodb.com/manual/reference/command/aggregate/#command-fields MongoDB Docs}.
-   */
-  options?: runtime.InputJsonValue
 }
 
 /**
