@@ -8,7 +8,7 @@
  *
  * 🟢 You can import this file directly.
  */
-import type * as runtime from "@prisma/client/runtime/client"
+import type * as runtime from "@prisma/client/runtime/library"
 import type * as $Enums from "../enums"
 import type * as Prisma from "../internal/prismaNamespace"
 
@@ -158,7 +158,7 @@ export type Algovisuals_tableGroupByOutputType = {
   _max: Algovisuals_tableMaxAggregateOutputType | null
 }
 
-export type GetAlgovisuals_tableGroupByPayload<T extends algovisuals_tableGroupByArgs> = Prisma.PrismaPromise<
+type GetAlgovisuals_tableGroupByPayload<T extends algovisuals_tableGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<Algovisuals_tableGroupByOutputType, T['by']> &
       {
@@ -187,12 +187,11 @@ export type algovisuals_tableWhereInput = {
 
 export type algovisuals_tableOrderByWithRelationInput = {
   id?: Prisma.SortOrder
-  subtopic_id?: Prisma.SortOrderInput | Prisma.SortOrder
+  subtopic_id?: Prisma.SortOrder
   code_text?: Prisma.SortOrder
   code_steps?: Prisma.SortOrder
   input_array?: Prisma.SortOrder
   subtopic_table?: Prisma.subtopic_tableOrderByWithRelationInput
-  _relevance?: Prisma.algovisuals_tableOrderByRelevanceInput
 }
 
 export type algovisuals_tableWhereUniqueInput = Prisma.AtLeast<{
@@ -209,7 +208,7 @@ export type algovisuals_tableWhereUniqueInput = Prisma.AtLeast<{
 
 export type algovisuals_tableOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
-  subtopic_id?: Prisma.SortOrderInput | Prisma.SortOrder
+  subtopic_id?: Prisma.SortOrder
   code_text?: Prisma.SortOrder
   code_steps?: Prisma.SortOrder
   input_array?: Prisma.SortOrder
@@ -246,7 +245,6 @@ export type algovisuals_tableUncheckedCreateInput = {
 }
 
 export type algovisuals_tableUpdateInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
   code_text?: Prisma.StringFieldUpdateOperationsInput | string
   code_steps?: Prisma.StringFieldUpdateOperationsInput | string
   input_array?: Prisma.StringFieldUpdateOperationsInput | string
@@ -254,7 +252,6 @@ export type algovisuals_tableUpdateInput = {
 }
 
 export type algovisuals_tableUncheckedUpdateInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
   subtopic_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   code_text?: Prisma.StringFieldUpdateOperationsInput | string
   code_steps?: Prisma.StringFieldUpdateOperationsInput | string
@@ -270,14 +267,12 @@ export type algovisuals_tableCreateManyInput = {
 }
 
 export type algovisuals_tableUpdateManyMutationInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
   code_text?: Prisma.StringFieldUpdateOperationsInput | string
   code_steps?: Prisma.StringFieldUpdateOperationsInput | string
   input_array?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type algovisuals_tableUncheckedUpdateManyInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
   subtopic_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   code_text?: Prisma.StringFieldUpdateOperationsInput | string
   code_steps?: Prisma.StringFieldUpdateOperationsInput | string
@@ -292,12 +287,6 @@ export type Algovisuals_tableListRelationFilter = {
 
 export type algovisuals_tableOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
-}
-
-export type algovisuals_tableOrderByRelevanceInput = {
-  fields: Prisma.algovisuals_tableOrderByRelevanceFieldEnum | Prisma.algovisuals_tableOrderByRelevanceFieldEnum[]
-  sort: Prisma.SortOrder
-  search: string
 }
 
 export type algovisuals_tableCountOrderByAggregateInput = {
@@ -387,7 +376,6 @@ export type algovisuals_tableCreateOrConnectWithoutSubtopic_tableInput = {
 
 export type algovisuals_tableCreateManySubtopic_tableInputEnvelope = {
   data: Prisma.algovisuals_tableCreateManySubtopic_tableInput | Prisma.algovisuals_tableCreateManySubtopic_tableInput[]
-  skipDuplicates?: boolean
 }
 
 export type algovisuals_tableUpsertWithWhereUniqueWithoutSubtopic_tableInput = {
@@ -425,21 +413,18 @@ export type algovisuals_tableCreateManySubtopic_tableInput = {
 }
 
 export type algovisuals_tableUpdateWithoutSubtopic_tableInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
   code_text?: Prisma.StringFieldUpdateOperationsInput | string
   code_steps?: Prisma.StringFieldUpdateOperationsInput | string
   input_array?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type algovisuals_tableUncheckedUpdateWithoutSubtopic_tableInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
   code_text?: Prisma.StringFieldUpdateOperationsInput | string
   code_steps?: Prisma.StringFieldUpdateOperationsInput | string
   input_array?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type algovisuals_tableUncheckedUpdateManyWithoutSubtopic_tableInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
   code_text?: Prisma.StringFieldUpdateOperationsInput | string
   code_steps?: Prisma.StringFieldUpdateOperationsInput | string
   input_array?: Prisma.StringFieldUpdateOperationsInput | string
@@ -681,6 +666,29 @@ export interface algovisuals_tableDelegate<ExtArgs extends runtime.Types.Extensi
    * })
    */
   upsert<T extends algovisuals_tableUpsertArgs>(args: Prisma.SelectSubset<T, algovisuals_tableUpsertArgs<ExtArgs>>): Prisma.Prisma__algovisuals_tableClient<runtime.Types.Result.GetResult<Prisma.$algovisuals_tablePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+  /**
+   * Find zero or more Algovisuals_tables that matches the filter.
+   * @param {algovisuals_tableFindRawArgs} args - Select which filters you would like to apply.
+   * @example
+   * const algovisuals_table = await prisma.algovisuals_table.findRaw({
+   *   filter: { age: { $gt: 25 } }
+   * })
+   */
+  findRaw(args?: Prisma.algovisuals_tableFindRawArgs): Prisma.PrismaPromise<Prisma.JsonObject>
+
+  /**
+   * Perform aggregation operations on a Algovisuals_table.
+   * @param {algovisuals_tableAggregateRawArgs} args - Select which aggregations you would like to apply.
+   * @example
+   * const algovisuals_table = await prisma.algovisuals_table.aggregateRaw({
+   *   pipeline: [
+   *     { $match: { status: "registered" } },
+   *     { $group: { _id: "$country", total: { $sum: 1 } } }
+   *   ]
+   * })
+   */
+  aggregateRaw(args?: Prisma.algovisuals_tableAggregateRawArgs): Prisma.PrismaPromise<Prisma.JsonObject>
 
 
   /**
@@ -1053,11 +1061,6 @@ export type algovisuals_tableFindManyArgs<ExtArgs extends runtime.Types.Extensio
    * Skip the first `n` algovisuals_tables.
    */
   skip?: number
-  /**
-   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-   * 
-   * Filter by unique combinations of algovisuals_tables.
-   */
   distinct?: Prisma.Algovisuals_tableScalarFieldEnum | Prisma.Algovisuals_tableScalarFieldEnum[]
 }
 
@@ -1091,7 +1094,6 @@ export type algovisuals_tableCreateManyArgs<ExtArgs extends runtime.Types.Extens
    * The data used to create many algovisuals_tables.
    */
   data: Prisma.algovisuals_tableCreateManyInput | Prisma.algovisuals_tableCreateManyInput[]
-  skipDuplicates?: boolean
 }
 
 /**
@@ -1202,6 +1204,34 @@ export type algovisuals_tableDeleteManyArgs<ExtArgs extends runtime.Types.Extens
    * Limit how many algovisuals_tables to delete.
    */
   limit?: number
+}
+
+/**
+ * algovisuals_table findRaw
+ */
+export type algovisuals_tableFindRawArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * The query predicate filter. If unspecified, then all documents in the collection will match the predicate. ${@link https://docs.mongodb.com/manual/reference/operator/query MongoDB Docs}.
+   */
+  filter?: runtime.InputJsonValue
+  /**
+   * Additional options to pass to the `find` command ${@link https://docs.mongodb.com/manual/reference/command/find/#command-fields MongoDB Docs}.
+   */
+  options?: runtime.InputJsonValue
+}
+
+/**
+ * algovisuals_table aggregateRaw
+ */
+export type algovisuals_tableAggregateRawArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * An array of aggregation stages to process and transform the document stream via the aggregation pipeline. ${@link https://docs.mongodb.com/manual/reference/operator/aggregation-pipeline MongoDB Docs}.
+   */
+  pipeline?: runtime.InputJsonValue[]
+  /**
+   * Additional options to pass to the `aggregate` command ${@link https://docs.mongodb.com/manual/reference/command/aggregate/#command-fields MongoDB Docs}.
+   */
+  options?: runtime.InputJsonValue
 }
 
 /**

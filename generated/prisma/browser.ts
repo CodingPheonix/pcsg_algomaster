@@ -28,15 +28,15 @@ export type users_table = Prisma.users_tableModel
  */
 export type set_table = Prisma.set_tableModel
 /**
- * Model problem_description
- * 
- */
-export type problem_description = Prisma.problem_descriptionModel
-/**
  * Model problem_table
  * 
  */
 export type problem_table = Prisma.problem_tableModel
+/**
+ * Model problem_description
+ * 
+ */
+export type problem_description = Prisma.problem_descriptionModel
 /**
  * Model problem_visuals
  * 

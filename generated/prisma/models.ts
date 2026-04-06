@@ -10,8 +10,8 @@
  */
 export type * from './models/users_table'
 export type * from './models/set_table'
-export type * from './models/problem_description'
 export type * from './models/problem_table'
+export type * from './models/problem_description'
 export type * from './models/problem_visuals'
 export type * from './models/user_problem'
 export type * from './models/tutorials_table'

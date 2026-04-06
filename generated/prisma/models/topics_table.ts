@@ -8,7 +8,7 @@
  *
  * 🟢 You can import this file directly.
  */
-import type * as runtime from "@prisma/client/runtime/client"
+import type * as runtime from "@prisma/client/runtime/library"
 import type * as $Enums from "../enums"
 import type * as Prisma from "../internal/prismaNamespace"
 
@@ -151,7 +151,7 @@ export type Topics_tableGroupByOutputType = {
   _max: Topics_tableMaxAggregateOutputType | null
 }
 
-export type GetTopics_tableGroupByPayload<T extends topics_tableGroupByArgs> = Prisma.PrismaPromise<
+type GetTopics_tableGroupByPayload<T extends topics_tableGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<Topics_tableGroupByOutputType, T['by']> &
       {
@@ -174,18 +174,17 @@ export type topics_tableWhereInput = {
   title?: Prisma.StringNullableFilter<"topics_table"> | string | null
   content?: Prisma.StringNullableFilter<"topics_table"> | string | null
   subtopic_tableId?: Prisma.StringNullableFilter<"topics_table"> | string | null
-  comments_table?: Prisma.Comments_tableListRelationFilter
   subtopicTable?: Prisma.XOR<Prisma.Subtopic_tableNullableScalarRelationFilter, Prisma.subtopic_tableWhereInput> | null
+  comments_table?: Prisma.Comments_tableListRelationFilter
 }
 
 export type topics_tableOrderByWithRelationInput = {
   id?: Prisma.SortOrder
-  title?: Prisma.SortOrderInput | Prisma.SortOrder
-  content?: Prisma.SortOrderInput | Prisma.SortOrder
-  subtopic_tableId?: Prisma.SortOrderInput | Prisma.SortOrder
-  comments_table?: Prisma.comments_tableOrderByRelationAggregateInput
+  title?: Prisma.SortOrder
+  content?: Prisma.SortOrder
+  subtopic_tableId?: Prisma.SortOrder
   subtopicTable?: Prisma.subtopic_tableOrderByWithRelationInput
-  _relevance?: Prisma.topics_tableOrderByRelevanceInput
+  comments_table?: Prisma.comments_tableOrderByRelationAggregateInput
 }
 
 export type topics_tableWhereUniqueInput = Prisma.AtLeast<{
@@ -196,15 +195,15 @@ export type topics_tableWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.topics_tableWhereInput | Prisma.topics_tableWhereInput[]
   title?: Prisma.StringNullableFilter<"topics_table"> | string | null
   content?: Prisma.StringNullableFilter<"topics_table"> | string | null
-  comments_table?: Prisma.Comments_tableListRelationFilter
   subtopicTable?: Prisma.XOR<Prisma.Subtopic_tableNullableScalarRelationFilter, Prisma.subtopic_tableWhereInput> | null
+  comments_table?: Prisma.Comments_tableListRelationFilter
 }, "id" | "subtopic_tableId">
 
 export type topics_tableOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
-  title?: Prisma.SortOrderInput | Prisma.SortOrder
-  content?: Prisma.SortOrderInput | Prisma.SortOrder
-  subtopic_tableId?: Prisma.SortOrderInput | Prisma.SortOrder
+  title?: Prisma.SortOrder
+  content?: Prisma.SortOrder
+  subtopic_tableId?: Prisma.SortOrder
   _count?: Prisma.topics_tableCountOrderByAggregateInput
   _max?: Prisma.topics_tableMaxOrderByAggregateInput
   _min?: Prisma.topics_tableMinOrderByAggregateInput
@@ -224,8 +223,8 @@ export type topics_tableCreateInput = {
   id: string
   title?: string | null
   content?: string | null
-  comments_table?: Prisma.comments_tableCreateNestedManyWithoutTopics_tableInput
   subtopicTable?: Prisma.subtopic_tableCreateNestedOneWithoutTopics_tableInput
+  comments_table?: Prisma.comments_tableCreateNestedManyWithoutTopics_tableInput
 }
 
 export type topics_tableUncheckedCreateInput = {
@@ -237,15 +236,13 @@ export type topics_tableUncheckedCreateInput = {
 }
 
 export type topics_tableUpdateInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   content?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  comments_table?: Prisma.comments_tableUpdateManyWithoutTopics_tableNestedInput
   subtopicTable?: Prisma.subtopic_tableUpdateOneWithoutTopics_tableNestedInput
+  comments_table?: Prisma.comments_tableUpdateManyWithoutTopics_tableNestedInput
 }
 
 export type topics_tableUncheckedUpdateInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   content?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   subtopic_tableId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -260,13 +257,11 @@ export type topics_tableCreateManyInput = {
 }
 
 export type topics_tableUpdateManyMutationInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   content?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type topics_tableUncheckedUpdateManyInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   content?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   subtopic_tableId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -280,12 +275,6 @@ export type Topics_tableListRelationFilter = {
 
 export type topics_tableOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
-}
-
-export type topics_tableOrderByRelevanceInput = {
-  fields: Prisma.topics_tableOrderByRelevanceFieldEnum | Prisma.topics_tableOrderByRelevanceFieldEnum[]
-  sort: Prisma.SortOrder
-  search: string
 }
 
 export type topics_tableCountOrderByAggregateInput = {
@@ -391,7 +380,6 @@ export type topics_tableCreateOrConnectWithoutSubtopicTableInput = {
 
 export type topics_tableCreateManySubtopicTableInputEnvelope = {
   data: Prisma.topics_tableCreateManySubtopicTableInput | Prisma.topics_tableCreateManySubtopicTableInput[]
-  skipDuplicates?: boolean
 }
 
 export type topics_tableUpsertWithWhereUniqueWithoutSubtopicTableInput = {
@@ -451,14 +439,12 @@ export type topics_tableUpdateToOneWithWhereWithoutComments_tableInput = {
 }
 
 export type topics_tableUpdateWithoutComments_tableInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   content?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   subtopicTable?: Prisma.subtopic_tableUpdateOneWithoutTopics_tableNestedInput
 }
 
 export type topics_tableUncheckedUpdateWithoutComments_tableInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   content?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   subtopic_tableId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -471,21 +457,18 @@ export type topics_tableCreateManySubtopicTableInput = {
 }
 
 export type topics_tableUpdateWithoutSubtopicTableInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   content?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   comments_table?: Prisma.comments_tableUpdateManyWithoutTopics_tableNestedInput
 }
 
 export type topics_tableUncheckedUpdateWithoutSubtopicTableInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   content?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   comments_table?: Prisma.comments_tableUncheckedUpdateManyWithoutTopics_tableNestedInput
 }
 
 export type topics_tableUncheckedUpdateManyWithoutSubtopicTableInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   content?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
@@ -526,8 +509,8 @@ export type topics_tableSelect<ExtArgs extends runtime.Types.Extensions.Internal
   title?: boolean
   content?: boolean
   subtopic_tableId?: boolean
-  comments_table?: boolean | Prisma.topics_table$comments_tableArgs<ExtArgs>
   subtopicTable?: boolean | Prisma.topics_table$subtopicTableArgs<ExtArgs>
+  comments_table?: boolean | Prisma.topics_table$comments_tableArgs<ExtArgs>
   _count?: boolean | Prisma.Topics_tableCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["topics_table"]>
 
@@ -542,16 +525,16 @@ export type topics_tableSelectScalar = {
 
 export type topics_tableOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "content" | "subtopic_tableId", ExtArgs["result"]["topics_table"]>
 export type topics_tableInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  comments_table?: boolean | Prisma.topics_table$comments_tableArgs<ExtArgs>
   subtopicTable?: boolean | Prisma.topics_table$subtopicTableArgs<ExtArgs>
+  comments_table?: boolean | Prisma.topics_table$comments_tableArgs<ExtArgs>
   _count?: boolean | Prisma.Topics_tableCountOutputTypeDefaultArgs<ExtArgs>
 }
 
 export type $topics_tablePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "topics_table"
   objects: {
-    comments_table: Prisma.$comments_tablePayload<ExtArgs>[]
     subtopicTable: Prisma.$subtopic_tablePayload<ExtArgs> | null
+    comments_table: Prisma.$comments_tablePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -758,6 +741,29 @@ export interface topics_tableDelegate<ExtArgs extends runtime.Types.Extensions.I
    */
   upsert<T extends topics_tableUpsertArgs>(args: Prisma.SelectSubset<T, topics_tableUpsertArgs<ExtArgs>>): Prisma.Prisma__topics_tableClient<runtime.Types.Result.GetResult<Prisma.$topics_tablePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
+  /**
+   * Find zero or more Topics_tables that matches the filter.
+   * @param {topics_tableFindRawArgs} args - Select which filters you would like to apply.
+   * @example
+   * const topics_table = await prisma.topics_table.findRaw({
+   *   filter: { age: { $gt: 25 } }
+   * })
+   */
+  findRaw(args?: Prisma.topics_tableFindRawArgs): Prisma.PrismaPromise<Prisma.JsonObject>
+
+  /**
+   * Perform aggregation operations on a Topics_table.
+   * @param {topics_tableAggregateRawArgs} args - Select which aggregations you would like to apply.
+   * @example
+   * const topics_table = await prisma.topics_table.aggregateRaw({
+   *   pipeline: [
+   *     { $match: { status: "registered" } },
+   *     { $group: { _id: "$country", total: { $sum: 1 } } }
+   *   ]
+   * })
+   */
+  aggregateRaw(args?: Prisma.topics_tableAggregateRawArgs): Prisma.PrismaPromise<Prisma.JsonObject>
+
 
   /**
    * Count the number of Topics_tables.
@@ -898,8 +904,8 @@ readonly fields: topics_tableFieldRefs;
  */
 export interface Prisma__topics_tableClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  comments_table<T extends Prisma.topics_table$comments_tableArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.topics_table$comments_tableArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$comments_tablePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   subtopicTable<T extends Prisma.topics_table$subtopicTableArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.topics_table$subtopicTableArgs<ExtArgs>>): Prisma.Prisma__subtopic_tableClient<runtime.Types.Result.GetResult<Prisma.$subtopic_tablePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  comments_table<T extends Prisma.topics_table$comments_tableArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.topics_table$comments_tableArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$comments_tablePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1129,11 +1135,6 @@ export type topics_tableFindManyArgs<ExtArgs extends runtime.Types.Extensions.In
    * Skip the first `n` topics_tables.
    */
   skip?: number
-  /**
-   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-   * 
-   * Filter by unique combinations of topics_tables.
-   */
   distinct?: Prisma.Topics_tableScalarFieldEnum | Prisma.Topics_tableScalarFieldEnum[]
 }
 
@@ -1167,7 +1168,6 @@ export type topics_tableCreateManyArgs<ExtArgs extends runtime.Types.Extensions.
    * The data used to create many topics_tables.
    */
   data: Prisma.topics_tableCreateManyInput | Prisma.topics_tableCreateManyInput[]
-  skipDuplicates?: boolean
 }
 
 /**
@@ -1281,6 +1281,53 @@ export type topics_tableDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.
 }
 
 /**
+ * topics_table findRaw
+ */
+export type topics_tableFindRawArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * The query predicate filter. If unspecified, then all documents in the collection will match the predicate. ${@link https://docs.mongodb.com/manual/reference/operator/query MongoDB Docs}.
+   */
+  filter?: runtime.InputJsonValue
+  /**
+   * Additional options to pass to the `find` command ${@link https://docs.mongodb.com/manual/reference/command/find/#command-fields MongoDB Docs}.
+   */
+  options?: runtime.InputJsonValue
+}
+
+/**
+ * topics_table aggregateRaw
+ */
+export type topics_tableAggregateRawArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * An array of aggregation stages to process and transform the document stream via the aggregation pipeline. ${@link https://docs.mongodb.com/manual/reference/operator/aggregation-pipeline MongoDB Docs}.
+   */
+  pipeline?: runtime.InputJsonValue[]
+  /**
+   * Additional options to pass to the `aggregate` command ${@link https://docs.mongodb.com/manual/reference/command/aggregate/#command-fields MongoDB Docs}.
+   */
+  options?: runtime.InputJsonValue
+}
+
+/**
+ * topics_table.subtopicTable
+ */
+export type topics_table$subtopicTableArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the subtopic_table
+   */
+  select?: Prisma.subtopic_tableSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the subtopic_table
+   */
+  omit?: Prisma.subtopic_tableOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.subtopic_tableInclude<ExtArgs> | null
+  where?: Prisma.subtopic_tableWhereInput
+}
+
+/**
  * topics_table.comments_table
  */
 export type topics_table$comments_tableArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1302,25 +1349,6 @@ export type topics_table$comments_tableArgs<ExtArgs extends runtime.Types.Extens
   take?: number
   skip?: number
   distinct?: Prisma.Comments_tableScalarFieldEnum | Prisma.Comments_tableScalarFieldEnum[]
-}
-
-/**
- * topics_table.subtopicTable
- */
-export type topics_table$subtopicTableArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the subtopic_table
-   */
-  select?: Prisma.subtopic_tableSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the subtopic_table
-   */
-  omit?: Prisma.subtopic_tableOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.subtopic_tableInclude<ExtArgs> | null
-  where?: Prisma.subtopic_tableWhereInput
 }
 
 /**

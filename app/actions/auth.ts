@@ -12,14 +12,21 @@ import { redirect } from "next/navigation"
 import { createSession, deleteSession } from "../lib/sessions"
 import { eq, or } from "drizzle-orm"
 import { v4 as uuidv4 } from "uuid"
+import { connect_to_mongo } from "../db/mongodb/connect_to_mongo"
+import { Users } from "../db/mongodb/mongo_schema"
 
 export async function signup(state: FormState, formData: FormData) {
+
+    await connect_to_mongo();
+
     // Validate form fields
     const validatedFields = SignupFormSchema.safeParse({
         username: formData.get('username'),
         email: formData.get('email'),
         password: formData.get('password'),
     })
+
+    console.log('Validated fields:', validatedFields)
 
     // If any form fields are invalid, return early
     if (!validatedFields.success) {
@@ -41,9 +48,15 @@ export async function signup(state: FormState, formData: FormData) {
     //     .where(or(eq(usersTable.email, email), eq(usersTable.username, username)))
     //     .execute()
 
-    const existingUser = await prisma.users_table.findUnique({
-        where: { "email": email}
+    // const existingUser = await prisma.users_table.findUnique({
+    //     where: { "email": email}
+    // })
+
+    const existingUser = await Users.findOne({
+        email: email
     })
+
+    console.log('Existing user:', existingUser)
 
     if (existingUser) {
         return {
@@ -68,19 +81,31 @@ export async function signup(state: FormState, formData: FormData) {
         //         dateJoined: new Date(Date.now())
         //     })
         //     .$returningId()
+        console.log("enter")
 
-        await prisma.users_table.create({
-            data: {
-                id: userId,
-                username,
-                email,
-                password: hashedPassword,
-                dateJoined: new Date(Date.now())
-            }
+        // const data = await prisma.users_table.create({
+        //     data: {
+        //         id: userId,
+        //         username,
+        //         email,
+        //         password: hashedPassword,
+        //         dateJoined: new Date(Date.now())
+        //     }
+        // })
+
+        const data = await Users.create({
+            id: userId,
+            username,
+            email,
+            password: hashedPassword,
+            dateJoined: new Date(Date.now())
         })
+
+        console.log('User created with ID:', data)
     } catch (error) {
         return {
             message: 'An error occurred while creating your account.',
+            error: error
         }
     }
 
@@ -125,11 +150,13 @@ export async function login(state: FormState, formData: FormData) {
     //     .where(or(eq(usersTable.email, email), eq(usersTable.password, hashedPassword)))
     //     .execute()
 
-    const existingUser = await prisma.users_table.findFirst({
-        where: {
-            email: email
-        }
-    })
+    // const existingUser = await prisma.users_table.findFirst({
+    //     where: {
+    //         email: email
+    //     }
+    // })
+
+    const existingUser = await Users.findOne({ email })
 
     console.log('Existing user:', existingUser)
 

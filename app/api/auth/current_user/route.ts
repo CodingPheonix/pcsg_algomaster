@@ -3,6 +3,7 @@ import { db } from "../../../db/index";
 import { decrypt } from "@/app/lib/sessions";
 import { NextRequest, NextResponse } from "next/server";
 import { eq } from "drizzle-orm";
+import { Users } from "@/app/db/mongodb/mongo_schema";
 
 type sessionPayload = {
     userId: string,
@@ -20,19 +21,25 @@ export async function GET(request: NextRequest) {
 
         const decrypted = await decrypt(session as string) as sessionPayload
 
-        const data = await db
-            .select()
-            .from(usersTable)
-            .where(eq(usersTable.id, decrypted.userId))
-            .execute()
+        // const data = await db
+        //     .select()
+        //     .from(usersTable)
+        //     .where(eq(usersTable.id, decrypted.userId))
+        //     .execute()
+
+        const data = await Users.findOne({
+            id: decrypted.userId
+        })
+
+        console.log(data)
 
         return NextResponse.json({
             user: {
-                id: data[0].id,
-                username: data[0].username,
-                email: data[0].email,
-                role: data[0].role,
-                dateJoined: data[0].dateJoined
+                id: data.id,
+                username: data.username,
+                email: data.email,
+                role: data.role,
+                dateJoined: data.dateJoined
             }
         })
     } catch (error) {

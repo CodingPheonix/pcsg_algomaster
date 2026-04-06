@@ -8,7 +8,7 @@
  *
  * 🟢 You can import this file directly.
  */
-import type * as runtime from "@prisma/client/runtime/client"
+import type * as runtime from "@prisma/client/runtime/library"
 import type * as $Enums from "../enums"
 import type * as Prisma from "../internal/prismaNamespace"
 
@@ -144,7 +144,7 @@ export type Set_tableGroupByOutputType = {
   _max: Set_tableMaxAggregateOutputType | null
 }
 
-export type GetSet_tableGroupByPayload<T extends set_tableGroupByArgs> = Prisma.PrismaPromise<
+type GetSet_tableGroupByPayload<T extends set_tableGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<Set_tableGroupByOutputType, T['by']> &
       {
@@ -176,7 +176,6 @@ export type set_tableOrderByWithRelationInput = {
   author_id?: Prisma.SortOrder
   problem_table?: Prisma.problem_tableOrderByRelationAggregateInput
   users_table?: Prisma.users_tableOrderByWithRelationInput
-  _relevance?: Prisma.set_tableOrderByRelevanceInput
 }
 
 export type set_tableWhereUniqueInput = Prisma.AtLeast<{
@@ -223,14 +222,12 @@ export type set_tableUncheckedCreateInput = {
 }
 
 export type set_tableUpdateInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   problem_table?: Prisma.problem_tableUpdateManyWithoutSet_tableNestedInput
   users_table?: Prisma.users_tableUpdateOneRequiredWithoutSet_tableNestedInput
 }
 
 export type set_tableUncheckedUpdateInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   author_id?: Prisma.StringFieldUpdateOperationsInput | string
   problem_table?: Prisma.problem_tableUncheckedUpdateManyWithoutSet_tableNestedInput
@@ -243,12 +240,10 @@ export type set_tableCreateManyInput = {
 }
 
 export type set_tableUpdateManyMutationInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type set_tableUncheckedUpdateManyInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   author_id?: Prisma.StringFieldUpdateOperationsInput | string
 }
@@ -261,12 +256,6 @@ export type Set_tableListRelationFilter = {
 
 export type set_tableOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
-}
-
-export type set_tableOrderByRelevanceInput = {
-  fields: Prisma.set_tableOrderByRelevanceFieldEnum | Prisma.set_tableOrderByRelevanceFieldEnum[]
-  sort: Prisma.SortOrder
-  search: string
 }
 
 export type set_tableCountOrderByAggregateInput = {
@@ -367,7 +356,6 @@ export type set_tableCreateOrConnectWithoutUsers_tableInput = {
 
 export type set_tableCreateManyUsers_tableInputEnvelope = {
   data: Prisma.set_tableCreateManyUsers_tableInput | Prisma.set_tableCreateManyUsers_tableInput[]
-  skipDuplicates?: boolean
 }
 
 export type set_tableUpsertWithWhereUniqueWithoutUsers_tableInput = {
@@ -424,13 +412,11 @@ export type set_tableUpdateToOneWithWhereWithoutProblem_tableInput = {
 }
 
 export type set_tableUpdateWithoutProblem_tableInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   users_table?: Prisma.users_tableUpdateOneRequiredWithoutSet_tableNestedInput
 }
 
 export type set_tableUncheckedUpdateWithoutProblem_tableInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   author_id?: Prisma.StringFieldUpdateOperationsInput | string
 }
@@ -441,19 +427,16 @@ export type set_tableCreateManyUsers_tableInput = {
 }
 
 export type set_tableUpdateWithoutUsers_tableInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   problem_table?: Prisma.problem_tableUpdateManyWithoutSet_tableNestedInput
 }
 
 export type set_tableUncheckedUpdateWithoutUsers_tableInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   problem_table?: Prisma.problem_tableUncheckedUpdateManyWithoutSet_tableNestedInput
 }
 
 export type set_tableUncheckedUpdateManyWithoutUsers_tableInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
@@ -721,6 +704,29 @@ export interface set_tableDelegate<ExtArgs extends runtime.Types.Extensions.Inte
    * })
    */
   upsert<T extends set_tableUpsertArgs>(args: Prisma.SelectSubset<T, set_tableUpsertArgs<ExtArgs>>): Prisma.Prisma__set_tableClient<runtime.Types.Result.GetResult<Prisma.$set_tablePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+  /**
+   * Find zero or more Set_tables that matches the filter.
+   * @param {set_tableFindRawArgs} args - Select which filters you would like to apply.
+   * @example
+   * const set_table = await prisma.set_table.findRaw({
+   *   filter: { age: { $gt: 25 } }
+   * })
+   */
+  findRaw(args?: Prisma.set_tableFindRawArgs): Prisma.PrismaPromise<Prisma.JsonObject>
+
+  /**
+   * Perform aggregation operations on a Set_table.
+   * @param {set_tableAggregateRawArgs} args - Select which aggregations you would like to apply.
+   * @example
+   * const set_table = await prisma.set_table.aggregateRaw({
+   *   pipeline: [
+   *     { $match: { status: "registered" } },
+   *     { $group: { _id: "$country", total: { $sum: 1 } } }
+   *   ]
+   * })
+   */
+  aggregateRaw(args?: Prisma.set_tableAggregateRawArgs): Prisma.PrismaPromise<Prisma.JsonObject>
 
 
   /**
@@ -1092,11 +1098,6 @@ export type set_tableFindManyArgs<ExtArgs extends runtime.Types.Extensions.Inter
    * Skip the first `n` set_tables.
    */
   skip?: number
-  /**
-   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-   * 
-   * Filter by unique combinations of set_tables.
-   */
   distinct?: Prisma.Set_tableScalarFieldEnum | Prisma.Set_tableScalarFieldEnum[]
 }
 
@@ -1130,7 +1131,6 @@ export type set_tableCreateManyArgs<ExtArgs extends runtime.Types.Extensions.Int
    * The data used to create many set_tables.
    */
   data: Prisma.set_tableCreateManyInput | Prisma.set_tableCreateManyInput[]
-  skipDuplicates?: boolean
 }
 
 /**
@@ -1241,6 +1241,34 @@ export type set_tableDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Int
    * Limit how many set_tables to delete.
    */
   limit?: number
+}
+
+/**
+ * set_table findRaw
+ */
+export type set_tableFindRawArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * The query predicate filter. If unspecified, then all documents in the collection will match the predicate. ${@link https://docs.mongodb.com/manual/reference/operator/query MongoDB Docs}.
+   */
+  filter?: runtime.InputJsonValue
+  /**
+   * Additional options to pass to the `find` command ${@link https://docs.mongodb.com/manual/reference/command/find/#command-fields MongoDB Docs}.
+   */
+  options?: runtime.InputJsonValue
+}
+
+/**
+ * set_table aggregateRaw
+ */
+export type set_tableAggregateRawArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * An array of aggregation stages to process and transform the document stream via the aggregation pipeline. ${@link https://docs.mongodb.com/manual/reference/operator/aggregation-pipeline MongoDB Docs}.
+   */
+  pipeline?: runtime.InputJsonValue[]
+  /**
+   * Additional options to pass to the `aggregate` command ${@link https://docs.mongodb.com/manual/reference/command/aggregate/#command-fields MongoDB Docs}.
+   */
+  options?: runtime.InputJsonValue
 }
 
 /**

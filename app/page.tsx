@@ -20,6 +20,9 @@ import { prisma } from "./db/prisma";
 })();
 
 export default function Home() {
+
+  console.log(process.env.MONGO_URL)
+
   return (
     <>
       <Navbar />

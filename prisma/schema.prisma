@@ -1,161 +1,198 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
 generator client {
   provider = "prisma-client"
   output   = "../generated/prisma"
 }
 
 datasource db {
-  provider = "mysql"
+  provider = "mongodb"
+  url      = env("MONGO_URL")
 }
 
-// model set_problem {
-//   id            String        @id @db.VarChar(40)
-//   set_id        String        @db.VarChar(40)
-//   problem_id    String        @unique(map: "set_problem_problem_id_unique") @db.VarChar(40)
-//   problem_table problem_table @relation(fields: [problem_id], references: [id], onUpdate: Restrict, map: "set_problem_problem_id_problem_table_id_fk")
-//   set_table     set_table     @relation(fields: [set_id], references: [id], onUpdate: Restrict, map: "set_problem_set_id_set_table_id_fk")
-
-//   @@index([set_id], map: "set_problem_set_id_set_table_id_fk")
-// }
+//////////////////////////////////////////////////////
+// 👤 USERS
+//////////////////////////////////////////////////////
 
 model users_table {
-  id              String            @id @db.VarChar(40)
-  username        String            @db.VarChar(255)
-  password        String            @db.VarChar(255)
-  email           String            @unique(map: "users_table_email_unique") @db.VarChar(255)
-  role            String            @default("user") @db.VarChar(50)
-  dateJoined      DateTime          @default(dbgenerated("('2026-03-22 05:25:50')")) @db.DateTime(0)
+  id              String            @id @map("_id")
+  username        String
+  password        String
+  email           String            @unique
+  role            String            @default("user")
+  dateJoined      DateTime          @default(now())
+
   problem_table   problem_table[]
   set_table       set_table[]
   tutorials_table tutorials_table[]
   user_problem    user_problem?
 }
 
+//////////////////////////////////////////////////////
+// 📦 SET
+//////////////////////////////////////////////////////
+
 model set_table {
-  id            String          @id @db.VarChar(40)
-  name          String          @db.VarChar(100)
-  author_id     String          @db.VarChar(40)
-  // set_problem set_problem[]
+  id            String          @id @map("_id")
+  name          String
+  author_id     String
+
   problem_table problem_table[]
-  users_table   users_table     @relation(fields: [author_id], references: [id], onUpdate: Restrict, map: "set_table_author_id_users_table_id_fk")
 
-  @@index([author_id], map: "set_table_author_id_users_table_id_fk")
+  users_table   users_table     @relation(fields: [author_id], references: [id])
+
+  @@index([author_id])
 }
 
-model problem_description {
-  id            String        @id @db.VarChar(40)
-  title         String?       @db.VarChar(255)
-  content       String?       @db.LongText
-  problem_id    String        @unique(map: "problem_description_problem_id_unique") @db.VarChar(40)
-  problem_table problem_table @relation(fields: [problem_id], references: [id], onUpdate: Restrict, map: "problem_description_problem_id_problem_table_id_fk")
-}
+//////////////////////////////////////////////////////
+// 🧠 PROBLEM
+//////////////////////////////////////////////////////
 
 model problem_table {
-  id                  String               @id @db.VarChar(40)
-  name                String               @db.VarChar(200)
-  link                String               @db.VarChar(1000)
-  difficulty          String               @default("Easy") @db.VarChar(10)
-  video_link          String?              @db.VarChar(1000)
-  author_id           String               @db.VarChar(40)
-  hints               Json?                @db.Json
+  id                  String               @id @map("_id")
+  name                String
+  link                String
+  difficulty          String               @default("Easy")
+  video_link          String?
+  author_id           String
+  hints               Json?
+
   problem_description problem_description?
-  users_table         users_table          @relation(fields: [author_id], references: [id], onUpdate: Restrict, map: "problem_table_author_id_users_table_id_fk")
   problem_visuals     problem_visuals?
 
-  set_id    String    @db.VarChar(40)
-  set_table set_table @relation(fields: [set_id], references: [id], onUpdate: Restrict)
+  users_table         users_table          @relation(fields: [author_id], references: [id])
 
-  @@index([author_id], map: "problem_table_author_id_users_table_id_fk")
+  set_id    String
+  set_table set_table @relation(fields: [set_id], references: [id])
+
+  @@index([author_id])
+  @@index([set_id])
 }
+
+//////////////////////////////////////////////////////
+// 📝 PROBLEM DESCRIPTION
+//////////////////////////////////////////////////////
+
+model problem_description {
+  id            String        @id @map("_id")
+  title         String?
+  content       String?
+
+  problem_id    String        @unique
+  problem_table problem_table @relation(fields: [problem_id], references: [id])
+}
+
+//////////////////////////////////////////////////////
+// 🎥 PROBLEM VISUALS
+//////////////////////////////////////////////////////
 
 model problem_visuals {
-  id            String        @id @db.VarChar(40)
-  problem_id    String        @unique(map: "problem_visuals_problem_id_unique") @db.VarChar(40)
-  code_text     String        @db.VarChar(500)
-  code_steps    String        @db.LongText
-  input_array   String        @db.VarChar(500)
-  problem_table problem_table @relation(fields: [problem_id], references: [id], onUpdate: Restrict, map: "problem_visuals_problem_id_problem_table_id_fk")
+  id            String        @id @map("_id")
+  problem_id    String        @unique
+  code_text     String
+  code_steps    String
+  input_array   String
+
+  problem_table problem_table @relation(fields: [problem_id], references: [id])
 }
+
+//////////////////////////////////////////////////////
+// 👤 USER PROBLEM
+//////////////////////////////////////////////////////
 
 model user_problem {
-  id          String      @id @db.VarChar(40)
-  user_id     String      @unique(map: "user_problem_user_id_unique") @db.VarChar(40)
-  problem_ids Json?       @db.Json
-  users_table users_table @relation(fields: [user_id], references: [id], onUpdate: Restrict, map: "user_problem_user_id_users_table_id_fk")
+  id          String      @id @map("_id")
+  user_id     String      @unique
+  problem_ids Json?
+
+  users_table users_table @relation(fields: [user_id], references: [id])
 }
+
+//////////////////////////////////////////////////////
+// 📚 TUTORIAL
+//////////////////////////////////////////////////////
 
 model tutorials_table {
-  id       String @id @db.VarChar(40)
-  title    String @db.VarChar(255)
-  authorId String @db.VarChar(255)
-  type     String @default("algorithm") @db.VarChar(20)
+  id       String @id @map("_id")
+  title    String
+  authorId String
+  type     String @default("algorithm")
 
-  // tutorial_subtopics tutorial_subtopics[] 
   subtopic_table subtopic_table[]
-  users_table    users_table      @relation(fields: [authorId], references: [id], onUpdate: Restrict, map: "tutorials_table_authorId_users_table_id_fk")
-  // topicsTables   topics_table[]
 
-  @@index([authorId], map: "tutorials_table_authorId_users_table_id_fk")
+  users_table users_table @relation(fields: [authorId], references: [id])
+
+  @@index([authorId])
 }
 
+//////////////////////////////////////////////////////
+// 🧠 SUBTOPIC
+//////////////////////////////////////////////////////
+
 model subtopic_table {
-  id             String  @id @db.VarChar(40)
-  name           String  @db.VarChar(255)
-  description    String? @db.VarChar(255)
-  difficulty     String  @default("Easy") @db.VarChar(255)
-  external_video String? @db.VarChar(1000)
+  id             String  @id @map("_id")
+  name           String
+  description    String?
+  difficulty     String  @default("Easy")
+  external_video String?
+
+  tutorial_id    String
+  tutorial_table tutorials_table @relation(fields: [tutorial_id], references: [id])
 
   topics_table topics_table[]
-
-  tutorial_id    String          @db.VarChar(40)
-  tutorial_table tutorials_table @relation(fields: [tutorial_id], references: [id], onUpdate: Restrict)
-
   algovisuals_table algovisuals_table[]
 
   @@index([tutorial_id])
 }
 
-model algovisuals_table {
-  id             String          @id @db.VarChar(40)
-  subtopic_id    String?         @db.VarChar(40)
-  code_text      String          @db.LongText
-  code_steps     String          @db.LongText
-  input_array    String          @db.VarChar(30)
-  subtopic_table subtopic_table? @relation(fields: [subtopic_id], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "algovisuals_table_subtopic_id_subtopic_table_id_fk")
+//////////////////////////////////////////////////////
+// ⚙️ ALGOVISUALS
+//////////////////////////////////////////////////////
 
-  @@index([subtopic_id], map: "algovisuals_table_subtopic_id_subtopic_table_id_fk")
+model algovisuals_table {
+  id          String  @id @map("_id")
+  subtopic_id String?
+
+  code_text   String
+  code_steps  String
+  input_array String
+
+  subtopic_table subtopic_table? @relation(fields: [subtopic_id], references: [id])
+
+  @@index([subtopic_id])
 }
+
+//////////////////////////////////////////////////////
+// 📝 TOPICS
+//////////////////////////////////////////////////////
 
 model topics_table {
-  id               String  @id @db.VarChar(40)
-  title            String? @db.VarChar(255)
-  content          String? @db.LongText
-  subtopic_tableId String? @unique @db.VarChar(40)
+  id               String  @id @map("_id")
+  title            String?
+  content          String?
+
+  subtopic_tableId String? @unique
+
+  subtopicTable subtopic_table? @relation(fields: [subtopic_tableId], references: [id])
 
   comments_table comments_table[]
-
-  subtopicTable subtopic_table? @relation(fields: [subtopic_tableId], references: [id], map: "subtopic_tableId_topics_table_id_fk")
-
-  @@index([subtopic_tableId], map: "subtopic_tableId_topics_table_id_fk")
 }
+
+//////////////////////////////////////////////////////
+// 💬 COMMENTS
+//////////////////////////////////////////////////////
 
 model comments_table {
-  id           String       @id @db.VarChar(40)
-  username     String       @db.VarChar(100)
-  message      String       @db.VarChar(500)
-  time         DateTime?    @db.Date
-  topic_id     String       @db.VarChar(40)
-  topics_table topics_table @relation(fields: [topic_id], references: [id], onUpdate: Restrict, map: "comments_table_topic_id_topics_table_id_fk")
+  id       String    @id @map("_id")
+  username String
+  message  String
+  time     DateTime?
 
-  @@index([topic_id], map: "comments_table_topic_id_topics_table_id_fk")
+  topic_id String
+  topics_table topics_table @relation(fields: [topic_id], references: [id])
+
+  @@index([topic_id])
 }
-
-// model tutorial_subtopics {
-//   id              String          @id
-//   tutorialId      String          @db.VarChar(40)
-//   subtopicId      String          @db.VarChar(40)
-//   subtopic_table  subtopic_table  @relation(fields: [subtopicId], references: [id], onUpdate: Restrict, map: "tutorial_subtopics_subtopicId_subtopic_table_id_fk")
-//   tutorials_table tutorials_table @relation(fields: [tutorialId], references: [id], onUpdate: Restrict, map: "tutorial_subtopics_tutorialId_tutorials_table_id_fk")
-
-//   @@index([subtopicId], map: "tutorial_subtopics_subtopicId_subtopic_table_id_fk")
-//   @@index([tutorialId], map: "tutorial_subtopics_tutorialId_tutorials_table_id_fk")
-// }

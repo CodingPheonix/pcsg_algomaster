@@ -8,7 +8,7 @@
  *
  * 🟢 You can import this file directly.
  */
-import type * as runtime from "@prisma/client/runtime/client"
+import type * as runtime from "@prisma/client/runtime/library"
 import type * as $Enums from "../enums"
 import type * as Prisma from "../internal/prismaNamespace"
 
@@ -151,7 +151,7 @@ export type Tutorials_tableGroupByOutputType = {
   _max: Tutorials_tableMaxAggregateOutputType | null
 }
 
-export type GetTutorials_tableGroupByPayload<T extends tutorials_tableGroupByArgs> = Prisma.PrismaPromise<
+type GetTutorials_tableGroupByPayload<T extends tutorials_tableGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<Tutorials_tableGroupByOutputType, T['by']> &
       {
@@ -185,7 +185,6 @@ export type tutorials_tableOrderByWithRelationInput = {
   type?: Prisma.SortOrder
   subtopic_table?: Prisma.subtopic_tableOrderByRelationAggregateInput
   users_table?: Prisma.users_tableOrderByWithRelationInput
-  _relevance?: Prisma.tutorials_tableOrderByRelevanceInput
 }
 
 export type tutorials_tableWhereUniqueInput = Prisma.AtLeast<{
@@ -237,7 +236,6 @@ export type tutorials_tableUncheckedCreateInput = {
 }
 
 export type tutorials_tableUpdateInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.StringFieldUpdateOperationsInput | string
   subtopic_table?: Prisma.subtopic_tableUpdateManyWithoutTutorial_tableNestedInput
@@ -245,7 +243,6 @@ export type tutorials_tableUpdateInput = {
 }
 
 export type tutorials_tableUncheckedUpdateInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   authorId?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.StringFieldUpdateOperationsInput | string
@@ -260,13 +257,11 @@ export type tutorials_tableCreateManyInput = {
 }
 
 export type tutorials_tableUpdateManyMutationInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type tutorials_tableUncheckedUpdateManyInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   authorId?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.StringFieldUpdateOperationsInput | string
@@ -280,12 +275,6 @@ export type Tutorials_tableListRelationFilter = {
 
 export type tutorials_tableOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
-}
-
-export type tutorials_tableOrderByRelevanceInput = {
-  fields: Prisma.tutorials_tableOrderByRelevanceFieldEnum | Prisma.tutorials_tableOrderByRelevanceFieldEnum[]
-  sort: Prisma.SortOrder
-  search: string
 }
 
 export type tutorials_tableCountOrderByAggregateInput = {
@@ -391,7 +380,6 @@ export type tutorials_tableCreateOrConnectWithoutUsers_tableInput = {
 
 export type tutorials_tableCreateManyUsers_tableInputEnvelope = {
   data: Prisma.tutorials_tableCreateManyUsers_tableInput | Prisma.tutorials_tableCreateManyUsers_tableInput[]
-  skipDuplicates?: boolean
 }
 
 export type tutorials_tableUpsertWithWhereUniqueWithoutUsers_tableInput = {
@@ -451,14 +439,12 @@ export type tutorials_tableUpdateToOneWithWhereWithoutSubtopic_tableInput = {
 }
 
 export type tutorials_tableUpdateWithoutSubtopic_tableInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.StringFieldUpdateOperationsInput | string
   users_table?: Prisma.users_tableUpdateOneRequiredWithoutTutorials_tableNestedInput
 }
 
 export type tutorials_tableUncheckedUpdateWithoutSubtopic_tableInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   authorId?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.StringFieldUpdateOperationsInput | string
@@ -471,21 +457,18 @@ export type tutorials_tableCreateManyUsers_tableInput = {
 }
 
 export type tutorials_tableUpdateWithoutUsers_tableInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.StringFieldUpdateOperationsInput | string
   subtopic_table?: Prisma.subtopic_tableUpdateManyWithoutTutorial_tableNestedInput
 }
 
 export type tutorials_tableUncheckedUpdateWithoutUsers_tableInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.StringFieldUpdateOperationsInput | string
   subtopic_table?: Prisma.subtopic_tableUncheckedUpdateManyWithoutTutorial_tableNestedInput
 }
 
 export type tutorials_tableUncheckedUpdateManyWithoutUsers_tableInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.StringFieldUpdateOperationsInput | string
 }
@@ -757,6 +740,29 @@ export interface tutorials_tableDelegate<ExtArgs extends runtime.Types.Extension
    * })
    */
   upsert<T extends tutorials_tableUpsertArgs>(args: Prisma.SelectSubset<T, tutorials_tableUpsertArgs<ExtArgs>>): Prisma.Prisma__tutorials_tableClient<runtime.Types.Result.GetResult<Prisma.$tutorials_tablePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+  /**
+   * Find zero or more Tutorials_tables that matches the filter.
+   * @param {tutorials_tableFindRawArgs} args - Select which filters you would like to apply.
+   * @example
+   * const tutorials_table = await prisma.tutorials_table.findRaw({
+   *   filter: { age: { $gt: 25 } }
+   * })
+   */
+  findRaw(args?: Prisma.tutorials_tableFindRawArgs): Prisma.PrismaPromise<Prisma.JsonObject>
+
+  /**
+   * Perform aggregation operations on a Tutorials_table.
+   * @param {tutorials_tableAggregateRawArgs} args - Select which aggregations you would like to apply.
+   * @example
+   * const tutorials_table = await prisma.tutorials_table.aggregateRaw({
+   *   pipeline: [
+   *     { $match: { status: "registered" } },
+   *     { $group: { _id: "$country", total: { $sum: 1 } } }
+   *   ]
+   * })
+   */
+  aggregateRaw(args?: Prisma.tutorials_tableAggregateRawArgs): Prisma.PrismaPromise<Prisma.JsonObject>
 
 
   /**
@@ -1129,11 +1135,6 @@ export type tutorials_tableFindManyArgs<ExtArgs extends runtime.Types.Extensions
    * Skip the first `n` tutorials_tables.
    */
   skip?: number
-  /**
-   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-   * 
-   * Filter by unique combinations of tutorials_tables.
-   */
   distinct?: Prisma.Tutorials_tableScalarFieldEnum | Prisma.Tutorials_tableScalarFieldEnum[]
 }
 
@@ -1167,7 +1168,6 @@ export type tutorials_tableCreateManyArgs<ExtArgs extends runtime.Types.Extensio
    * The data used to create many tutorials_tables.
    */
   data: Prisma.tutorials_tableCreateManyInput | Prisma.tutorials_tableCreateManyInput[]
-  skipDuplicates?: boolean
 }
 
 /**
@@ -1278,6 +1278,34 @@ export type tutorials_tableDeleteManyArgs<ExtArgs extends runtime.Types.Extensio
    * Limit how many tutorials_tables to delete.
    */
   limit?: number
+}
+
+/**
+ * tutorials_table findRaw
+ */
+export type tutorials_tableFindRawArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * The query predicate filter. If unspecified, then all documents in the collection will match the predicate. ${@link https://docs.mongodb.com/manual/reference/operator/query MongoDB Docs}.
+   */
+  filter?: runtime.InputJsonValue
+  /**
+   * Additional options to pass to the `find` command ${@link https://docs.mongodb.com/manual/reference/command/find/#command-fields MongoDB Docs}.
+   */
+  options?: runtime.InputJsonValue
+}
+
+/**
+ * tutorials_table aggregateRaw
+ */
+export type tutorials_tableAggregateRawArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * An array of aggregation stages to process and transform the document stream via the aggregation pipeline. ${@link https://docs.mongodb.com/manual/reference/operator/aggregation-pipeline MongoDB Docs}.
+   */
+  pipeline?: runtime.InputJsonValue[]
+  /**
+   * Additional options to pass to the `aggregate` command ${@link https://docs.mongodb.com/manual/reference/command/aggregate/#command-fields MongoDB Docs}.
+   */
+  options?: runtime.InputJsonValue
 }
 
 /**
