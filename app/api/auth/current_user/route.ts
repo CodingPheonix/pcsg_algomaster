@@ -31,7 +31,7 @@ export async function GET(request: NextRequest) {
             id: decrypted.userId
         })
 
-        console.log(data)
+        console.log("fetched decrypt data" , data)
 
         return NextResponse.json({
             user: {

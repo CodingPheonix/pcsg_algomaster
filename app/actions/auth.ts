@@ -134,8 +134,6 @@ export async function login(state: FormState, formData: FormData) {
         }
     }
 
-    console.log(process.env.DATABASE_URL)
-
     // 2. Prepare data for insertion into database
     const { email, password } = validatedFields.data
     // e.g. Hash the user's password before storing it
