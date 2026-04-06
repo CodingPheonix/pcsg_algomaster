@@ -15,9 +15,10 @@ import { v4 as uuidv4 } from "uuid"
 import { connect_to_mongo } from "../db/mongodb/connect_to_mongo"
 import { Users } from "../db/mongodb/mongo_schema"
 
+await connect_to_mongo();
+
 export async function signup(state: FormState, formData: FormData) {
 
-    await connect_to_mongo();
 
     // Validate form fields
     const validatedFields = SignupFormSchema.safeParse({
